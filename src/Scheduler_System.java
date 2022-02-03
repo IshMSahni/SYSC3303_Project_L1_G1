@@ -80,6 +80,10 @@ public class Scheduler_System implements Runnable{
         else{
             //Find best position in scheduled queue for Task (Another method)
         }
+    }
+
+    /**Method to Sort Scheduled Elevator Tasks */
+    public void sortScheduleQueue(){
 
     }
 
