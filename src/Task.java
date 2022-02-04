@@ -1,6 +1,4 @@
-/**
- * Task class. Represents a task given to scheduler
- */
+/** Task class. Represents a task given to scheduler */
 public class Task {
     private String[] time;
     private int elevatorNumber;
@@ -24,7 +22,7 @@ public class Task {
         this.isFloorTask = true;
     }
 
-    /**Getter methods for all attributes */
+    /** Getter methods for all attributes */
     public String[] getTime() {return time;}
     public Boolean getIsFloorTask() {return this.isFloorTask;}
     public int getFloorNumber() {return floorNumber;}
