@@ -17,8 +17,9 @@ public class Scheduler_System implements Runnable{
         this.elevator_system = elevator_system;
         this.floors = floors;
         this.tasksQueue = new ArrayList<>();
+        this.scheduledQueue = new HashMap<>();
         for (int i = 0; i < this.elevators.size(); i++) {
-            scheduledQueue.put(i,new ArrayList<>());
+            this.scheduledQueue.put(i,new ArrayList<>());
         }
     }
 
@@ -61,9 +62,9 @@ public class Scheduler_System implements Runnable{
             bestTaskNumber = getTaskNumber(bestElevatorNumber);
         }
         //Add task to scheduled Task list for best elevator number.
-        ArrayList<Integer> queue = scheduledQueue.get(bestElevatorNumber);
+        ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
         queue.add(bestTaskNumber,task.getFloorNumber());
-        scheduledQueue.replace(task.getElevatorNumber(),queue);
+        this.scheduledQueue.replace(task.getElevatorNumber(),queue);
     }
 
     /** Method to get position of task if added to a given elevator number to schedule most the recent task */
@@ -71,7 +72,7 @@ public class Scheduler_System implements Runnable{
         //Target Floor number of latest task added and status of elevator.
         Integer targetFloorNumber = tasksQueue.get(tasksQueue.size() - 1).getFloorNumber();
         Float elevatorPosition = elevators.get(elevatorNumber).getPosition();
-        ArrayList<Integer> queue = scheduledQueue.get(elevatorNumber);
+        ArrayList<Integer> queue = this.scheduledQueue.get(elevatorNumber);
         Boolean condition1 = false;
         Boolean condition2 = false;
         Integer bestTaskNumber = 0;
