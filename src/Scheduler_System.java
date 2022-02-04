@@ -67,7 +67,8 @@ public class Scheduler_System implements Runnable{
         this.scheduledQueue.replace(task.getElevatorNumber(),queue);
     }
 
-    /** Method to get position of task if added to a given elevator number to schedule most the recent task */
+    /** Method to get position of task if added to a given elevator number to schedule most the recent task
+     * Return -1 if target floor is already in queue */
     public int getTaskNumber(Integer elevatorNumber){
         //Target Floor number of latest task added and status of elevator.
         Integer targetFloorNumber = tasksQueue.get(tasksQueue.size() - 1).getFloorNumber();
@@ -79,8 +80,12 @@ public class Scheduler_System implements Runnable{
 
         //Iterate task number until condition1 or condition2 becomes true, Or until queue.size reaches end.
         for (int i = 0; !condition1 && !condition2 && (i < queue.size()); i++){
-            condition1 = (elevatorPosition > queue.get(i))&&(targetFloorNumber > queue.get(i))&&(elevatorPosition > targetFloorNumber);
-            condition2 = (elevatorPosition < queue.get(i))&&(targetFloorNumber < queue.get(i))&&(elevatorPosition < targetFloorNumber);
+            Integer queueFloor = queue.get(i);
+            if(targetFloorNumber == queueFloor){
+                return -1; //Return -1 if target floor already in queue
+            }
+            condition1 = (elevatorPosition > queueFloor)&&(targetFloorNumber > queueFloor)&&(elevatorPosition > targetFloorNumber);
+            condition2 = (elevatorPosition < queueFloor)&&(targetFloorNumber < queueFloor)&&(elevatorPosition < targetFloorNumber);
             bestTaskNumber = i;
         }
         return bestTaskNumber;
