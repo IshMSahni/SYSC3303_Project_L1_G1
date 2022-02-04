@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Scheduler class
@@ -8,7 +9,7 @@ public class Scheduler_System implements Runnable{
     private ArrayList<Floor> floors;
     private Elevator_System elevator_system;
     private ArrayList<Task> tasksQueue;
-    private ArrayList<Task> scheduledQueue;
+    private HashMap<Integer,ArrayList<Integer>> scheduledQueue;  //Key is Elevator Number, Values are next floor numbers to go to.
 
     /** Constructor for Scheduler_System */
     public Scheduler_System(ArrayList<ElevatorCar> elevators, ArrayList<Floor> floors, Elevator_System elevator_system){
@@ -16,11 +17,13 @@ public class Scheduler_System implements Runnable{
         this.elevator_system = elevator_system;
         this.floors = floors;
         this.tasksQueue = new ArrayList<>();
-        this.scheduledQueue = new ArrayList<>();
+        for (int i = 0; i < this.elevators.size(); i++) {
+            scheduledQueue.put(i,new ArrayList<>());
+        }
     }
 
-    /**Get Scheduled tasks from Scheduler*/
-    public ArrayList<Task> getScheduledQueue(){return this.scheduledQueue;}
+    /**Get Scheduled tasks from Scheduler for a given elevator number*/
+    public ArrayList<Task> getScheduledQueue(Integer elevatorNumber){return this.getScheduledQueue(elevatorNumber);}
 
     /**Add task to queue for Scheduler and schedule it*/
     public void addToQueue(Task task){
@@ -57,7 +60,6 @@ public class Scheduler_System implements Runnable{
             else{possibleElevators.add(elevators.get(0));}
 
             ElevatorCar bestElevator = possibleElevators.get(0);
-
             //If 0 or more than 1 elevator is a possibleElevator, then pick best one based on net distance to target.
             if(possibleElevators.size() != 1){
                 if(possibleElevators.size() == 0){
@@ -71,20 +73,37 @@ public class Scheduler_System implements Runnable{
                     }
                 }
             }
-
             //Best Elevator now selected until here
-            //Now find best position in scheduled queue for Task (Another method)
-
+            //Now find best position in scheduled queue for Task
+            sortScheduleQueue(bestElevator.getElevatorNumber());
         }
         //Elevator Task
         else{
-            //Find best position in scheduled queue for Task (Another method)
+            //Find best position in scheduled queue for Task
+            sortScheduleQueue(task.getElevatorNumber());
         }
     }
 
     /**Method to Sort Scheduled Elevator Tasks */
-    public void sortScheduleQueue(){
+    public void sortScheduleQueue(Integer elevatorNumber){
+        //Target Floor number of latest task added and status of elevator.
+        Integer targetFloorNumber = tasksQueue.get(tasksQueue.size() - 1).getFloorNumber();
+        Float elevatorPosition = elevators.get(elevatorNumber).getPosition();
+        ArrayList<Integer> queue = scheduledQueue.get(elevatorNumber);
 
+        Boolean condition1 = (elevatorPosition > queue.get(0))&&(targetFloorNumber > queue.get(0))&&(elevatorPosition > targetFloorNumber);
+        Boolean condition2 = (elevatorPosition < queue.get(0))&&(targetFloorNumber < queue.get(0))&&(elevatorPosition < targetFloorNumber);
+
+        int i = 0;
+        while (!condition1 && !condition2 && (i < queue.size())){
+            i++;
+            condition1 = (elevatorPosition > queue.get(i))&&(targetFloorNumber > queue.get(i))&&(elevatorPosition > targetFloorNumber);
+            condition2 = (elevatorPosition < queue.get(i))&&(targetFloorNumber < queue.get(i))&&(elevatorPosition < targetFloorNumber);
+        }
+
+        //Add targetFloorNumber to best index "i" found and replace sceduledQueue with New queue
+        queue.add(i,targetFloorNumber);
+        scheduledQueue.replace(elevatorNumber,queue);
     }
 
     @Override

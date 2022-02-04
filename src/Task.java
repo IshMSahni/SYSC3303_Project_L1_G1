@@ -4,16 +4,15 @@
 public class Task {
     private String[] time;
     private int elevatorNumber;
-    private int destinationFloorNumber;
     private int floorNumber;
     private String direction;
     private Boolean isFloorTask;
 
     /** Constructor if task is an Elevator Task*/
-    public Task(String[] time, int elevatorNumber, int destinationFloorNumber){
+    public Task(String[] time, int elevatorNumber, int floorNumber){
         this.time = time;
         this.elevatorNumber = elevatorNumber;
-        this.destinationFloorNumber = destinationFloorNumber;
+        this.floorNumber = floorNumber;
         this.isFloorTask = false;
     }
 
@@ -29,7 +28,6 @@ public class Task {
     public String[] getTime() {return time;}
     public Boolean getIsFloorTask() {return this.isFloorTask;}
     public int getFloorNumber() {return floorNumber;}
-    public int getDestinationFloorNumber() {return destinationFloorNumber;}
     public int getElevatorNumber() {return elevatorNumber;}
     public String getDirection() {return direction;}
 }
