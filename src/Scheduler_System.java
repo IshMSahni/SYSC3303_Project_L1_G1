@@ -61,10 +61,12 @@ public class Scheduler_System implements Runnable{
             bestElevatorNumber = task.getElevatorNumber();
             bestTaskNumber = getTaskNumber(bestElevatorNumber);
         }
-        //Add task to scheduled Task list for best elevator number.
-        ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
-        queue.add(bestTaskNumber,task.getFloorNumber());
-        this.scheduledQueue.replace(task.getElevatorNumber(),queue);
+        //Add task to scheduled Task list for best elevator number if task is Not already queue.
+        if(bestTaskNumber != -1) {
+            ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
+            queue.add(bestTaskNumber, task.getFloorNumber());
+            this.scheduledQueue.replace(task.getElevatorNumber(), queue);
+        }
     }
 
     /** Method to get position of task if added to a given elevator number to schedule most the recent task
