@@ -44,14 +44,6 @@ public class ElevatorCar {
     
     public int getElevatorNumber() {return elevatorNumber;}
     
-    public void reachedFloor(float position) {
-    	doorsOpen = true;
-    	motors = false;
-    	
-    	buttons.set((int)position, false);
-    	status = "Stopped";
-    }
-
     /** Method for when a button is pressed inside Elevator */
     public void buttonPressed(int buttonLocation){
         this.scheduler_system.addToQueue(new Task(elevatorNumber,buttonLocation));

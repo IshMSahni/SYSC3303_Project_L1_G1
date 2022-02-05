@@ -32,16 +32,38 @@ public class Elevator_System implements Runnable{
 		ElevatorCar elevator = elevators.get(elevatorNumber);
 		Float startLocation = elevator.getPosition();
 		Integer endLocation = elevator.getTasks().get(0);
+		elevator.setButton(endLocation, true);
+		elevator.setStatus(movingDirection(startLocation, endLocation));
 		long time = calculateTime(startLocation,endLocation);
-
+		elevator.buttonPressed(elevator.getTasks().get(0));
+		elevator.setMotors(true);
+		
+		
 		//Wait for calculated time
 		try{ wait(time); }
 		catch (Exception e){}
-
+		
+		elevator.setMotors(false);
+		elevator.setStatus("Stopped");
 		//Set elevator to new position and remove task from Elevator's queue
 		elevator.setPosition(endLocation);
+		elevator.setDoors(true);
+		elevator.setButton(endLocation, false);
+		
+		//Wait for 1 second (it will be longer when there will be a gui)
+		try{ wait(1); }
+		catch (Exception e){}
+		
+		elevator.setDoors(false);
 		elevator.getTasks().remove(0);
 		elevators.set(elevatorNumber,elevator);
+	}
+	
+	public String movingDirection(Float start, int end) {
+		if(start > end){
+			return "Moving Down";
+		}
+		return "Moving Up";
 	}
 
 	/** Method to calculate time in milliseconds to move Elevator a given amount of distance */
