@@ -21,11 +21,12 @@ public class Elevator_System implements Runnable{
 	}
 
 	/** This method will update elevator scheduled queue*/
-	public synchronized void updateElevatorQueue(){
-		targetElevatorNumber = scheduler_system.getTargetElevatorNumber();
-		ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(targetElevatorNumber);
-		this.elevators.get(targetElevatorNumber).setTasks(tasks);
+	public synchronized void updateElevatorQueue(Integer elevatorNumber){
+		ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(elevatorNumber);
+		this.elevators.get(elevatorNumber).setTasks(tasks);
 		isEvent = true;
+		moveElevator(elevatorNumber);
+		loadElevator(elevatorNumber);
 	}
 
 	/** Method to move elevator */
