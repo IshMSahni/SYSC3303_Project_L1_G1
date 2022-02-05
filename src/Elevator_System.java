@@ -7,8 +7,10 @@ public class Elevator_System implements Runnable{
 	private static boolean isEvent;		// Variable for breaking wait()
 	private ArrayList<ElevatorCar> elevators; //List of elevators
 	private Scheduler_System scheduler_system;
-	private final float elevatorAcceleration = 1; // 1 meter per second square
-	private final float elevatorTopSpeed = 5; // 5 meters per second
+	private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
+	private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
+	private final long loadTime = 10; // 10 seconds is the average loading time
+
 	private static Integer targetElevatorNumber;
 
 	/** Constructor for Elevator_System */
@@ -19,7 +21,7 @@ public class Elevator_System implements Runnable{
 	}
 
 	/** This method will update elevator scheduled queue*/
-	public void updateElevatorQueue(){
+	public synchronized void updateElevatorQueue(){
 		targetElevatorNumber = scheduler_system.getTargetElevatorNumber();
 		ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(targetElevatorNumber);
 		this.elevators.get(targetElevatorNumber).setTasks(tasks);
@@ -27,21 +29,24 @@ public class Elevator_System implements Runnable{
 	}
 
 	/** Method to move elevator */
-	public void moveElevator(Integer elevatorNumber){
+	public synchronized void moveElevator(Integer elevatorNumber){
 		//Calculate Time to move elevator
 		ElevatorCar elevator = elevators.get(elevatorNumber);
 		Float startLocation = elevator.getPosition();
 		Integer endLocation = elevator.getTasks().get(0);
 		long time = calculateTime(startLocation,endLocation);
+		elevator.setMotors(true);
+		System.out.println("Elevator "+elevatorNumber+" now moving to floor "+endLocation);
 
 		//Wait for calculated time
 		try{ wait(time); }
 		catch (Exception e){}
 
 		//Set elevator to new position and remove task from Elevator's queue
-		elevator.setPosition(endLocation);
+		elevator.reachedFloor(endLocation);
 		elevator.getTasks().remove(0);
 		elevators.set(elevatorNumber,elevator);
+		System.out.println("Elevator "+elevatorNumber+" now at floor "+endLocation+", Door Opening.");
 	}
 
 	/** Method to calculate time in milliseconds to move Elevator a given amount of distance */
@@ -62,14 +67,28 @@ public class Elevator_System implements Runnable{
 		return (Math.round(time) * 1000);
 	}
 
+	/** Method to simulate loading elevator waiting time */
+	public synchronized void loadElevator(Integer elevatorNumber){
+		try{
+			wait(loadTime*1000);
+			ElevatorCar targetElevator = elevators.get(elevatorNumber);
+			targetElevator.setDoors(false);
+			System.out.println("Loading Elevator "+elevatorNumber+" completed, Door closed.");
+		}
+		catch (Exception e){
+			System.out.println("Error occured while loading Elevator in thread.");
+			e.printStackTrace();
+		}
+	}
+
 	public static void setIsEvent(boolean isEvent) {Elevator_System.isEvent = isEvent;}
 
 	public void setSchedulerSystem(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
 
 	/** Run method for Elevator_System */
 	 @Override
-	    public void run() {
-	 		while (true) {
+	 public synchronized void run() {
+	 	while (true) {
 	 			//Wait until event occurs for elevator
 	 			while (!isEvent){
 					try {
@@ -79,9 +98,10 @@ public class Elevator_System implements Runnable{
 						e.printStackTrace();
 					}
 				}
-				//Send signal to elevator car for which floor to go to
+				//Send signal to elevator car for which floor to go to and load/unload elevator
 				moveElevator(targetElevatorNumber);
 	 			this.scheduler_system.removeElevatorTask(targetElevatorNumber);
+	 			loadElevator(targetElevatorNumber);
 			}
-	    }
+	 }
 }

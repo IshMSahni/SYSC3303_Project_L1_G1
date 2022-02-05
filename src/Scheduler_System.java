@@ -27,7 +27,7 @@ public class Scheduler_System implements Runnable{
     }
 
     /**Get Scheduled tasks from Scheduler for a given elevator number*/
-    public ArrayList<Integer> getScheduledQueue(Integer elevatorNumber){return this.getScheduledQueue(elevatorNumber);}
+    public synchronized ArrayList<Integer> getScheduledQueue(Integer elevatorNumber){return this.scheduledQueue.get(elevatorNumber);}
 
     /**Add task to queue for Scheduler and schedule it*/
     public void addToQueue(Task task){
@@ -101,8 +101,10 @@ public class Scheduler_System implements Runnable{
 
     public void setElevator_system(Elevator_System elevator_system){this.elevator_system = elevator_system;}
 
+    public void setIsNewTaskScheduled(Boolean condition){isNewTaskScheduled = condition;}
+
     @Override
-    public void run() {
+    public synchronized void run() {
         while (true){
             //Wait until new task is added and scheduled
             while (!isNewTaskScheduled) {
@@ -115,6 +117,7 @@ public class Scheduler_System implements Runnable{
             }
             //Notify Elevator system
             this.elevator_system.updateElevatorQueue();
+            isNewTaskScheduled = false;
         }
     }
 }

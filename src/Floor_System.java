@@ -27,7 +27,7 @@ public class Floor_System implements Runnable{
 	private static Elevator_System elevator_system; //Elevator system
 	
 	static Person[] allPeople;				// Array of Person objects
-	static Floor[] floors = new Floor[3];	// Array of Floor objects
+	static Floor[] floors;	// Array of Floor objects
 	
 	/**
 	 * Method: readFile
@@ -44,7 +44,6 @@ public class Floor_System implements Runnable{
 		String temp;				// temp variable for programming logic
 		
 		time = new int[4];	// Initialize array with empty elements
-		Person[] allPeople = new Person[numberOfLines];	// Initialize array with empty elements
 		
 		// Try Catch statement for file processing
 		try {
@@ -60,6 +59,7 @@ public class Floor_System implements Runnable{
 		    // Close and re-open scanner
 		    myCounter.close();
 		    Scanner myReader = new Scanner(myObj);
+			Person[] allPeople = new Person[numberOfLines];	// Initialize array with empty elements
 		    
 		    // for loop processes each line individually
 		    for (int i = 0; i < numberOfLines; i++) {
@@ -98,8 +98,10 @@ public class Floor_System implements Runnable{
 
 				//Schedule task
 				scheduler_system.addToQueue(new Task(time,buttonStatustemp,floorNumber));
+				scheduler_system.setIsNewTaskScheduled(true);
 				time[2] = time[2] + 1; //Add 1 second buffer between tasks
 				scheduler_system.addToQueue(new Task(time,scheduler_system.getTargetElevatorNumber(),carButton));
+				scheduler_system.setIsNewTaskScheduled(true);
 		    }
 			myReader.close();
 			return allPeople;
@@ -189,7 +191,7 @@ public class Floor_System implements Runnable{
 	 * 	Args: Null
 	 * 	Return: Void
 	 */
-	public void run() {
+	public synchronized void run() {
 		
 		// while loop loops thread until program is terminated
 		while (true) {
@@ -197,10 +199,10 @@ public class Floor_System implements Runnable{
 			// if statement displays all initial floor data
 			if (eventFloor == -1) {
 				for (int i = 0; i < getFloors().length; i++) {
-					getFloors()[i].printFloor();
+					//getFloors()[i].printFloor();
 				}
 			} else {	// else statement displays changed floor data
-				getFloors()[eventFloor].printFloor();
+				//getFloors()[eventFloor].printFloor();
 			}
 			isEvent = false;
 			
@@ -230,6 +232,7 @@ public class Floor_System implements Runnable{
 		ArrayList<ElevatorCar> elevatorCarsList = new ArrayList<>();
 
 		// for loop initializes every floor
+		floors = new Floor[totalFloorNumber];
 		for (int i = 0; i < totalFloorNumber; i++) {
 			floors[i] = new Floor(totalElevatorNumber);
 			floors[i].setFloor(i);
