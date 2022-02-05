@@ -12,8 +12,7 @@ public class Elevator_System implements Runnable{
 	private static Integer targetElevatorNumber;
 
 	/** Constructor for Elevator_System */
-	public Elevator_System(ArrayList<ElevatorCar> elevators, Scheduler_System scheduler_system){
-		this.scheduler_system = scheduler_system;
+	public Elevator_System(ArrayList<ElevatorCar> elevators){
 		this.elevators = elevators;
 		isEvent = false;
 		targetElevatorNumber = 0;
@@ -64,6 +63,8 @@ public class Elevator_System implements Runnable{
 	}
 
 	public static void setIsEvent(boolean isEvent) {Elevator_System.isEvent = isEvent;}
+
+	public void setSchedulerSystem(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
 
 	/** Run method for Elevator_System */
 	 @Override

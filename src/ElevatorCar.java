@@ -18,16 +18,21 @@ public class ElevatorCar {
     private String status; //Possible statuses:"Stopped","Moving Up","Moving Down"
     
     /** Constructor for Elevator Car */
-    public ElevatorCar(int elevatorNumber, ArrayList<Boolean> lights, ArrayList<Boolean> buttons, Scheduler_System scheduler_system){
+    public ElevatorCar(int elevatorNumber, int totalFloorNumber, Scheduler_System scheduler_system){
         this.elevatorNumber = elevatorNumber; //
         this.position = 0; //
         this.status = "Stopped"; //
-        this.lights = lights;
-        this.buttons = buttons;
+        this.lights = new ArrayList<>();
+        this.buttons = new ArrayList<>();
         this.doorsOpen = false;
         this.motors = false;
         this.tasks = new ArrayList<>();
         this.scheduler_system = scheduler_system;
+
+        for (int i = 0; i < totalFloorNumber; i++) {
+            this.lights.add(false);
+            this.buttons.add(false);
+        }
     }
     
     /** Getter and setters for position and status */
@@ -73,4 +78,6 @@ public class ElevatorCar {
     /**Getter and Setter method for Tasks */
     public ArrayList<Integer> getTasks() {return tasks;}
     public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
+
+    public void setScheduler_system(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
 }

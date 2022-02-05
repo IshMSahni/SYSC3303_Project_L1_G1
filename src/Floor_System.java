@@ -8,6 +8,7 @@
 // imports for scanning text file
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 // Class declaration
@@ -22,6 +23,8 @@ public class Floor_System implements Runnable{
 	private static int carButton;		// Destination floor variable
 	private static boolean isEvent;		// Variable for breaking wait()
 	private static int eventFloor;		// Temp Target floor variable
+	private static Scheduler_System scheduler_system;
+	private static Elevator_System elevator_system; //Elevator system
 	
 	static Person[] allPeople;				// Array of Person objects
 	static Floor[] floors = new Floor[3];	// Array of Floor objects
@@ -92,6 +95,11 @@ public class Floor_System implements Runnable{
 				}
 				Person myPerson = new Person(time, floorNumber, buttonStatus, carButton);	// Create Person object
 				allPeople[i] = myPerson;	// Add Person to array of people
+
+				//Schedule task
+				scheduler_system.addToQueue(new Task(time,buttonStatustemp,floorNumber));
+				time[2] = time[2] + 1; //Add 1 second buffer between tasks
+				scheduler_system.addToQueue(new Task(time,scheduler_system.getTargetElevatorNumber(),carButton));
 		    }
 			myReader.close();
 			return allPeople;
@@ -216,27 +224,42 @@ public class Floor_System implements Runnable{
 	 */
 	public static void main(String[] args) {
 		eventFloor = -1;	// Initializing status variable
+		int totalFloorNumber = 10; //total number of floors
+		int totalElevatorNumber = 1; //total number of elevators
+		ArrayList<Floor> floorList = new ArrayList<>();
+		ArrayList<ElevatorCar> elevatorCarsList = new ArrayList<>();
 
 		// for loop initializes every floor
-		for (int i = 0; i < (floors.length - 1); i++) {
-			floors[i] = new Floor();
+		for (int i = 0; i < totalFloorNumber; i++) {
+			floors[i] = new Floor(totalElevatorNumber);
 			floors[i].setFloor(i);
+			floorList.add(floors[i]);
 		}
+
 		
 		// Separate logic to initialize top floor
 		// Note: # of floors - 1 (replace '2')
-		floors[2] = new Floor();
-		floors[2].setFloor((floors.length - 1), true);	//Separate floor initialization for last floor (Override)
-		
-		allPeople = readFile();	// Initialize people array using readFile method
-		
-		// for loop adds all people to queue
-		for (int i = 0; i < allPeople.length; i++) {
-		// Scheduler_System.addToQueue(allPeople[i]);
+		floors[totalFloorNumber - 1] = new Floor(totalElevatorNumber);
+		floors[totalFloorNumber - 1].setFloor((floors.length - 1), true);	//Separate floor initialization for last floor (Override)
+
+		//Intialize Elevator and Scheduler system
+		for (int i = 0; i < totalElevatorNumber; i++) {
+			elevatorCarsList.add(new ElevatorCar(i,totalFloorNumber,scheduler_system));
 		}
+		elevator_system = new Elevator_System(elevatorCarsList);
+		scheduler_system = new Scheduler_System(elevatorCarsList,floorList);
+		elevator_system.setSchedulerSystem(scheduler_system);
+		scheduler_system.setElevator_system(elevator_system);
+
+		allPeople = readFile();	// Initialize people array using readFile method
 		
 		// Initializes floor manager thread and starts it
 		Thread floorSystemThread = new Thread(new Floor_System(), "Floor Simulation");
+		Thread elevatorSystemThread = new Thread(elevator_system, "Elevator Simulation");
+		Thread schedulerSystemThread = new Thread(scheduler_system, "Scheduler Simulation");
+
 		floorSystemThread.start();
+		elevatorSystemThread.start();
+		schedulerSystemThread.start();
 	}
 }

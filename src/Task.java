@@ -1,6 +1,6 @@
 /** Task class. Represents a task given to scheduler */
 public class Task {
-    private String[] time;
+    private int[] time;
     private int elevatorNumber;
     private int floorNumber;
     private String direction;
@@ -14,7 +14,7 @@ public class Task {
     }
 
     /** Constructor if task is an Elevator Task*/
-    public Task(String[] time, int elevatorNumber, int floorNumber){
+    public Task(int[] time, int elevatorNumber, int floorNumber){
         this.time = time;
         this.elevatorNumber = elevatorNumber;
         this.floorNumber = floorNumber;
@@ -22,14 +22,14 @@ public class Task {
     }
 
     /** Constructor if task is a Floor task (No time given)*/
-    public Task(int floorNumber, String direction){
+    public Task(String direction, int floorNumber){
         this.floorNumber = floorNumber;
         this.direction = direction;
         this.isFloorTask = true;
     }
 
     /** Constructor if task is a Floor task */
-    public Task(String[] time, int floorNumber, String direction){
+    public Task(int[] time, String direction, int floorNumber){
         this.time = time;
         this.floorNumber = floorNumber;
         this.direction = direction;
@@ -37,7 +37,7 @@ public class Task {
     }
 
     /** Getter methods for all attributes */
-    public String[] getTime() {return time;}
+    public int[] getTime() {return time;}
     public Boolean getIsFloorTask() {return this.isFloorTask;}
     public int getFloorNumber() {return floorNumber;}
     public int getElevatorNumber() {return elevatorNumber;}

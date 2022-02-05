@@ -19,12 +19,10 @@ public class Floor {
 	 * 	Floor constructor initializes all floor variables
 	 * 	Note floor Number is not initialized due to how floor objects are created
 	 */
-	public Floor() {
+	public Floor(int totalElevatorNumber) {
 		upButton = false;
 		downButton = false;
-		
-		//lamps = new int[getNumberOfElevators()];
-		lamps = new int[2];
+		lamps = new int[totalElevatorNumber];
 	}
 
 	/**

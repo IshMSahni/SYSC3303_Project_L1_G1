@@ -14,10 +14,9 @@ public class Scheduler_System implements Runnable{
     private static Integer targetElevatorNumber;
 
     /** Constructor for Scheduler_System */
-    public Scheduler_System(ArrayList<ElevatorCar> elevators, ArrayList<Floor> floors, Elevator_System elevator_system){
+    public Scheduler_System(ArrayList<ElevatorCar> elevators, ArrayList<Floor> floors){
         this.elevators = elevators;
         isNewTaskScheduled = false;
-        this.elevator_system = elevator_system;
         this.floors = floors;
         this.tasksQueue = new ArrayList<>();
         this.scheduledQueue = new HashMap<>();
@@ -99,6 +98,8 @@ public class Scheduler_System implements Runnable{
     }
 
     public Integer getTargetElevatorNumber(){return targetElevatorNumber;}
+
+    public void setElevator_system(Elevator_System elevator_system){this.elevator_system = elevator_system;}
 
     @Override
     public void run() {
