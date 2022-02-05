@@ -105,6 +105,10 @@ public class Scheduler_System implements Runnable{
 
     public void setIsNewTaskScheduled(Boolean condition){isNewTaskScheduled = condition;}
 
+    public void setTasksQueue(ArrayList<Task> tasks){this.tasksQueue = tasks;}
+
+    public void setScheduledQueue(HashMap<Integer,ArrayList<Integer>> tasks){this.scheduledQueue = tasks;}
+
     @Override
     public synchronized void run() {
         while (true){
