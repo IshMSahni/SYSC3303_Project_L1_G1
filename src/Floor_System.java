@@ -100,8 +100,10 @@ public class Floor_System implements Runnable{
 				scheduler_system.addToQueue(new Task(time,buttonStatustemp,floorNumber));
 				scheduler_system.setIsNewTaskScheduled(true);
 				time[2] = time[2] + 1; //Add 1 second buffer between tasks
-				scheduler_system.addToQueue(new Task(time,scheduler_system.getTargetElevatorNumber(),carButton));
+				Integer elevatorNumber = scheduler_system.getTargetElevatorNumber();
+				scheduler_system.addToQueue(new Task(time,elevatorNumber,carButton));
 				scheduler_system.setIsNewTaskScheduled(true);
+				System.out.println("New Task added to queue, time: "+ time[1]+":"+time[2] +", Target Floor: "+carButton+", Elevator Number: "+elevatorNumber);
 		    }
 			myReader.close();
 			return allPeople;
@@ -247,14 +249,14 @@ public class Floor_System implements Runnable{
 
 		//Intialize Elevator and Scheduler system
 		for (int i = 0; i < totalElevatorNumber; i++) {
-			elevatorCarsList.add(new ElevatorCar(i,totalFloorNumber,scheduler_system));
+			ElevatorCar elevator = new ElevatorCar(i,totalFloorNumber);
+			elevator.setScheduler_system(scheduler_system);
+			elevatorCarsList.add(elevator);
 		}
 		elevator_system = new Elevator_System(elevatorCarsList);
 		scheduler_system = new Scheduler_System(elevatorCarsList,floorList);
 		elevator_system.setSchedulerSystem(scheduler_system);
 		scheduler_system.setElevator_system(elevator_system);
-
-		allPeople = readFile();	// Initialize people array using readFile method
 		
 		// Initializes floor manager thread and starts it
 		Thread floorSystemThread = new Thread(new Floor_System(), "Floor Simulation");
@@ -264,5 +266,6 @@ public class Floor_System implements Runnable{
 		floorSystemThread.start();
 		elevatorSystemThread.start();
 		schedulerSystemThread.start();
+		allPeople = readFile();	// Initialize people array using readFile method
 	}
 }

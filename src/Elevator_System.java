@@ -37,13 +37,16 @@ public class Elevator_System implements Runnable{
 		long time = calculateTime(startLocation,endLocation);
 		elevator.setMotors(true);
 		System.out.println("Elevator "+elevatorNumber+" now moving to floor "+endLocation);
-
 		//Wait for calculated time
 		try{ wait(time); }
 		catch (Exception e){}
 
+		elevator.setMotors(false);
+		elevator.setStatus("Stopped");
 		//Set elevator to new position and remove task from Elevator's queue
-		elevator.reachedFloor(endLocation);
+		elevator.setPosition(endLocation);
+		elevator.setDoors(true);
+		elevator.setButton(endLocation, false);
 		elevator.getTasks().remove(0);
 		elevators.set(elevatorNumber,elevator);
 		System.out.println("Elevator "+elevatorNumber+" now at floor "+endLocation+", Door Opening.");

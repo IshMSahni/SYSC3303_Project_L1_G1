@@ -18,7 +18,7 @@ public class ElevatorCar {
     private String status; //Possible statuses:"Stopped","Moving Up","Moving Down"
     
     /** Constructor for Elevator Car */
-    public ElevatorCar(int elevatorNumber, int totalFloorNumber, Scheduler_System scheduler_system){
+    public ElevatorCar(int elevatorNumber, int totalFloorNumber){
         this.elevatorNumber = elevatorNumber; //
         this.position = 0; //
         this.status = "Stopped"; //
@@ -27,7 +27,6 @@ public class ElevatorCar {
         this.doorsOpen = false;
         this.motors = false;
         this.tasks = new ArrayList<>();
-        this.scheduler_system = scheduler_system;
 
         for (int i = 0; i < totalFloorNumber; i++) {
             this.lights.add(false);
