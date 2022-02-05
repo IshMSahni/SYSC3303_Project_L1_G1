@@ -1,3 +1,4 @@
+package elevatorSystem;
 /**
  * Floor Class:
  * 	Class is an object to represent a floor

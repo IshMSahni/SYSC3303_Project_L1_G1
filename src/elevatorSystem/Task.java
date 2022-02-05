@@ -1,3 +1,4 @@
+package elevatorSystem;
 /** Task class. Represents a task given to scheduler */
 public class Task {
     private int[] time;
