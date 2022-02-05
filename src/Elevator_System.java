@@ -47,15 +47,18 @@ public class Elevator_System implements Runnable{
 
 	/** Method to calculate time to move Elevator a given amount of distance */
 	public long calculateTime(Float startLocation, Integer endLocation){
-		double time = 0;
+		double time;
 		double netDistance = Math.abs(startLocation - endLocation);
 		double inflectionDistance = (elevatorTopSpeed*elevatorTopSpeed)/elevatorAcceleration;
+
+		//If net distance between floors allows elevator to reach top speed, then use 1st formula, else use 2nd formula.
 		if(netDistance > inflectionDistance){
-			time = Math.sqrt(netDistance) * 2;
-		}
-		else{
 			time = ((netDistance - inflectionDistance) / elevatorTopSpeed) + (Math.sqrt(inflectionDistance) * 2);
 		}
+		else{
+			time = Math.sqrt(netDistance) * 2;
+		}
+		//Return time converted to long type after rounding.
 		return Math.round(time);
 	}
 
@@ -79,7 +82,4 @@ public class Elevator_System implements Runnable{
 	 			this.scheduler_system.removeElevatorTask(targetElevatorNumber);
 			}
 	    }
-	
-
-
 }
