@@ -35,10 +35,10 @@ public class Floor_System implements Runnable{
 	 * 	Constructor for JUnit testing
 	 * 	Args: Null
 	 */
-	public Floor_System(int floorCount) {
+	public Floor_System(int floorCount, int elevatorNumber) {
 		floors = new Floor[floorCount];
 		for (int i = 0; i < floorCount; i++) {
-			floors[i] = new Floor();
+			floors[i] = new Floor(elevatorNumber);
 			floors[i].setFloor(i);
 		}
 	}
@@ -49,7 +49,7 @@ public class Floor_System implements Runnable{
 	 * 	Args: Null
 	 * 	Return: Array of Person objects
 	 */
-	private static Person[] readFile() {
+	public static Person[] readFile() {
 		String[] timeSTR;			// Time array as String variables
 		String buttonStatustemp;	// temp variable to process button status
 		int index = 0;				// temp index variable for time calculation
@@ -275,7 +275,7 @@ public class Floor_System implements Runnable{
 		allPeople = readFile();	// Initialize people array using readFile method
 		
 		// Initializes floor manager thread and starts it
-		Thread floorSystemThread = new Thread(new Floor_System(), "Floor Simulation");
+		Thread floorSystemThread = new Thread(new Floor_System(totalFloorNumber,totalElevatorNumber), "Floor Simulation");
 		Thread elevatorSystemThread = new Thread(elevator_system, "Elevator Simulation");
 		Thread schedulerSystemThread = new Thread(scheduler_system, "Scheduler Simulation");
 

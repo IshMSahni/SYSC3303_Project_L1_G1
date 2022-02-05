@@ -1,6 +1,8 @@
 package tests;
 import static org.junit.jupiter.api.Assertions.*;
 
+import elevatorSystem.Floor_System;
+import elevatorSystem.Person;
 import org.junit.jupiter.api.Test;
 
 class Test_Floor_System {
@@ -10,7 +12,7 @@ class Test_Floor_System {
 	 */
 	@Test
 	void test_readFile() {
-		Person[] allPeople;	
+		Person[] allPeople;
 		allPeople = Floor_System.readFile();
 		
 		assertEquals(1, allPeople[2].getTime()[1]);
@@ -19,7 +21,7 @@ class Test_Floor_System {
 	
 	@Test
 	void test_buttonEvent() {
-		Floor_System x = new Floor_System(3);
+		Floor_System x = new Floor_System(3,1);
 		x.buttonEvent(0, 1);
 		x.buttonEvent(1, 2);
 		
@@ -29,7 +31,7 @@ class Test_Floor_System {
 	
 	@Test
 	void test_lampEvent() {
-		Floor_System x = new Floor_System(3);
+		Floor_System x = new Floor_System(3,1);
 		x.lampEvent(1, 0, 2);
 		
 		assertEquals(2, x.getFloors()[1].getLamp()[0]);

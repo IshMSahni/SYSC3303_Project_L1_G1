@@ -1,6 +1,7 @@
 package tests;
 import static org.junit.jupiter.api.Assertions.*;
 
+import elevatorSystem.Person;
 import org.junit.jupiter.api.Test;
 
 class Test_Person {
@@ -13,7 +14,7 @@ class Test_Person {
 		i[2] = 2;
 		i[3] = 3;
 		
-		Person x = new Person(i, 1, 2, 3);	
+		Person x = new Person(i, 1, 2, 3);
 		assertEquals(i, x.getTime());	
 		assertEquals(1, x.getFloorNumber());
 		assertEquals(2, x.getDirection());
