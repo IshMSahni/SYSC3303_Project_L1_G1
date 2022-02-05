@@ -31,6 +31,19 @@ public class Floor_System implements Runnable{
 	static Floor[] floors;	// Array of Floor objects
 	
 	/**
+	 * Constructor: Floor_System
+	 * 	Constructor for JUnit testing
+	 * 	Args: Null
+	 */
+	public Floor_System(int floorCount) {
+		floors = new Floor[floorCount];
+		for (int i = 0; i < floorCount; i++) {
+			floors[i] = new Floor();
+			floors[i].setFloor(i);
+		}
+	}
+	
+	/**
 	 * Method: readFile
 	 * 	Method reads txt file, processes the person data and passes formalized list.
 	 * 	Args: Null
