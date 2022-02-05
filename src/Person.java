@@ -1,5 +1,5 @@
 /**
- * Floor Class:
+ * Person Class:
  * 	Class is an object to represent a person
  * Written by: Keith Lam 101147900
  */
