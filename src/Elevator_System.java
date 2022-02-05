@@ -45,7 +45,7 @@ public class Elevator_System implements Runnable{
 		elevators.set(elevatorNumber,elevator);
 	}
 
-	/** Method to calculate time to move Elevator a given amount of distance */
+	/** Method to calculate time in milliseconds to move Elevator a given amount of distance */
 	public long calculateTime(Float startLocation, Integer endLocation){
 		double time;
 		double netDistance = Math.abs(startLocation - endLocation);
@@ -59,7 +59,8 @@ public class Elevator_System implements Runnable{
 			time = Math.sqrt(netDistance) * 2;
 		}
 		//Return time converted to long type after rounding.
-		return Math.round(time);
+		//Multiply 1000 because to convert time from seconds to milliseconds
+		return (Math.round(time) * 1000);
 	}
 
 	public static void setIsEvent(boolean isEvent) {Elevator_System.isEvent = isEvent;}
