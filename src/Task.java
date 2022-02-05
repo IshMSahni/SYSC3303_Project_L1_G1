@@ -6,12 +6,26 @@ public class Task {
     private String direction;
     private Boolean isFloorTask;
 
+    /** Constructor if task is an Elevator Task (No time given)*/
+    public Task(int elevatorNumber, int floorNumber){
+        this.elevatorNumber = elevatorNumber;
+        this.floorNumber = floorNumber;
+        this.isFloorTask = false;
+    }
+
     /** Constructor if task is an Elevator Task*/
     public Task(String[] time, int elevatorNumber, int floorNumber){
         this.time = time;
         this.elevatorNumber = elevatorNumber;
         this.floorNumber = floorNumber;
         this.isFloorTask = false;
+    }
+
+    /** Constructor if task is a Floor task (No time given)*/
+    public Task(int floorNumber, String direction){
+        this.floorNumber = floorNumber;
+        this.direction = direction;
+        this.isFloorTask = true;
     }
 
     /** Constructor if task is a Floor task */

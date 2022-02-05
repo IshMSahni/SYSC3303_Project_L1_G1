@@ -10,12 +10,12 @@ public class Scheduler_System implements Runnable{
     private Elevator_System elevator_system;
     private ArrayList<Task> tasksQueue;
     private HashMap<Integer,ArrayList<Integer>> scheduledQueue;  //Key is Elevator Number, Values are next floor numbers to go to.
-    private Boolean isNewTaskScheduled;
+    private static Boolean isNewTaskScheduled;
 
     /** Constructor for Scheduler_System */
     public Scheduler_System(ArrayList<ElevatorCar> elevators, ArrayList<Floor> floors, Elevator_System elevator_system){
         this.elevators = elevators;
-        this.isNewTaskScheduled = false;
+        isNewTaskScheduled = false;
         this.elevator_system = elevator_system;
         this.floors = floors;
         this.tasksQueue = new ArrayList<>();
@@ -35,9 +35,9 @@ public class Scheduler_System implements Runnable{
     }
 
     /**Remove task from all queues after finsihing a task*/
-    public void removeFromQueue(Task task){
+    public void removeElevatorTask(Task task){
         tasksQueue.remove(task);
-        scheduledQueue.remove(task);
+        scheduledQueue.get(task.getElevatorNumber()).remove(0);
     }
 
     /** Schedule tasks based off elevators & floors data */
@@ -68,7 +68,7 @@ public class Scheduler_System implements Runnable{
             ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
             queue.add(bestTaskNumber, task.getFloorNumber());
             this.scheduledQueue.replace(task.getElevatorNumber(), queue);
-            this.isNewTaskScheduled = true;
+            isNewTaskScheduled = true;
         }
     }
 
@@ -100,7 +100,7 @@ public class Scheduler_System implements Runnable{
     public void run() {
         while (true){
             //Wait until new task is added and scheduled
-            while (!this.isNewTaskScheduled) {
+            while (!isNewTaskScheduled) {
                 try {
                     wait();
                 } catch (InterruptedException e) {

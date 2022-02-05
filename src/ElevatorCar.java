@@ -13,11 +13,12 @@ public class ElevatorCar {
     private boolean doorsOpen = false; //to open the doors
     private boolean motors =  false; //for motion
     private ArrayList<Integer> tasks;
+    private Scheduler_System scheduler_system;
     
-    private String status; //Possible statuses:"Stopped","Door Open","Moving Up","Moving Down"
+    private String status; //Possible statuses:"Stopped","Moving Up","Moving Down"
     
     /** Constructor for Elevator Car */
-    public ElevatorCar(int elevatorNumber, ArrayList<Boolean> lights, ArrayList<Boolean> buttons){
+    public ElevatorCar(int elevatorNumber, ArrayList<Boolean> lights, ArrayList<Boolean> buttons, Scheduler_System scheduler_system){
         this.elevatorNumber = elevatorNumber; //
         this.position = 0; //
         this.status = "Stopped"; //
@@ -26,6 +27,7 @@ public class ElevatorCar {
         this.doorsOpen = false;
         this.motors = false;
         this.tasks = new ArrayList<>();
+        this.scheduler_system = scheduler_system;
     }
     
     /** Getter and setters for position and status */
@@ -44,38 +46,29 @@ public class ElevatorCar {
     	buttons.set((int)position, false);
     	status = "Stopped";
     }
-    
-    public void setLights(int location, boolean value) {
-    	lights.set(location, value);
+
+    /** Method for when a button is pressed inside Elevator */
+    public void buttonPressed(int buttonLocation){
+        this.scheduler_system.addToQueue(new Task(elevatorNumber,buttonLocation));
+        this.setLights(buttonLocation,true);
+        this.setButton(buttonLocation, true);
     }
-    
-    public boolean getLights(int location) {
-    	return lights.get(location);
-    }
-    
-    public void setButton(int location, boolean value) {
-    	lights.set(location, value);
-    }
-    
-    public boolean getButton(int location) {
-    	return lights.get(location);
-    }
-    
-    public boolean getDoors() {
-    	return this.doorsOpen;
-    }
-    
-    public void setDoors(boolean value) {
-    	this.doorsOpen = value;
-    }
-    
-    public boolean getMotors() {
-    	return this.doorsOpen;
-    }
-    
-    public void setMotors(boolean value) {
-    	this.doorsOpen = value;
-    }
+
+    /**Getter and Setter method for Lights */
+    public void setLights(int location, boolean value) {lights.set(location, value);}
+    public boolean getLights(int location) {return lights.get(location);}
+
+    /**Getter and Setter method for buttons */
+    public void setButton(int location, boolean value) {buttons.set(location, value);}
+    public boolean getButton(int location) {return buttons.get(location);}
+
+    /**Getter and Setter method for doorsOpens */
+    public boolean getDoors() {return this.doorsOpen;}
+    public void setDoors(boolean value) {this.doorsOpen = value;}
+
+    /**Getter and Setter method for Motors */
+    public boolean getMotors() {return this.motors;}
+    public void setMotors(boolean value) {this.motors = value;}
 
     /**Getter and Setter method for Tasks */
     public ArrayList<Integer> getTasks() {return tasks;}
