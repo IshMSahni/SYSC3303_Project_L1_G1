@@ -11,6 +11,7 @@ public class Scheduler_System implements Runnable{
     private ArrayList<Task> tasksQueue;
     private HashMap<Integer,ArrayList<Integer>> scheduledQueue;  //Key is Elevator Number, Values are next floor numbers to go to.
     private static Boolean isNewTaskScheduled;
+    private static Integer targetElevatorNumber;
 
     /** Constructor for Scheduler_System */
     public Scheduler_System(ArrayList<ElevatorCar> elevators, ArrayList<Floor> floors, Elevator_System elevator_system){
@@ -23,6 +24,7 @@ public class Scheduler_System implements Runnable{
         for (int i = 0; i < this.elevators.size(); i++) {
             this.scheduledQueue.put(i,new ArrayList<>());
         }
+        targetElevatorNumber = 0;
     }
 
     /**Get Scheduled tasks from Scheduler for a given elevator number*/
@@ -34,10 +36,9 @@ public class Scheduler_System implements Runnable{
         scheduleTask(task);
     }
 
-    /**Remove task from all queues after finsihing a task*/
-    public void removeElevatorTask(Task task){
-        tasksQueue.remove(task);
-        scheduledQueue.get(task.getElevatorNumber()).remove(0);
+    /**Remove First task from queue of a given elevator number*/
+    public void removeElevatorTask(Integer elevatorNumber){
+        scheduledQueue.get(elevatorNumber).remove(0);
     }
 
     /** Schedule tasks based off elevators & floors data */
@@ -68,6 +69,7 @@ public class Scheduler_System implements Runnable{
             ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
             queue.add(bestTaskNumber, task.getFloorNumber());
             this.scheduledQueue.replace(task.getElevatorNumber(), queue);
+            targetElevatorNumber = bestElevatorNumber;
             isNewTaskScheduled = true;
         }
     }
@@ -96,6 +98,8 @@ public class Scheduler_System implements Runnable{
         return bestTaskNumber;
     }
 
+    public Integer getTargetElevatorNumber(){return targetElevatorNumber;}
+
     @Override
     public void run() {
         while (true){
@@ -109,7 +113,7 @@ public class Scheduler_System implements Runnable{
                 }
             }
             //Notify Elevator system
-            this.elevator_system.updateAllElevatorQueues();
+            this.elevator_system.updateElevatorQueue();
         }
     }
 }
