@@ -12,6 +12,7 @@ public class ElevatorCar {
     private ArrayList<Boolean> buttons = new ArrayList<Boolean>();
     private boolean doorsOpen = false; //to open the doors
     private boolean motors =  false; //for motion
+    private ArrayList<Integer> tasks;
     
     private String status; //Possible statuses:"Stopped","Door Open","Moving Up","Moving Down"
     
@@ -24,6 +25,7 @@ public class ElevatorCar {
         this.buttons = buttons;
         this.doorsOpen = false;
         this.motors = false;
+        this.tasks = new ArrayList<>();
     }
     
     /** Getter and setters for position and status */
@@ -74,17 +76,8 @@ public class ElevatorCar {
     public void setMotors(boolean value) {
     	this.doorsOpen = value;
     }
-    
-    
-    
-    
 
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
-	}
-    
-    
-   
+    /**Getter and Setter method for Tasks */
+    public ArrayList<Integer> getTasks() {return tasks;}
+    public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
 }

@@ -10,10 +10,12 @@ public class Scheduler_System implements Runnable{
     private Elevator_System elevator_system;
     private ArrayList<Task> tasksQueue;
     private HashMap<Integer,ArrayList<Integer>> scheduledQueue;  //Key is Elevator Number, Values are next floor numbers to go to.
+    private Boolean isNewTaskScheduled;
 
     /** Constructor for Scheduler_System */
     public Scheduler_System(ArrayList<ElevatorCar> elevators, ArrayList<Floor> floors, Elevator_System elevator_system){
         this.elevators = elevators;
+        this.isNewTaskScheduled = false;
         this.elevator_system = elevator_system;
         this.floors = floors;
         this.tasksQueue = new ArrayList<>();
@@ -24,7 +26,7 @@ public class Scheduler_System implements Runnable{
     }
 
     /**Get Scheduled tasks from Scheduler for a given elevator number*/
-    public ArrayList<Task> getScheduledQueue(Integer elevatorNumber){return this.getScheduledQueue(elevatorNumber);}
+    public ArrayList<Integer> getScheduledQueue(Integer elevatorNumber){return this.getScheduledQueue(elevatorNumber);}
 
     /**Add task to queue for Scheduler and schedule it*/
     public void addToQueue(Task task){
@@ -66,6 +68,7 @@ public class Scheduler_System implements Runnable{
             ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
             queue.add(bestTaskNumber, task.getFloorNumber());
             this.scheduledQueue.replace(task.getElevatorNumber(), queue);
+            this.isNewTaskScheduled = true;
         }
     }
 
@@ -96,9 +99,17 @@ public class Scheduler_System implements Runnable{
     @Override
     public void run() {
         while (true){
-            //Wait until new task is added or task is complete
-            //Then schedule tasks
+            //Wait until new task is added and scheduled
+            while (!this.isNewTaskScheduled) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    System.out.println("Error occured while waiting for New Scheduled Task in thread.");
+                    e.printStackTrace();
+                }
+            }
             //Notify Elevator system
+            this.elevator_system.updateAllElevatorQueues();
         }
     }
 }

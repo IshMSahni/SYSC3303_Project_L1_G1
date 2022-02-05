@@ -1,31 +1,37 @@
-
 // imports for scanning text file
+import java.util.ArrayList;
 
-
-// Class declaration
+/** Elevator_System class, Simulates as a control system for Elevator Car objects */
 public class Elevator_System implements Runnable{
-	
-	/**
-	 * Initial Class Variables
-	 */
-	private static float position;		// floor number variable 
-	private static int buttonStatus;	// Button status variable
-	private static int carButton;		// Destination floor variable
+
 	private static boolean isEvent;		// Variable for breaking wait()
-	private static int eventFloor;		// Temp Target floor variable
-	
-	static ElevatorCar[] elevator = new ElevatorCar[1];	
-	
-	public ElevatorCar[] getElevator() {
-		return elevator;
+	private ArrayList<ElevatorCar> elevators; //List of elevators
+	private Scheduler_System scheduler_system;
+
+	/** Constructor for Elevator_System */
+	public Elevator_System(ArrayList<ElevatorCar> elevators, Scheduler_System scheduler_system){
+		this.scheduler_system = scheduler_system;
+		this.elevators = elevators;
 	}
-	
+
+	/** This method will update all the queues in all elevators */
+	public void updateAllElevatorQueues(){
+		for (int i = 0; i < this.elevators.size(); i++) {
+			ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(i);
+			this.elevators.get(i).setTasks(tasks);
+		}
+	}
+
+	/** Run method for Elevator_System */
 	 @Override
 	    public void run() {
-	        //Wait until button is pressed inside elevator or elevator reaches floor
-	        //Notify Scheduler of button pressed in elevator
-	        //Wait until Schduler has scheduled queue
-	        //Send signal to elevator cars on which floor to go to
+	 		while (true) {
+
+				//Wait until button is pressed inside elevator or elevator reaches floor
+				//Notify Scheduler of button pressed in elevator
+				//Wait until Scheduler has scheduled queue
+				//Send signal to elevator cars on which floor to go to
+			}
 	    }
 	
 
