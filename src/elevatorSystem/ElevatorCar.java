@@ -53,6 +53,12 @@ public class ElevatorCar {
         this.setLights(buttonLocation,true);
         this.setButton(buttonLocation, true);
     }
+    
+    public void testbuttonPressed(int buttonLocation){
+        this.setLights(buttonLocation,true);
+        this.setButton(buttonLocation, true);
+    }
+
 
     /**Getter and Setter method for Lights */
     public void setLights(int location, boolean value) {lights.set(location, value);}
@@ -73,6 +79,6 @@ public class ElevatorCar {
     /**Getter and Setter method for Tasks */
     public ArrayList<Integer> getTasks() {return tasks;}
     public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
-
+    public boolean getScheduler_system(){if(this.scheduler_system != null) {return true;} else return false;}
     public void setScheduler_system(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
 }
