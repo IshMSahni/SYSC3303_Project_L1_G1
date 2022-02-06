@@ -64,5 +64,5 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 
 ## Team & Contributions
 1. Keith Lam - Floor.java, Floor_System.java, Person.java & their test cases
-2. Muhammad Furqan - Scheduler_System.java, Elevator_System.java, Task.java, UML Sequence Diagram
+2. Muhammad Furqan - Scheduler_System.java & its test cases, Elevator_System.java, Task.java, UML Sequence Diagram
 3. Ishanov Sahni - ElevatorCar.java, Elevator_System.java & their test cases, UML Class Diagram
