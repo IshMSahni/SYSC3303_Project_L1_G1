@@ -114,7 +114,6 @@ public class Floor_System implements Runnable{
 				Integer elevatorNumber = scheduler_system.getTargetElevatorNumber();
 				System.out.println("New Task added to queue, time: "+ time[1]+":"+time[2] +", Target Floor: "+floorNumber+", Elevator Number: "+elevatorNumber);
 				scheduler_system.addToQueue(new Task(time,buttonStatustemp,floorNumber));
-				scheduler_system.setIsNewTaskScheduled(true);
 				time[2] = time[2] + 1; //Add 1 second buffer between tasks
 				System.out.println("New Task added to queue, time: "+ time[1]+":"+time[2] +", Target Floor: "+carButton+", Elevator Number: "+elevatorNumber);
 				scheduler_system.addToQueue(new Task(time,elevatorNumber,carButton));
@@ -211,7 +210,6 @@ public class Floor_System implements Runnable{
 		
 		// while loop loops thread until program is terminated
 		while (true) {
-			scheduler_system.setIsNewTaskScheduled(true);
 			// if statement displays all initial floor data
 			if (eventFloor == -1) {
 				for (int i = 0; i < getFloors().length; i++) {

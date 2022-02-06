@@ -26,7 +26,7 @@ public class Elevator_System implements Runnable{
 		ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(elevatorNumber);
 
 		this.elevators.get(elevatorNumber).setTasks(tasks);
-		isEvent = true;
+		//isEvent = true;
 		moveElevator(elevatorNumber);
 		loadElevator(elevatorNumber);
 	}
@@ -105,9 +105,12 @@ public class Elevator_System implements Runnable{
 					}
 				}
 				//Send signal to elevator car for which floor to go to and load/unload elevator
-				moveElevator(targetElevatorNumber);
-	 			this.scheduler_system.removeElevatorTask(targetElevatorNumber);
-	 			loadElevator(targetElevatorNumber);
+				if(isEvent){
+					moveElevator(targetElevatorNumber);
+					this.scheduler_system.removeElevatorTask(targetElevatorNumber);
+					loadElevator(targetElevatorNumber);
+					isEvent = false;
+				}
 			}
 	 }
 }

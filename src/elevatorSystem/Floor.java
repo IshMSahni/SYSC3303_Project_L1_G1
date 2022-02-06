@@ -148,5 +148,6 @@ public class Floor {
 		}
 	}
 
+	/** Getter method for lamps */
 	public int[] getLamp() {return lamps;}
 }
