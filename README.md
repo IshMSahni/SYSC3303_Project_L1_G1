@@ -4,10 +4,19 @@
 
 Import the Iteration 1 into IDE
 
-Steps to run the program:
-1. Run the main method from Floor_System.java file
+### Steps to run the program:
+1. Import repo on eclipse
 
-Steps to run the Java Tests:
+a. Paste github url (https://github.com/KeithLam101147900/SYSC3303_Project_L1_G1.git)
+
+b. Type in User and API key (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)
+
+c. Create new project
+	
+2. Make sure .java files are under src (source folder)
+3. Run the main method from Floor_System.java file
+
+### Steps to run the Java Tests:
 1. Right click the test package in the project explorer
 2. Click Run As -> JUnit Test
 
@@ -26,9 +35,11 @@ Steps to run the Java Tests:
 ### Floor_System.java
 - Reads input from filename.txt
 - Note that document called "filename" follows the following format:
-00:00:23.101 2 Down 1
-00:00:53.101 3 Up 5
-00:01:53.101 0 Up 5
+
+
+	00:00:23.101 2 Down 1
+	00:00:53.101 3 Up 5
+	00:01:53.101 0 Up 5
 hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 
 - Parses each line into People objects and adds them to queue for scheduler
@@ -41,14 +52,18 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - Creates floors of the building for a Person to be located on/have a destination to
 - Outputs the interactions with the floor
 - Note that Lamps array first element is for the elevator number and the second element int values are assigned as:
--- 0 = off
--- 1 = up
--- 2 = down
+
+
+	 0 = off
+	 1 = up
+	 2 = down
+
 - Note that Button int values are assigned as:
--- 0 = off
--- 1 = up
--- 2 = down
--- 3 = both up and down
+
+	 0 = off
+	 1 = up
+	 2 = down
+	 3 = both up and down
 
 ### Person.java
 - Object for holding the interactions that a Person would be having with the elevator
