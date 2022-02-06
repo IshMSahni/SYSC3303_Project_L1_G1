@@ -2,7 +2,11 @@ package elevatorSystem;
 import java.util.ArrayList;
 
 /**
- * Elevator car objects.
+ * ElevatorCar class. Simulates an elevator object.
+ * elevatorNumber for number for this Elevator
+ * ArrayList of buttons and lights to simulates elevator buttons inside
+ * Boolean attributes for doorsOpen (true if open), and motors (true if moving)
+ * String status for status of elevator, Possible statuses:"Stopped","Moving Up","Moving Down"
  */
 public class ElevatorCar {
     
@@ -15,8 +19,7 @@ public class ElevatorCar {
     private boolean motors =  false; //for motion
     private ArrayList<Integer> tasks;
     private Scheduler_System scheduler_system;
-    
-    private String status; //Possible statuses:"Stopped","Moving Up","Moving Down"
+    private String status;
     
     /** Constructor for Elevator Car */
     public ElevatorCar(int elevatorNumber, int totalFloorNumber){

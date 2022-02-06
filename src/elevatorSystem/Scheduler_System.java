@@ -3,14 +3,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Scheduler class
+ * Scheduler_System class. Simulates a scheduler system for an Elevator system.
+ * elevators attribute to store the list of Elevators
+ * floors attribute to store the list of Floors
+ * elevator_system attribute to store a reference to the Elevator_System
+ * tasksQueue attribute to store a list Tasks added to schedule
+ * scheduledQueue attribute to store a list of scheduled Floor numbers to visit (Value) for each Elevator (Key)
+ * isNewTaskScheduled attribute to store a boolean value of true if a new task is scheduled, else false
+ * targetElevatorNumber attribute to store an integer number of the elevator selected to be scheduled
  */
 public class Scheduler_System implements Runnable{
     private ArrayList<ElevatorCar> elevators;
     private ArrayList<Floor> floors;
     private Elevator_System elevator_system;
     private ArrayList<Task> tasksQueue;
-    private HashMap<Integer,ArrayList<Integer>> scheduledQueue;  //Key is Elevator Number, Values are next floor numbers to go to.
+    private HashMap<Integer,ArrayList<Integer>> scheduledQueue;
     private static Boolean isNewTaskScheduled;
     private static Integer targetElevatorNumber;
 
@@ -41,7 +48,7 @@ public class Scheduler_System implements Runnable{
         scheduledQueue.get(elevatorNumber).remove(0);
     }
 
-    /** Schedule tasks based off elevators & floors data */
+    /** Schedule a given Task based off elevators & floors data */
     public void scheduleTask(Task task){
         //Get All Elevators position and status
         Integer bestElevatorNumber = 0;
@@ -70,7 +77,7 @@ public class Scheduler_System implements Runnable{
             queue.add(bestTaskNumber, task.getFloorNumber());
             this.scheduledQueue.replace(task.getElevatorNumber(), queue);
             targetElevatorNumber = bestElevatorNumber;
-            isNewTaskScheduled = true;
+            //isNewTaskScheduled = true;
             this.elevator_system.updateElevatorQueue(bestElevatorNumber);
         }
     }
@@ -99,16 +106,16 @@ public class Scheduler_System implements Runnable{
         return bestTaskNumber;
     }
 
+    /** Getter method for targert Elevator Number */
     public Integer getTargetElevatorNumber(){return targetElevatorNumber;}
 
+    /** Setter methods for a group of attributes */
     public void setElevator_system(Elevator_System elevator_system){this.elevator_system = elevator_system;}
-
     public void setIsNewTaskScheduled(Boolean condition){isNewTaskScheduled = condition;}
-
     public void setTasksQueue(ArrayList<Task> tasks){this.tasksQueue = tasks;}
-
     public void setScheduledQueue(HashMap<Integer,ArrayList<Integer>> tasks){this.scheduledQueue = tasks;}
 
+    /** run method for Scheduler Thread */
     @Override
     public synchronized void run() {
         while (true){
@@ -122,8 +129,10 @@ public class Scheduler_System implements Runnable{
                 }
             }
             //Notify Elevator system
-            this.elevator_system.updateElevatorQueue(targetElevatorNumber);
-            isNewTaskScheduled = false;
+            if(isNewTaskScheduled) {
+                this.elevator_system.updateElevatorQueue(targetElevatorNumber);
+                isNewTaskScheduled = false;
+            }
         }
     }
 }
