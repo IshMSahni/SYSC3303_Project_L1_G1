@@ -280,5 +280,6 @@ public class Floor_System implements Runnable{
 		floorSystemThread.start();
 		elevatorSystemThread.start();
 		schedulerSystemThread.start();
+		System.exit(0); // This is to end program Only for Iteration 1 after reading data from file.
 	}
 }
