@@ -1,4 +1,6 @@
 package elevatorSystem;
+import ElevatorStates.*;
+
 import java.util.ArrayList;
 
 /**
@@ -20,6 +22,8 @@ public class ElevatorCar {
     private ArrayList<Integer> tasks;
     private Scheduler_System scheduler_system;
     private String status;
+    private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown;
+    private ElevatorState elevatorState;
     
     /** Constructor for Elevator Car */
     public ElevatorCar(int elevatorNumber, int totalFloorNumber){
@@ -31,11 +35,20 @@ public class ElevatorCar {
         this.doorsOpen = false;
         this.motors = false;
         this.tasks = new ArrayList<>();
-
         for (int i = 0; i < totalFloorNumber; i++) {
             this.lights.add(false);
             this.buttons.add(false);
         }
+
+        //Initialize elevator states
+        this.doorOpen = new DoorOpen(this);
+        this.doorClosed = new DoorClosed(this);
+        this.arrived = new Arrived(this);
+        this.loading = new Loading(this);
+        this.movingUp = new MovingUp(this);
+        this.movingDown = new MovingDown(this);
+        this.elevatorState = doorClosed;
+
     }
     
     /** Getter and setters for position and status */
