@@ -27,7 +27,8 @@ public class Floor_System implements Runnable{
 	private static Scheduler_System scheduler_system;
 	private static Elevator_System elevator_system; //Elevator system
 	
-	static Person[] allPeople;				// Array of Person objects
+	//static Person[] allPeople;				// Array of Person objects
+	static ArrayList<Person> allPeople;
 	static Floor[] floors;	// Array of Floor objects
 	
 	/**
@@ -79,7 +80,7 @@ public class Floor_System implements Runnable{
 		    // Close and re-open scanner
 		    myCounter.close();
 		    Scanner myReader = new Scanner(myObj);
-			Person[] allPeople = new Person[numberOfLines];	// Initialize array with empty elements
+			Person[] filePeople = new Person[numberOfLines];	// Initialize array with empty elements
 		    
 		    // for loop processes each line individually
 		    for (int i = 0; i < numberOfLines; i++) {
@@ -114,18 +115,10 @@ public class Floor_System implements Runnable{
 					buttonStatus = 0;
 				}
 				Person myPerson = new Person(time, floorNumber, buttonStatus, carButton);	// Create Person object
-				allPeople[i] = myPerson;	// Add Person to array of people
-
-				//Schedule task
-				Integer elevatorNumber = scheduler_system.getTargetElevatorNumber();
-				System.out.println("New Task added to queue, time: "+ time[1]+":"+time[2] +", Target Floor: "+floorNumber+", Elevator Number: "+elevatorNumber);
-				scheduler_system.addToQueue(new Task(time,buttonStatustemp,floorNumber));
-				time[2] = time[2] + 1; //Add 1 second buffer between tasks
-				System.out.println("New Task added to queue, time: "+ time[1]+":"+time[2] +", Target Floor: "+carButton+", Elevator Number: "+elevatorNumber);
-				scheduler_system.addToQueue(new Task(time,elevatorNumber,carButton));
+				filePeople[i] = myPerson;	// Add Person to array of people
 		    }
 			myReader.close();
-			return allPeople;
+			return filePeople;
 		} catch (FileNotFoundException e) {	// Cover case of interrupt
 			System.out.println("Error occured while reading file.");
 		    e.printStackTrace();
@@ -149,11 +142,9 @@ public class Floor_System implements Runnable{
 	 * 	Args: Null
 	 * 	Return: Array of Person objects
 	 */
-	public Person[] getAllPeople() {
+	public ArrayList<Person> getAllPeople() {
 		return allPeople;
 	}
-
-	public void setAllPeople(Person[] people){allPeople = people;}
 
 	public void setEventFloor(int eventFloorNum){eventFloor = eventFloorNum;}
 	
@@ -163,7 +154,7 @@ public class Floor_System implements Runnable{
 	 * 	Args: (int) floor, (int) direction
 	 * 	Return: Void
 	 */
-	public void buttonEvent(int floor, int direction) {
+	public void buttonEvent(int floor, ints direction) {
 		
 		// if statement logic changes data based on args
 		if (direction == 0) {
@@ -220,6 +211,7 @@ public class Floor_System implements Runnable{
 		
 		// while loop loops thread until program is terminated
 		while (true) {
+			/*
 			// if statement displays all initial floor data
 			if (eventFloor == -1) {
 				for (int i = 0; i < getFloors().length; i++) {
@@ -227,7 +219,24 @@ public class Floor_System implements Runnable{
 				}
 			} else {	// else statement displays changed floor data
 				//getFloors()[eventFloor].printFloor();
-			}
+			} */
+			
+			//Schedule task
+			Integer elevatorNumber = scheduler_system.getTargetElevatorNumber();
+			System.out.println("New Task added to queue, time: " + time[1] + ":" + time[2] + ", Target Floor: "
+					+ floorNumber + ", Elevator Number: " + elevatorNumber);
+					
+			scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), allPeople.get(0).getDirection(), allPeople.get(0).getFloorNumber()));
+			// scheduler_system.addToQueue(new Task(time, buttonStatustemp, floorNumber));
+			
+			time[2] = time[2] + 1; //Add 1 second buffer between tasks
+			System.out.println("New Task added to queue, time: " + time[1] + ":" + time[2] +", Target Floor: " 
+					+ carButton + ", Elevator Number: " + elevatorNumber);
+			
+			scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), elevatorNumber, allPeople.get(0).getDestination()));
+			// scheduler_system.addToQueue(new Task(time, elevatorNumber, carButton));
+			
+			allPeople.remove(0);
 			isEvent = false;
 			
 			// while loop loops until thread is notified
@@ -261,7 +270,9 @@ public class Floor_System implements Runnable{
 		floor_SubSystem.setEventFloor(-1);
 
 		Person[] people = readFile();	// Initialize people array using readFile method
-		floor_SubSystem.setAllPeople(people);
+		for (int i = 0; i < people.length; i++) {
+			floor_SubSystem.allPeople.add(people[i]);
+		}
 		
 		// Initializes floor manager thread and starts it
 		Thread floorSystemThread = new Thread(floor_SubSystem, "Floor Simulation");
