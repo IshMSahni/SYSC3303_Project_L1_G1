@@ -35,12 +35,18 @@ public class Floor_System implements Runnable{
 	 * 	Constructor for JUnit testing
 	 * 	Args: Null
 	 */
-	public Floor_System(int floorCount, int elevatorNumber) {
-		floors = new Floor[floorCount];
-		for (int i = 0; i < floorCount; i++) {
-			floors[i] = new Floor(elevatorNumber);
-			floors[i].setFloor(i);
+	public Floor_System(int totalNumFloors, int totalNumElevators) {
+		floors = new Floor[totalNumFloors];
+		int lastFloorNumber = totalNumFloors - 1;
+		for (int i = 0; i < lastFloorNumber; i++) {
+			floors[i] = new Floor(i, totalNumElevators, this);
 		}
+		floors[lastFloorNumber] = new Floor(lastFloorNumber, totalNumElevators, this);
+		floors[lastFloorNumber].setFloor(lastFloorNumber,true);
+	}
+
+	public void setScheduler_system(Scheduler_System system){
+		scheduler_system = system;
 	}
 	
 	/**
@@ -146,6 +152,10 @@ public class Floor_System implements Runnable{
 	public Person[] getAllPeople() {
 		return allPeople;
 	}
+
+	public void setAllPeople(Person[] people){allPeople = people;}
+
+	public void setEventFloor(int eventFloorNum){eventFloor = eventFloorNum;}
 	
 	/**
 	 * Method: buttonEvent
@@ -239,43 +249,24 @@ public class Floor_System implements Runnable{
 	 * 	Return: Void
 	 */
 	public static void main(String[] args) {
-		eventFloor = -1;	// Initializing status variable
 		int totalFloorNumber = 10; //total number of floors
 		int totalElevatorNumber = 1; //total number of elevators
-		ArrayList<Floor> floorList = new ArrayList<>();
-		ArrayList<ElevatorCar> elevatorCarsList = new ArrayList<>();
 
-		// for loop initializes every floor
-		floors = new Floor[totalFloorNumber];
-		for (int i = 0; i < totalFloorNumber; i++) {
-			floors[i] = new Floor(totalElevatorNumber);
-			floors[i].setFloor(i);
-			floorList.add(floors[i]);
-		}
+		Floor_System floor_SubSystem = new Floor_System(totalFloorNumber,totalElevatorNumber);
+		Elevator_System elevator_SubSystem = new Elevator_System(totalElevatorNumber,totalFloorNumber);
+		Scheduler_System scheduler_SubSystem = new Scheduler_System();
 
-		
-		// Separate logic to initialize top floor
-		// Note: # of floors - 1 (replace '2')
-		floors[totalFloorNumber - 1] = new Floor(totalElevatorNumber);
-		floors[totalFloorNumber - 1].setFloor((floors.length - 1), true);	//Separate floor initialization for last floor (Override)
+		scheduler_SubSystem.setElevator_system(elevator_SubSystem);
+		floor_SubSystem.setScheduler_system(scheduler_SubSystem);
+		floor_SubSystem.setEventFloor(-1);
 
-		//Intialize Elevator and Scheduler system
-		for (int i = 0; i < totalElevatorNumber; i++) {
-			ElevatorCar elevator = new ElevatorCar(i,totalFloorNumber);
-			elevator.setScheduler_system(scheduler_system);
-			elevatorCarsList.add(elevator);
-		}
-		elevator_system = new Elevator_System(elevatorCarsList);
-		scheduler_system = new Scheduler_System(elevatorCarsList,floorList);
-		scheduler_system.setElevator_system(elevator_system);
-		elevator_system.setSchedulerSystem(scheduler_system);
-
-		allPeople = readFile();	// Initialize people array using readFile method
+		Person[] people = readFile();	// Initialize people array using readFile method
+		floor_SubSystem.setAllPeople(people);
 		
 		// Initializes floor manager thread and starts it
-		Thread floorSystemThread = new Thread(new Floor_System(totalFloorNumber,totalElevatorNumber), "Floor Simulation");
-		Thread elevatorSystemThread = new Thread(elevator_system, "Elevator Simulation");
-		Thread schedulerSystemThread = new Thread(scheduler_system, "Scheduler Simulation");
+		Thread floorSystemThread = new Thread(floor_SubSystem, "Floor Simulation");
+		Thread elevatorSystemThread = new Thread(elevator_SubSystem, "Elevator Simulation");
+		Thread schedulerSystemThread = new Thread(scheduler_SubSystem, "Scheduler Simulation");
 
 		floorSystemThread.start();
 		elevatorSystemThread.start();
