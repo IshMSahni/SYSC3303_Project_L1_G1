@@ -28,11 +28,9 @@ public class Elevator_System implements Runnable{
 	/** This method will update elevator scheduled queue*/
 	public synchronized void updateElevatorQueue(Integer elevatorNumber){
 		ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(elevatorNumber);
-
 		this.elevators[elevatorNumber].setTasks(tasks);
-		//isEvent = true;
-		moveElevator(elevatorNumber);
-		loadElevator(elevatorNumber);
+		isEvent = true;
+		targetElevatorNumber = elevatorNumber;
 	}
 
 	/** Method to move elevator */
@@ -42,7 +40,10 @@ public class Elevator_System implements Runnable{
 		Float startLocation = elevator.getPosition();
 		Integer endLocation = elevator.getTasks().get(0);
 		long time = calculateTime(startLocation,endLocation);
+		//Elevator state methods
 		elevators[elevatorNumber].moveElevator(time);
+		elevators[elevatorNumber].elevatorArrived();
+		elevators[elevatorNumber].openDoor();
 	}
 
 	/** Method to calculate time in milliseconds to move Elevator a given amount of distance */
@@ -66,6 +67,7 @@ public class Elevator_System implements Runnable{
 	/** Method to simulate loading elevator waiting time */
 	public synchronized void loadElevator(Integer elevatorNumber){
 		elevators[elevatorNumber].loadElevator(loadTime*1000);
+		elevators[elevatorNumber].closeDoor();
 	}
 
 	public static void setIsEvent(boolean isEvent) {Elevator_System.isEvent = isEvent;}
