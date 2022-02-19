@@ -13,17 +13,18 @@ public class DoorOpen implements ElevatorState {
 
     @Override
     public void moveElevator(long time) {
-
+        System.out.println("Can Not move, Door is open for Elevator "+elevator.getElevatorNumber());
     }
 
     @Override
     public void openDoor() {
-
+        System.out.println("Door already open for Elevator "+elevator.getElevatorNumber());
     }
 
     @Override
     public void closeDoor() {
-
+        System.out.println("Closing door for Elevator "+elevator.getElevatorNumber());
+        elevator.setElevatorState(elevator.getDoorClosed()); // set to new state
     }
 
     @Override
@@ -32,16 +33,18 @@ public class DoorOpen implements ElevatorState {
          try{
              wait(time);
              elevator.setDoors(false);
-             System.out.println("Loading Elevator "+elevatorNumber+" completed, Door closed.");
+             System.out.println("Loading Elevator "+elevatorNumber+" completed.");
+             elevator.setElevatorState(elevator.getLoading()); //Set to new state
          }
          catch (Exception e){
              System.out.println("Error occured while loading Elevator in thread.");
              e.printStackTrace();
          }
+
     }
 
     @Override
     public void elevatorArrived() {
-
+        System.out.println("Can Not arrive for Elevator "+elevator.getElevatorNumber());
     }
 }

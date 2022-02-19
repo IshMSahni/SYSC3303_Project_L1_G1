@@ -98,10 +98,10 @@ public class ElevatorCar {
     public void setScheduler_system(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
 
     /** Elevator State methods*/
-    public void moveElevator(long time){this.elevatorState.moveElevator(time);}
+    public synchronized void moveElevator(long time){this.elevatorState.moveElevator(time);}
     public void openDoor(){this.elevatorState.openDoor();}
     public void closeDoor(){this.elevatorState.closeDoor();}
-    public void loadElevator(long time){this.elevatorState.loadElevator(time);}
+    public synchronized void loadElevator(long time){this.elevatorState.loadElevator(time);}
     public void elevatorArrived(){this.elevatorState.elevatorArrived();}
 
     public ElevatorState getDoorOpen(){return this.doorOpen;}

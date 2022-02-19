@@ -14,41 +14,54 @@ public class DoorClosed implements ElevatorState {
     @Override
     public synchronized void moveElevator(long time) {
         int elevatorNumber = elevator.getElevatorNumber();
+        float startLocation = elevator.getPosition();
         int endLocation = elevator.getTasks().get(0);
         elevator.setMotors(true);
-        System.out.println("Elevator "+elevatorNumber+" now moving to floor "+endLocation);
+
+        if(startLocation < endLocation){
+            System.out.println("Elevator "+elevatorNumber+" now Moving Up to floor "+endLocation);
+            elevator.setElevatorState(elevator.getMovingUp());
+        }
+        else{
+            System.out.println("Elevator "+elevatorNumber+" now Moving Down to floor "+endLocation);
+            elevator.setElevatorState(elevator.getMovingDown());
+        }
+
         //Wait for calculated time
         try{ wait(time); }
         catch (Exception e){}
+
+
 
         elevator.setMotors(false);
         elevator.setStatus("Stopped");
         //Set elevator to new position and remove task from Elevator's queue
         elevator.setPosition(endLocation);
-        elevator.setDoors(true);
         elevator.setButton(endLocation, false);
         elevator.getTasks().remove(0);
-        System.out.println("Elevator "+elevatorNumber+" now at floor "+endLocation+", Door Opening.");
+        System.out.println("Elevator "+elevatorNumber+" now arrived floor "+endLocation);
+        //Set to new state
+        elevator.setElevatorState(elevator.getArrived());
     }
 
     @Override
     public void openDoor() {
         System.out.println("Door opening");
-        elevator.setElevatorState(elevator.getDoorOpen());
+        elevator.setElevatorState(elevator.getDoorOpen()); //Set to new state
     }
 
     @Override
     public void closeDoor() {
-        System.out.println("Door already Closed");
+        System.out.println("Door already closed for Elevator "+elevator.getElevatorNumber());
     }
 
     @Override
     public synchronized void loadElevator(long time) {
-
+        System.out.println("Can Not load, Door closed for Elevator "+elevator.getElevatorNumber());
     }
 
     @Override
     public void elevatorArrived() {
-
+        System.out.println("Can Not arrive, Door closed for Elevator "+elevator.getElevatorNumber());
     }
 }
