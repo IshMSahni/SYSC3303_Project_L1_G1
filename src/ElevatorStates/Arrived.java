@@ -37,4 +37,5 @@ public class Arrived implements ElevatorState {
     public void elevatorArrived() {
         System.out.println("Already arrived for Elevator "+elevator.getElevatorNumber());
     }
+
 }

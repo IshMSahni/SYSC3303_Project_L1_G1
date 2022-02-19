@@ -37,4 +37,5 @@ public class Loading implements ElevatorState {
     public void elevatorArrived() {
         System.out.println("Can not arrive, Loading for Elevator "+elevator.getElevatorNumber());
     }
+    
 }

@@ -2,12 +2,18 @@ package ElevatorStates;
 
 import elevatorSystem.ElevatorCar;
 import elevatorSystem.ElevatorState;
+import elevatorSystem.Elevator_System;
+
+import java.util.ArrayList;
 
 public class DoorClosed implements ElevatorState {
+        ElevatorCar e;
+        Boolean check;
 
     private ElevatorCar elevator;
 
     public DoorClosed(ElevatorCar elevator){
+
         this.elevator = elevator;
     }
 
@@ -52,5 +58,7 @@ public class DoorClosed implements ElevatorState {
     @Override
     public void elevatorArrived() {
         System.out.println("Can Not arrive, Door closed for Elevator "+elevator.getElevatorNumber());
+
     }
+
 }

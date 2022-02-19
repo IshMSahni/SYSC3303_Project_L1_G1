@@ -1,5 +1,7 @@
 package elevatorSystem;
 // imports for scanning text file
+import ElevatorStates.DoorClosed;
+
 import java.util.ArrayList;
 
 /** Elevator_System class, Simulates as a control system for Elevator Car objects */
@@ -11,6 +13,7 @@ public class Elevator_System implements Runnable{
 	private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
 	private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
 	private final long loadTime = 10; // 10 seconds is the average loading time
+	private ArrayList<ElevatorState> states;
 
 	private static Integer targetElevatorNumber;
 
@@ -18,21 +21,25 @@ public class Elevator_System implements Runnable{
 	public Elevator_System(int totalNumElevators, int totalNumFloors){
 		isEvent = false;
 		targetElevatorNumber = 0;
+
 		//Create elevators
 		elevators = new ElevatorCar[totalNumElevators];
 		for (int elevatorNumber = 0; elevatorNumber < totalNumElevators; elevatorNumber++) {
 			elevators[elevatorNumber] = new ElevatorCar(elevatorNumber, totalNumFloors, this);
+
 		}
 	}
 
 	/** This method will update elevator scheduled queue*/
 	public synchronized void updateElevatorQueue(Integer elevatorNumber){
 		ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(elevatorNumber);
+
 		this.elevators[elevatorNumber].setTasks(tasks);
 		isEvent = true;
 		targetElevatorNumber = elevatorNumber;
 		moveElevator(elevatorNumber);
 		loadElevator(elevatorNumber);
+
 	}
 
 	/** Method to move elevator */

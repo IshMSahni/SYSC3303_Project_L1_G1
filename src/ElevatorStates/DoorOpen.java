@@ -29,6 +29,7 @@ public class DoorOpen implements ElevatorState {
     }
 
     @Override
+
     public synchronized void loadElevator(long time) {
         int elevatorNumber = elevator.getElevatorNumber();
          try{
@@ -41,10 +42,12 @@ public class DoorOpen implements ElevatorState {
              e.printStackTrace();
          }
 
+
     }
 
     @Override
     public void elevatorArrived() {
         System.out.println("Can Not arrive for Elevator "+elevator.getElevatorNumber());
+
     }
 }
