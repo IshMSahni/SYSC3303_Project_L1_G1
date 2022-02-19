@@ -9,4 +9,28 @@ public class DoorOpen implements ElevatorState {
 
     }
 
+    @Override
+    public void moveElevator() {
+
+    }
+
+    @Override
+    public void openDoor() {
+
+    }
+
+    @Override
+    public void closeDoor() {
+
+    }
+
+    @Override
+    public void loadElevator() {
+
+    }
+
+    @Override
+    public void elevatorArrived() {
+
+    }
 }

@@ -14,7 +14,6 @@ import java.util.HashMap;
  */
 public class Scheduler_System implements Runnable{
     private ArrayList<ElevatorCar> elevators;
-    private ArrayList<Floor> floors;
     private Elevator_System elevator_system;
     private ArrayList<Task> tasksQueue;
     private HashMap<Integer,ArrayList<Integer>> scheduledQueue;
@@ -22,15 +21,15 @@ public class Scheduler_System implements Runnable{
     private static Integer targetElevatorNumber;
 
     /** Constructor for Scheduler_System */
-    public Scheduler_System(ArrayList<ElevatorCar> elevators, ArrayList<Floor> floors){
-        this.elevators = elevators;
+    public Scheduler_System(){
+        this.elevators = new ArrayList<>();
         isNewTaskScheduled = false;
-        this.floors = floors;
         this.tasksQueue = new ArrayList<>();
         this.scheduledQueue = new HashMap<>();
+        /**
         for (int i = 0; i < this.elevators.size(); i++) {
             this.scheduledQueue.put(i,new ArrayList<>());
-        }
+        }*/
         targetElevatorNumber = 0;
     }
 
@@ -110,7 +109,11 @@ public class Scheduler_System implements Runnable{
     public Integer getTargetElevatorNumber(){return targetElevatorNumber;}
 
     /** Setter methods for a group of attributes */
-    public void setElevator_system(Elevator_System elevator_system){this.elevator_system = elevator_system;}
+    public void setElevator_system(Elevator_System elevator_system){
+        this.elevator_system = elevator_system;
+        elevator_system.setSchedulerSystem(this);
+        elevators = elevator_system.getElevators();
+    }
     public void setIsNewTaskScheduled(Boolean condition){isNewTaskScheduled = condition;}
     public void setTasksQueue(ArrayList<Task> tasks){this.tasksQueue = tasks;}
     public void setScheduledQueue(HashMap<Integer,ArrayList<Integer>> tasks){this.scheduledQueue = tasks;}

@@ -14,16 +14,20 @@ public class Floor {
 	private boolean upButton;	// Variable for up button status
 	private boolean downButton;	// Variable for down button status
 	private int[] lamps;		// Array for all lamps statuses
+	private Floor_System floor_system;
 	
 	/**
 	 * Constructor:
 	 * 	Floor constructor initializes all floor variables
 	 * 	Note floor Number is not initialized due to how floor objects are created
 	 */
-	public Floor(int totalElevatorNumber) {
+	public Floor(int floorNumber, int totalElevatorNumber, Floor_System floor_system) {
 		upButton = false;
 		downButton = false;
 		lamps = new int[totalElevatorNumber];
+		this.floor_system = floor_system;
+		this.floorNumber = floorNumber;
+		this.isLast = false;
 	}
 
 	/**

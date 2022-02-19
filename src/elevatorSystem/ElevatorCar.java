@@ -24,9 +24,10 @@ public class ElevatorCar {
     private String status;
     private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown;
     private ElevatorState elevatorState;
+    private Elevator_System elevator_system;
     
     /** Constructor for Elevator Car */
-    public ElevatorCar(int elevatorNumber, int totalFloorNumber){
+    public ElevatorCar(int elevatorNumber, int totalFloorNumber, Elevator_System elevator_system){
         this.elevatorNumber = elevatorNumber; //
         this.position = 0; //
         this.status = "Stopped"; //
@@ -34,6 +35,7 @@ public class ElevatorCar {
         this.buttons = new ArrayList<>();
         this.doorsOpen = false;
         this.motors = false;
+        this.elevator_system = elevator_system;
         this.tasks = new ArrayList<>();
         for (int i = 0; i < totalFloorNumber; i++) {
             this.lights.add(false);

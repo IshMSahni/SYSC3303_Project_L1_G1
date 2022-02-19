@@ -15,10 +15,14 @@ public class Elevator_System implements Runnable{
 	private static Integer targetElevatorNumber;
 
 	/** Constructor for Elevator_System */
-	public Elevator_System(ArrayList<ElevatorCar> elevators){
-		this.elevators = elevators;
+	public Elevator_System(int totalNumElevators, int totalNumFloors){
 		isEvent = false;
 		targetElevatorNumber = 0;
+		//Create elevators
+		elevators = new ArrayList<>();
+		for (int elevatorNumber = 0; elevatorNumber < totalNumElevators; elevatorNumber++) {
+			elevators.add(new ElevatorCar(elevatorNumber, totalNumFloors, this));
+		}
 	}
 
 	/** This method will update elevator scheduled queue*/
@@ -90,6 +94,8 @@ public class Elevator_System implements Runnable{
 	public static void setIsEvent(boolean isEvent) {Elevator_System.isEvent = isEvent;}
 
 	public void setSchedulerSystem(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
+
+	public ArrayList<ElevatorCar> getElevators(){return this.elevators;}
 
 	/** Run method for Elevator_System */
 	 @Override
