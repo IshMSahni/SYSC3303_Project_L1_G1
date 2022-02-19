@@ -30,23 +30,12 @@ public class DoorClosed implements ElevatorState {
         //Wait for calculated time
         try{ wait(time); }
         catch (Exception e){}
-
-
-
-        elevator.setMotors(false);
-        elevator.setStatus("Stopped");
-        //Set elevator to new position and remove task from Elevator's queue
-        elevator.setPosition(endLocation);
-        elevator.setButton(endLocation, false);
-        elevator.getTasks().remove(0);
-        System.out.println("Elevator "+elevatorNumber+" now arrived floor "+endLocation);
-        //Set to new state
-        elevator.setElevatorState(elevator.getArrived());
     }
 
     @Override
     public void openDoor() {
         System.out.println("Door opening");
+        elevator.setDoors(true);
         elevator.setElevatorState(elevator.getDoorOpen()); //Set to new state
     }
 

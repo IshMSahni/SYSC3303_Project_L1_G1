@@ -24,6 +24,7 @@ public class DoorOpen implements ElevatorState {
     @Override
     public void closeDoor() {
         System.out.println("Closing door for Elevator "+elevator.getElevatorNumber());
+        elevator.setDoors(false);
         elevator.setElevatorState(elevator.getDoorClosed()); // set to new state
     }
 
@@ -32,7 +33,6 @@ public class DoorOpen implements ElevatorState {
         int elevatorNumber = elevator.getElevatorNumber();
          try{
              wait(time);
-             elevator.setDoors(false);
              System.out.println("Loading Elevator "+elevatorNumber+" completed.");
              elevator.setElevatorState(elevator.getLoading()); //Set to new state
          }

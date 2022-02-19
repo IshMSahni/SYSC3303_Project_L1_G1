@@ -19,6 +19,7 @@ public class Arrived implements ElevatorState {
     @Override
     public void openDoor() {
         System.out.println("Door opening now for Elevator "+elevator.getElevatorNumber());
+        elevator.setDoors(true);
         elevator.setElevatorState(elevator.getDoorOpen()); //Set to new state
     }
 
