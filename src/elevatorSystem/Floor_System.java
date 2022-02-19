@@ -223,10 +223,19 @@ public class Floor_System implements Runnable{
 			
 			//Schedule task
 			Integer elevatorNumber = scheduler_system.getTargetElevatorNumber();
+			String buttonStatusTemp = "";
+			int direction = allPeople.get(0).getDirection();
+			//Assign buttonStatustemp
+			if(direction == 1){
+				buttonStatusTemp = "Up";
+			}
+			else if(direction == 2){
+				buttonStatusTemp = "Down";
+			}
 			System.out.println("New Task added to queue, time: " + time[1] + ":" + time[2] + ", Target Floor: "
 					+ floorNumber + ", Elevator Number: " + elevatorNumber);
 					
-			scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), allPeople.get(0).getDirection(), allPeople.get(0).getFloorNumber()));
+			scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), buttonStatusTemp, allPeople.get(0).getFloorNumber()));
 			// scheduler_system.addToQueue(new Task(time, buttonStatustemp, floorNumber));
 			
 			time[2] = time[2] + 1; //Add 1 second buffer between tasks
