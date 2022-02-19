@@ -7,8 +7,6 @@ import elevatorSystem.Elevator_System;
 import java.util.ArrayList;
 
 public class DoorClosed implements ElevatorState {
-        ElevatorCar e;
-        Boolean check;
 
     private ElevatorCar elevator;
 

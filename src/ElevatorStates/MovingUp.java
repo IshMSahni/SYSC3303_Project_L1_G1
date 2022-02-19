@@ -48,15 +48,5 @@ public class MovingUp implements ElevatorState {
     }
 
 
-    /*
-        elevator.setMotors(false);
-		elevator.setStatus("Stopped");
-		//Set elevator to new position and remove task from Elevator's queue
-		elevator.setPosition(endLocation);
-		elevator.setDoors(true);
-		elevator.setButton(endLocation, false);
-		elevator.getTasks().remove(0);
-		elevators.set(elevatorNumber,elevator);
-		System.out.println("Elevator "+elevatorNumber+" now at floor "+endLocation+", Door Opening.");
-     */
+
 }

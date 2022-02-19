@@ -6,6 +6,7 @@ public class CalculateTime {
     private final long loadTime = 10; // 10 seconds is the average loading time
 
     /** Method to calculate time in milliseconds to move Elevator a given amount of distance */
+    //Possibly useful for when there will be multiple states for multiple elevators
     public long CalculateTime(Float startLocation, Integer endLocation){
         double time;
         double netDistance = Math.abs(startLocation - endLocation);
