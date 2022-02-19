@@ -5,12 +5,14 @@ import elevatorSystem.ElevatorState;
 
 public class DoorOpen implements ElevatorState {
 
-    public DoorOpen(ElevatorCar elevator){
+    private ElevatorCar elevator;
 
+    public DoorOpen(ElevatorCar elevator){
+        this.elevator = elevator;
     }
 
     @Override
-    public void moveElevator() {
+    public void moveElevator(long time) {
 
     }
 
@@ -25,8 +27,17 @@ public class DoorOpen implements ElevatorState {
     }
 
     @Override
-    public void loadElevator() {
-
+    public synchronized void loadElevator(long time) {
+        int elevatorNumber = elevator.getElevatorNumber();
+         try{
+             wait(time);
+             elevator.setDoors(false);
+             System.out.println("Loading Elevator "+elevatorNumber+" completed, Door closed.");
+         }
+         catch (Exception e){
+             System.out.println("Error occured while loading Elevator in thread.");
+             e.printStackTrace();
+         }
     }
 
     @Override

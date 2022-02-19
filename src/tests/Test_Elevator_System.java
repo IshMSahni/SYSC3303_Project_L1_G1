@@ -18,7 +18,7 @@ public class Test_Elevator_System {
 		Floor[] floors = floor_system.getFloors();
 		Task task = new Task(0, 1);
 		Elevator_System elevator_system = new Elevator_System(1,2);
-		ElevatorCar elevator = elevator_system.getElevators().get(0);
+		ElevatorCar elevator = elevator_system.getElevators()[0];
 		elevator.setPosition(3);
 		Scheduler_System ss = new Scheduler_System();
 		ss.setElevator_system(elevator_system);

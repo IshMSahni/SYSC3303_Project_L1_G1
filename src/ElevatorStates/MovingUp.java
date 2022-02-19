@@ -5,12 +5,14 @@ import elevatorSystem.ElevatorState;
 
 public class MovingUp implements ElevatorState {
 
-    public MovingUp(ElevatorCar elevator){
+    private ElevatorCar elevator;
 
+    public MovingUp(ElevatorCar elevator){
+        this.elevator = elevator;
     }
 
     @Override
-    public void moveElevator() {
+    public void moveElevator(long time) {
 
     }
 
@@ -25,7 +27,7 @@ public class MovingUp implements ElevatorState {
     }
 
     @Override
-    public void loadElevator() {
+    public void loadElevator(long time) {
 
     }
 

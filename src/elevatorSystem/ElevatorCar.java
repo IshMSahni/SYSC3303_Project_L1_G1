@@ -96,4 +96,20 @@ public class ElevatorCar {
     public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
     public boolean getScheduler_system(){if(this.scheduler_system != null) {return true;} else return false;}
     public void setScheduler_system(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
+
+    /** Elevator State methods*/
+    public void moveElevator(long time){this.elevatorState.moveElevator(time);}
+    public void openDoor(){this.elevatorState.openDoor();}
+    public void closeDoor(){this.elevatorState.closeDoor();}
+    public void loadElevator(long time){this.elevatorState.loadElevator(time);}
+    public void elevatorArrived(){this.elevatorState.elevatorArrived();}
+
+    public ElevatorState getDoorOpen(){return this.doorOpen;}
+    public ElevatorState getDoorClosed(){return this.doorClosed;}
+    public ElevatorState getMovingUp(){return this.movingUp;}
+    public ElevatorState getMovingDown(){return this.movingDown;}
+    public ElevatorState getLoading(){return this.loading;}
+    public ElevatorState getArrived(){return this.arrived;}
+    public ElevatorState getElevatorState(){return this.elevatorState;}
+    public void setElevatorState(ElevatorState elevatorState){this.elevatorState = elevatorState;}
 }

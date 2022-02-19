@@ -13,7 +13,7 @@ import java.util.HashMap;
  * targetElevatorNumber attribute to store an integer number of the elevator selected to be scheduled
  */
 public class Scheduler_System implements Runnable{
-    private ArrayList<ElevatorCar> elevators;
+    private ElevatorCar[] elevators;
     private Elevator_System elevator_system;
     private ArrayList<Task> tasksQueue;
     private HashMap<Integer,ArrayList<Integer>> scheduledQueue;
@@ -22,7 +22,6 @@ public class Scheduler_System implements Runnable{
 
     /** Constructor for Scheduler_System */
     public Scheduler_System(){
-        this.elevators = new ArrayList<>();
         isNewTaskScheduled = false;
         this.tasksQueue = new ArrayList<>();
         this.scheduledQueue = new HashMap<>();
@@ -55,8 +54,8 @@ public class Scheduler_System implements Runnable{
 
         //Floor task
         if(task.getIsFloorTask()){
-            if(elevators.size() > 1) {
-                for (int i = 0; i < elevators.size(); i++) {
+            if(elevators.length > 1) {
+                for (int i = 0; i < elevators.length; i++) {
                     Integer currentTaskNumber = getTaskNumber(i);
                     if(bestTaskNumber > currentTaskNumber){
                         bestTaskNumber = currentTaskNumber;
@@ -86,7 +85,7 @@ public class Scheduler_System implements Runnable{
     public int getTaskNumber(Integer elevatorNumber){
         //Target Floor number of latest task added and status of elevator.
         Integer targetFloorNumber = tasksQueue.get(tasksQueue.size() - 1).getFloorNumber();
-        Float elevatorPosition = elevators.get(elevatorNumber).getPosition();
+        Float elevatorPosition = elevators[elevatorNumber].getPosition();
         ArrayList<Integer> queue = this.scheduledQueue.get(elevatorNumber);
         Boolean condition1 = false;
         Boolean condition2 = false;
