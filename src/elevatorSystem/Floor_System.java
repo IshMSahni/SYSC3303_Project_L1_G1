@@ -154,7 +154,7 @@ public class Floor_System implements Runnable{
 	 * 	Args: (int) floor, (int) direction
 	 * 	Return: Void
 	 */
-	public void buttonEvent(int floor, ints direction) {
+	public void buttonEvent(int floor, int direction) {
 		
 		// if statement logic changes data based on args
 		if (direction == 0) {
