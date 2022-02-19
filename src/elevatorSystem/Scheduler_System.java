@@ -25,10 +25,6 @@ public class Scheduler_System implements Runnable{
         isNewTaskScheduled = false;
         this.tasksQueue = new ArrayList<>();
         this.scheduledQueue = new HashMap<>();
-        /**
-        for (int i = 0; i < this.elevators.size(); i++) {
-            this.scheduledQueue.put(i,new ArrayList<>());
-        }*/
         targetElevatorNumber = 0;
     }
 
@@ -75,8 +71,7 @@ public class Scheduler_System implements Runnable{
             queue.add(bestTaskNumber, task.getFloorNumber());
             this.scheduledQueue.replace(task.getElevatorNumber(), queue);
             targetElevatorNumber = bestElevatorNumber;
-            //isNewTaskScheduled = true;
-            this.elevator_system.updateElevatorQueue(bestElevatorNumber);
+            isNewTaskScheduled = true;
         }
     }
 
@@ -92,14 +87,16 @@ public class Scheduler_System implements Runnable{
         Integer bestTaskNumber = 0;
 
         //Iterate task number until condition1 or condition2 becomes true, Or until queue.size reaches end.
-        for (int i = 0; !condition1 && !condition2 && (i < queue.size()); i++){
-            Integer queueFloor = queue.get(i);
-            if(targetFloorNumber == queueFloor){
-                return -1; //Return -1 if target floor already in queue
+        if(queue.size() != 0) {
+            for (int i = 0; !condition1 && !condition2 && (i < queue.size()); i++) {
+                Integer queueFloor = queue.get(i);
+                if (targetFloorNumber == queueFloor) {
+                    return -1; //Return -1 if target floor already in queue
+                }
+                condition1 = (elevatorPosition > queueFloor) && (targetFloorNumber > queueFloor) && (elevatorPosition > targetFloorNumber);
+                condition2 = (elevatorPosition < queueFloor) && (targetFloorNumber < queueFloor) && (elevatorPosition < targetFloorNumber);
+                bestTaskNumber = i;
             }
-            condition1 = (elevatorPosition > queueFloor)&&(targetFloorNumber > queueFloor)&&(elevatorPosition > targetFloorNumber);
-            condition2 = (elevatorPosition < queueFloor)&&(targetFloorNumber < queueFloor)&&(elevatorPosition < targetFloorNumber);
-            bestTaskNumber = i;
         }
         return bestTaskNumber;
     }
@@ -112,6 +109,9 @@ public class Scheduler_System implements Runnable{
         this.elevator_system = elevator_system;
         elevator_system.setSchedulerSystem(this);
         elevators = elevator_system.getElevators();
+        for (int i = 0; i < this.elevators.length; i++) {
+            this.scheduledQueue.put(i,new ArrayList<>());
+        }
     }
     public void setIsNewTaskScheduled(Boolean condition){isNewTaskScheduled = condition;}
     public void setTasksQueue(ArrayList<Task> tasks){this.tasksQueue = tasks;}
