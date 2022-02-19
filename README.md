@@ -2,18 +2,19 @@
 
 ## Steps to install:
 
-Import the Iteration 1 into IDE
+Import the Iteration 2 into IDE
 
 ### Steps to run the program:
 1. Import repo on eclipse
 
 a. Paste github url (https://github.com/KeithLam101147900/SYSC3303_Project_L1_G1.git)
 
-b. Type in User and API key (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)
+b. Type in User and API key
 
 c. Create new project
 	
 2. Make sure .java files are under src (source folder)
+
 3. Run the main method from Floor_System.java file
 
 ### Steps to run the Java Tests:
@@ -49,6 +50,7 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - Manages the outputs/inputs on each floor relative to the position of the elevator and people waiting on the floor
 - Initializes the program (main method located in Floor_System)
 - Note that Floor_System constructor has been created for JUnit Testing only.
+- allPeople array has been changed to an ArrayList in order to accommodate for the iteration 2 requirements.
 
 ### Floor.java
 - Creates floors of the building for a Person to be located on/have a destination to
@@ -118,6 +120,6 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - The next state for this is Arrived
 
 ## Team & Contributions
-1. Keith Lam - 
+1. Keith Lam - Floor_System update, States Diagram, readme.txt modifications
 2. Muhammad Furqan - 
-3. Ishanov Sahni - 
+3. Ishanov Sahni - readme.txt modifications
