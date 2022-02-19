@@ -18,8 +18,8 @@ public class Test_Scheduler_System  {
     public void setUp() throws Exception {
         Elevator_System elevator_system = new Elevator_System(1,10);
         elevators = elevator_system.getElevators();
-        Scheduler_System ss= new Scheduler_System();
-        ss.setElevator_system(elevator_system);
+        scheduler_system= new Scheduler_System();
+        scheduler_system.setElevator_system(elevator_system);
         Floor_System floor_system = new Floor_System(10,1);
         floors = floor_system.getFloors();
     }

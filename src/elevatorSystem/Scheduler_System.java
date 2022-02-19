@@ -33,6 +33,13 @@ public class Scheduler_System implements Runnable{
 
     /**Add task to queue for Scheduler and schedule it*/
     public void addToQueue(Task task){
+        if(task.getIsFloorTask()){
+            System.out.println("New Task added to queue" + ", Target Floor: "
+                    + task.getFloorNumber() + ", Elevator Number: " + targetElevatorNumber);
+        }
+        else{System.out.println("New Task added to queue"+ ", Target Floor: "
+                + task.getFloorNumber() + ", Elevator Number: " + targetElevatorNumber);
+        }
         tasksQueue.add(task);
         scheduleTask(task);
     }

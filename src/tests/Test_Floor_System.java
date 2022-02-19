@@ -16,7 +16,7 @@ class Test_Floor_System {
 		allPeople = Floor_System.readFile();
 		
 		assertEquals(1, allPeople[2].getTime()[1]);
-		assertEquals(2, allPeople[2].getDestination());
+		assertEquals(5, allPeople[2].getDestination());
 	}
 	
 	@Test
