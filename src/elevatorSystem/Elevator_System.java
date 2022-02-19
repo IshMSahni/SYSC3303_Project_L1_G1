@@ -31,6 +31,8 @@ public class Elevator_System implements Runnable{
 		this.elevators[elevatorNumber].setTasks(tasks);
 		isEvent = true;
 		targetElevatorNumber = elevatorNumber;
+		moveElevator(elevatorNumber);
+		loadElevator(elevatorNumber);
 	}
 
 	/** Method to move elevator */

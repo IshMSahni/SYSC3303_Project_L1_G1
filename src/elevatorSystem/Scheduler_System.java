@@ -72,6 +72,7 @@ public class Scheduler_System implements Runnable{
             this.scheduledQueue.replace(task.getElevatorNumber(), queue);
             targetElevatorNumber = bestElevatorNumber;
             isNewTaskScheduled = true;
+            elevator_system.updateElevatorQueue(bestElevatorNumber);
         }
     }
 

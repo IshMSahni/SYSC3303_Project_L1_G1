@@ -212,50 +212,35 @@ public class Floor_System implements Runnable{
 		
 		// while loop loops thread until program is terminated
 		while (true) {
-			/*
-			// if statement displays all initial floor data
-			if (eventFloor == -1) {
-				for (int i = 0; i < getFloors().length; i++) {
-					//getFloors()[i].printFloor();
-				}
-			} else {	// else statement displays changed floor data
-				//getFloors()[eventFloor].printFloor();
-			} */
-			
 			//Schedule task
-			Integer elevatorNumber = scheduler_system.getTargetElevatorNumber();
-			String buttonStatusTemp = "";
-			int direction = allPeople.get(0).getDirection();
-			//Assign buttonStatustemp
-			if(direction == 1){
-				buttonStatusTemp = "Up";
+			if(allPeople.size() != 0) {
+				Integer elevatorNumber = 0;
+				String buttonStatusTemp = "";
+				int direction = allPeople.get(0).getDirection();
+				//Assign buttonStatustemp
+				if (direction == 1) {
+					buttonStatusTemp = "Up";
+				} else if (direction == 2) {
+					buttonStatusTemp = "Down";
+				}
+
+				this.scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), buttonStatusTemp, allPeople.get(0).getFloorNumber()));
+				this.scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), elevatorNumber, allPeople.get(0).getDestination()));
+
+				allPeople.remove(0);
 			}
-			else if(direction == 2){
-				buttonStatusTemp = "Down";
-			}
-			System.out.println("New Task added to queue, time: " + time[1] + ":" + time[2] + ", Target Floor: "
-					+ floorNumber + ", Elevator Number: " + elevatorNumber);
-					
-			scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), buttonStatusTemp, allPeople.get(0).getFloorNumber()));
-			// scheduler_system.addToQueue(new Task(time, buttonStatustemp, floorNumber));
-			
-			time[2] = time[2] + 1; //Add 1 second buffer between tasks
-			System.out.println("New Task added to queue, time: " + time[1] + ":" + time[2] +", Target Floor: " 
-					+ carButton + ", Elevator Number: " + elevatorNumber);
-			
-			scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), elevatorNumber, allPeople.get(0).getDestination()));
-			// scheduler_system.addToQueue(new Task(time, elevatorNumber, carButton));
-			
-			allPeople.remove(0);
-			isEvent = false;
-			
-			// while loop loops until thread is notified
-			while (!isEvent) {
-				try {
-					wait();
-				} catch (InterruptedException e) {	// Try catch statement to catch thread logic interrupts
-					System.out.println("Error occured while waiting in thread.");
-					e.printStackTrace();
+
+			if(allPeople.size() == 0) {
+				isEvent = false;
+				System.exit(0);//Only because we don't have an GUI yet for Iteration 2
+				// while loop loops until thread is notified
+				while (!isEvent) {
+					try {
+						wait();
+					} catch (InterruptedException e) {    // Try catch statement to catch thread logic interrupts
+						System.out.println("Error occured while waiting in thread.");
+						e.printStackTrace();
+					}
 				}
 			}
 		}
