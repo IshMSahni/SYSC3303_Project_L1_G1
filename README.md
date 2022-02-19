@@ -125,5 +125,5 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 
 ## Team & Contributions
 1. Keith Lam - Floor_System update, States Diagram, readme.txt modifications
-2. Muhammad Furqan - 
+2. Muhammad Furqan - ElevatorStates classes and interface, Elevator_System update, Sequence Diagram
 3. Ishanov Sahni - readme.txt modifications
