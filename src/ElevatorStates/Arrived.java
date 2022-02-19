@@ -53,7 +53,8 @@ public class Arrived implements ElevatorState {
     }
 
     @Override
-    public void Elevator_NextState() {
+    public ElevatorState Elevator_NextState() {
 
+        return null;
     }
 }

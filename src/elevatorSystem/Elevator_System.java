@@ -1,5 +1,7 @@
 package elevatorSystem;
 // imports for scanning text file
+import ElevatorStates.DoorClosed;
+
 import java.util.ArrayList;
 
 /** Elevator_System class, Simulates as a control system for Elevator Car objects */
@@ -11,7 +13,7 @@ public class Elevator_System implements Runnable{
 	private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
 	private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
 	private final long loadTime = 10; // 10 seconds is the average loading time
-	private ElevatorState state;
+	private ArrayList<ElevatorState> states;
 
 	private static Integer targetElevatorNumber;
 
@@ -20,6 +22,10 @@ public class Elevator_System implements Runnable{
 		this.elevators = elevators;
 		isEvent = false;
 		targetElevatorNumber = 0;
+		for (int i =0; i < elevators.size(); i++){
+			ElevatorState state = new DoorClosed(elevators.get(i));
+			states.add(state);
+		}
 	}
 
 	/** This method will update elevator scheduled queue*/
@@ -28,31 +34,25 @@ public class Elevator_System implements Runnable{
 
 		this.elevators.get(elevatorNumber).setTasks(tasks);
 		//isEvent = true;
-		ElevatorCar elevator = elevators.get(elevatorNumber);
-		Float startLocation = elevator.getPosition();
-		Integer endLocation = elevator.getTasks().get(0);
-		if (startLocation > endLocation){
-			state.Elevator_MovingDown(elevator);
-		} else {
-			state.Elevator_MovingUp(elevator);
-		}
+
 		moveElevator(elevatorNumber);
 		loadElevator(elevatorNumber);
 	}
 
 	/** Method to move elevator */
 	public synchronized void moveElevator(Integer elevatorNumber){
-		//Calculate Time to move elevator
 		ElevatorCar elevator = elevators.get(elevatorNumber);
 		Float startLocation = elevator.getPosition();
 		Integer endLocation = elevator.getTasks().get(0);
-
-		long time = calculateTime(startLocation,endLocation);
-		elevator.setMotors(true);
-		System.out.println("Elevator "+elevatorNumber+" now moving to floor "+endLocation);
-		//Wait for calculated time
-		try{ wait(time); }
-		catch (Exception e){}
+		if (startLocation > endLocation){
+			states.get(elevatorNumber).Direction(true);
+			states.get(elevatorNumber).Elevator_NextState();
+		} else {
+			states.get(elevatorNumber).Direction(false);
+		}
+		states.set(elevatorNumber, states.get(elevatorNumber).Elevator_NextState());
+		//Calculate Time to move elevator
+		
 
 		elevator.setMotors(false);
 		elevator.setStatus("Stopped");
