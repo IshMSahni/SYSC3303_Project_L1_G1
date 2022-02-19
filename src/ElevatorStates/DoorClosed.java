@@ -61,21 +61,4 @@ public class DoorClosed implements ElevatorState {
 
     }
 
-
-    @Override
-    public void setState(ElevatorCar elevator, ArrayList<ElevatorCar> system) {
-
-    }
-
-    @Override
-    public ElevatorState Elevator_NextState() {
-        if(!check) {
-            ElevatorState state = new MovingUp(e);
-            return state;
-        } else{
-            ElevatorState state = new MovingDown(e);
-            return state;
-        }
-    }
-
 }

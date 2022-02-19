@@ -47,16 +47,6 @@ public class MovingUp implements ElevatorState {
         elevator.setElevatorState(elevator.getArrived());
     }
 
-    @Override
-    public ElevatorState Elevator_NextState() {
-        ElevatorState arr = new Arrived(this.ele);
-        return arr;
-    }
-
-    @Override
-    public void Direction(boolean check) {
-
-    }
 
     /*
         elevator.setMotors(false);
