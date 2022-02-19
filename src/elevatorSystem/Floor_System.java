@@ -269,6 +269,7 @@ public class Floor_System implements Runnable{
 	public static void main(String[] args) {
 		int totalFloorNumber = 10; //total number of floors
 		int totalElevatorNumber = 1; //total number of elevators
+		allPeople = new ArrayList<Person>()
 
 		Floor_System floor_SubSystem = new Floor_System(totalFloorNumber,totalElevatorNumber);
 		Elevator_System elevator_SubSystem = new Elevator_System(totalElevatorNumber,totalFloorNumber);
