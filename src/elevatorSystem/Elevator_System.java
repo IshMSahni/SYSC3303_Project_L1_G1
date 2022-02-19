@@ -11,6 +11,7 @@ public class Elevator_System implements Runnable{
 	private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
 	private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
 	private final long loadTime = 10; // 10 seconds is the average loading time
+	private ElevatorState state;
 
 	private static Integer targetElevatorNumber;
 
@@ -27,6 +28,14 @@ public class Elevator_System implements Runnable{
 
 		this.elevators.get(elevatorNumber).setTasks(tasks);
 		//isEvent = true;
+		ElevatorCar elevator = elevators.get(elevatorNumber);
+		Float startLocation = elevator.getPosition();
+		Integer endLocation = elevator.getTasks().get(0);
+		if (startLocation > endLocation){
+			state.Elevator_MovingDown(elevator);
+		} else {
+			state.Elevator_MovingUp(elevator);
+		}
 		moveElevator(elevatorNumber);
 		loadElevator(elevatorNumber);
 	}
@@ -37,6 +46,7 @@ public class Elevator_System implements Runnable{
 		ElevatorCar elevator = elevators.get(elevatorNumber);
 		Float startLocation = elevator.getPosition();
 		Integer endLocation = elevator.getTasks().get(0);
+
 		long time = calculateTime(startLocation,endLocation);
 		elevator.setMotors(true);
 		System.out.println("Elevator "+elevatorNumber+" now moving to floor "+endLocation);

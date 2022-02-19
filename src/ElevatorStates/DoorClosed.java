@@ -30,12 +30,12 @@ public class DoorClosed implements ElevatorState {
     }
 
     @Override
-    public void Elevator_MovingUp() {
+    public void Elevator_MovingUp(ElevatorCar elevator) {
 
     }
 
     @Override
-    public void Elevator_MovingDown() {
+    public void Elevator_MovingDown(ElevatorCar elevator) {
 
     }
 }
