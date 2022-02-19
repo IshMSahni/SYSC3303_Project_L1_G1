@@ -27,10 +27,12 @@ c. Create new project
 - System responsible for handling requests made by the Scheduler to then tell which chosen elevator to move where
 - Keeps track of the work that each elevator has to do in a queue
 - Ensures that the motion and timing of the completion of the elevator is realistic
+- Interacts with elevator states depending on action that needs to occur
 
 ### ElevatorCar.java
 - Object pertaining to requirements of every ElevatorCar such as buttons, lights, motors, doors etc.
 - Objects are managed by the Elevator_System to indicate where the elevator should travel
+- Contains the state of the elevator and also changes based on calls to the methods within the state
 
 ### Floor_System.java
 - Reads input from filename.txt
@@ -77,7 +79,45 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - Object that is made to represent the task given to the scheduler.
 - Can handle requests from both elevator and floor to then be red by the Scheduler_System.
 
+### Task.java
+- Object that is made to represent the task given to the scheduler.
+- Can handle requests from both elevator and floor to then be red by the Scheduler_System.
+
+### ElevatorState.java
+- An interface that outlines the methods that will be used by all the states that implement this interface.
+
+### Arrived.java
+- A class that implements ElevatorState
+- This state defines what happens when the elevator arrives on the correct floor and different methods that you can use to change the state of the elevator
+- The next state for this is DoorOpen
+
+### DoorClosed.java
+- A class that implements ElevatorState
+- This state defines what happens when the elevator door is closed and its implementation on how different methods interact with the elevator in this state
+- The next state for this is either DoorOpen, MovingUp, or MovingDown
+
+### DoorOpen.java
+- A class that implements ElevatorState
+- This state defines what happens when the elevator door is open and its implementation on how different methods interact with the elevator in this state
+- The next state for this is either DoorClosed or Loading
+- As per design specifications, this is the default state of the elevator to be at when there are no other tasks for the elevator to handle
+
+### Loading.java
+- A class that implements ElevatorState
+- This state defines what happens when the elevator is loading people and its separate implementation on how different methods interact with the elevator in this state
+- The next state for this is DoorClosed
+
+### MovingDown.java
+- A class that implements ElevatorState
+- This state defines what happens when the elevator is in motion while going down floors and its separate implementation on how different methods interact with the elevator in this state
+- The next state for this is Arrived
+
+### MovingUp.java
+- A class that implements ElevatorState
+- This state defines what happens when the elevator is in motion while going up floors and its separate implementation on how different methods interact with the elevator in this state
+- The next state for this is Arrived
+
 ## Team & Contributions
-1. Keith Lam - Floor.java, Floor_System.java, Person.java & their test cases
-2. Muhammad Furqan - Scheduler_System.java & its test cases, Elevator_System.java, Task.java, UML Sequence Diagram
-3. Ishanov Sahni - ElevatorCar.java, Elevator_System.java & their test cases, UML Class Diagram
+1. Keith Lam - 
+2. Muhammad Furqan - 
+3. Ishanov Sahni - 
