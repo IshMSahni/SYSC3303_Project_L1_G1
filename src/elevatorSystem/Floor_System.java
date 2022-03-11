@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 // Class declaration
 public class Floor_System implements Runnable{
-	
+
 	/**
 	 * Initial Class Variables
 	 */
@@ -26,11 +26,11 @@ public class Floor_System implements Runnable{
 	private static int eventFloor;		// Temp Target floor variable
 	private static Scheduler_System scheduler_system;
 	private static Elevator_System elevator_system; //Elevator system
-	
+
 	//static Person[] allPeople;				// Array of Person objects
-	static ArrayList<Person> allPeople;
-	static Floor[] floors;	// Array of Floor objects
-	
+	private ArrayList<Person> allPeople;
+	private Floor[] floors;	// Array of Floor objects
+
 	/**
 	 * Constructor: Floor_System
 	 * 	Constructor for JUnit testing
@@ -50,7 +50,7 @@ public class Floor_System implements Runnable{
 	public void setScheduler_system(Scheduler_System system){
 		scheduler_system = system;
 	}
-	
+
 	/**
 	 * Method: readFile
 	 * 	Method reads txt file, processes the person data and passes formalized list.
@@ -64,49 +64,49 @@ public class Floor_System implements Runnable{
 		String[] txt;				// Array of strings to organize person data
 		int numberOfLines = 0;		// Variable to count number of Lines
 		String temp;				// temp variable for programming logic
-		
+
 		time = new int[4];	// Initialize array with empty elements
-		
+
 		// Try Catch statement for file processing
 		try {
 			File myObj = new File("filename.txt");
-		    Scanner myCounter = new Scanner(myObj);
-		    
-		    // while loop counts number of lines
-		    while (myCounter.hasNextLine()) {
-		    	temp = myCounter.nextLine();
-		    	numberOfLines++;
-		    }
-		    
-		    // Close and re-open scanner
-		    myCounter.close();
-		    Scanner myReader = new Scanner(myObj);
+			Scanner myCounter = new Scanner(myObj);
+
+			// while loop counts number of lines
+			while (myCounter.hasNextLine()) {
+				temp = myCounter.nextLine();
+				numberOfLines++;
+			}
+
+			// Close and re-open scanner
+			myCounter.close();
+			Scanner myReader = new Scanner(myObj);
 			Person[] filePeople = new Person[numberOfLines];	// Initialize array with empty elements
-		    
-		    // for loop processes each line individually
-		    for (int i = 0; i < numberOfLines; i++) {
-		    	index = 0;
-			    txt = myReader.nextLine().split(" ");	// Split data
-			    
-			    timeSTR = txt[0].split(":");			// Read time from file
-			    floorNumber = Integer.parseInt(txt[1]);	// Read floor number from file
+
+			// for loop processes each line individually
+			for (int i = 0; i < numberOfLines; i++) {
+				index = 0;
+				txt = myReader.nextLine().split(" ");	// Split data
+
+				timeSTR = txt[0].split(":");			// Read time from file
+				floorNumber = Integer.parseInt(txt[1]);	// Read floor number from file
 				buttonStatustemp = txt[2];				// Read button status from file
 				carButton = Integer.parseInt(txt[3]);	// Read Destination floor from file
-			
+
 				// for loop assigns hours and minutes to time array
 				for (int i0 = 0; i0 < (timeSTR.length - 1); i0++) {
 					time[i0] = Integer.parseInt(timeSTR[i0]);
 					index++;
 				}
 				double x = Double.parseDouble(timeSTR[index]);	// Assign seconds/milliseconds to temp variable
-				
+
 				index = (int)x;	// Assigns seconds by casting int
 				x = x % 1;		// Finds milliseconds using modulus
-				
+
 				// Assigns seconds and milliseconds to time array
 				time[3] = (int) (1000 * x);
 				time[2] = index;
-				
+
 				// Assign direction based on text input
 				if (buttonStatustemp.equals("Up")) {
 					buttonStatus = 1;
@@ -117,16 +117,30 @@ public class Floor_System implements Runnable{
 				}
 				Person myPerson = new Person(time, floorNumber, buttonStatus, carButton);	// Create Person object
 				filePeople[i] = myPerson;	// Add Person to array of people
-		    }
+			}
 			myReader.close();
 			return filePeople;
 		} catch (FileNotFoundException e) {	// Cover case of interrupt
-			System.out.println("Error occured while reading file.");
-		    e.printStackTrace();
+			System.out.println("Problem occured while reading file, adding default people list");
+			//Create default people objects and return a list of them.
+			int time[] = new int[4];
+			time[0]=00; time[1]=00; time[2]=23; time[3]=1010;
+			Person myPerson1 = new Person(time, 2, 2, 1);
+
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=53; time[3]=1010;
+			Person myPerson2 = new Person(time, 3, 1, 5);
+
+			time = new int[4]; time[0]=00; time[1]=01; time[2]=53; time[3]=1010;
+			Person myPerson3 = new Person(time, 0, 1, 5);
+
+			Person defaultPeoples[] = new Person[3];
+			defaultPeoples[0] = myPerson1; defaultPeoples[1] = myPerson2; defaultPeoples[2] = myPerson3;
+
+			return defaultPeoples;
 		}
-		return null;	// Redundancy for syntax error coverage
+		//return null;	// Redundancy for syntax error coverage
 	}
-	
+
 	/**
 	 * Method: getFloors
 	 * 	Method returns floors array
@@ -136,7 +150,11 @@ public class Floor_System implements Runnable{
 	public Floor[] getFloors() {
 		return floors;
 	}
-	
+
+	public void setFloors(Floor[] floors) {
+		this.floors = floors;
+	}
+
 	/**
 	 * Method: getAllPeople
 	 * 	Method returns People array
@@ -147,8 +165,12 @@ public class Floor_System implements Runnable{
 		return allPeople;
 	}
 
+	public void setAllPeople(ArrayList<Person> people) {
+		this.allPeople = people;
+	}
+
 	public void setEventFloor(int eventFloorNum){eventFloor = eventFloorNum;}
-	
+
 	/**
 	 * Method: buttonEvent
 	 * 	Method handles any button event. Direction instructions in README
@@ -156,7 +178,7 @@ public class Floor_System implements Runnable{
 	 * 	Return: Void
 	 */
 	public void buttonEvent(int floor, int direction) {
-		
+
 		// if statement logic changes data based on args
 		if (direction == 0) {
 			getFloors()[floor].setDownButton(false);
@@ -174,12 +196,12 @@ public class Floor_System implements Runnable{
 			System.out.println("Error occurred when buttonEvent() was called");
 			System.exit(0);
 		}
-		
+
 		// Variables used to communicate to thread logic
 		isEvent = true;
 		eventFloor = floor;
 	}
-	
+
 	/**
 	 * Method: lampEvent
 	 * 	Method handles any lamp event. Direction instructions in README
@@ -187,7 +209,7 @@ public class Floor_System implements Runnable{
 	 * 	Return: Void
 	 */
 	public void lampEvent(int floor, int elevator, int direction) {
-		
+
 		// if statement checks for correct arg values
 		if (floor < floors.length && direction < 3) {
 			floors[floor].changeLamp(elevator, direction);
@@ -195,12 +217,12 @@ public class Floor_System implements Runnable{
 			System.out.println("Error occurred when lampEvent() was called");
 			System.exit(0);
 		}
-		
+
 		// Variables used to communicate to thread logic
 		isEvent = true;
 		eventFloor = floor;
 	}
-	
+
 	/**
 	 * Method: run
 	 * 	@Override
@@ -209,7 +231,7 @@ public class Floor_System implements Runnable{
 	 * 	Return: Void
 	 */
 	public synchronized void run() {
-		
+
 		// while loop loops thread until program is terminated
 		while (true) {
 			//Schedule task
@@ -224,8 +246,8 @@ public class Floor_System implements Runnable{
 					buttonStatusTemp = "Down";
 				}
 
-				this.scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), buttonStatusTemp, allPeople.get(0).getFloorNumber()));
-				this.scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), elevatorNumber, allPeople.get(0).getDestination()));
+				scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), buttonStatusTemp, allPeople.get(0).getFloorNumber()));
+				scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), elevatorNumber, allPeople.get(0).getDestination()));
 
 				allPeople.remove(0);
 			}
@@ -245,7 +267,7 @@ public class Floor_System implements Runnable{
 			}
 		}
 	}
-	
+
 	/**
 	 * Method: main
 	 * 	Method hosts Starting/main sequential logic and initialized objects
@@ -265,10 +287,12 @@ public class Floor_System implements Runnable{
 		floor_SubSystem.setEventFloor(-1);
 
 		Person[] people = readFile();	// Initialize people array using readFile method
+		ArrayList<Person> peoples = new ArrayList<>();
 		for (int i = 0; i < people.length; i++) {
-			floor_SubSystem.allPeople.add(people[i]);
+			peoples.add(people[i]);
 		}
-		
+		floor_SubSystem.setAllPeople(peoples);
+
 		// Initializes floor manager thread and starts it
 		Thread floorSystemThread = new Thread(floor_SubSystem, "Floor Simulation");
 		Thread elevatorSystemThread = new Thread(elevator_SubSystem, "Elevator Simulation");
