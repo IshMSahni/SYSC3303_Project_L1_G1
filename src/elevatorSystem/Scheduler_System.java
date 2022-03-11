@@ -46,8 +46,8 @@ public class Scheduler_System implements Runnable{
         receivePacket = new DatagramPacket(data, data.length);
 
         try {
-            // Wait until data reply is received via sendReceiveSocket.
-            System.out.println("Server: Waiting for New Task......");
+            // Wait until data reply is received via receiveSocket.
+            System.out.println("Scheduler_System: Waiting for New Task......");
             receiveSocket.receive(receivePacket);
         } catch(IOException e) {
             e.printStackTrace();
@@ -61,11 +61,11 @@ public class Scheduler_System implements Runnable{
             tempData[i] = data[i];
         }
         data = tempData;
+        int portRecievedFrom = receivePacket.getPort();
 
         System.out.println("Scheduler_System: Task received:");
         System.out.println("From: " + receivePacket.getAddress());
-        System.out.println("Port: " + receivePacket.getPort());
-
+        System.out.println("Port: " + portRecievedFrom);
         System.out.println("Length: " + len);
         System.out.print("Containing: ");
 
@@ -73,6 +73,37 @@ public class Scheduler_System implements Runnable{
         String received = new String(data,0,len);
         System.out.println("String: " + received);
         System.out.println("Bytes: " + Arrays.toString(data) + "\n");
+
+        //Re-construct Task object from recieved data
+        Task task;
+        if(data[0] == (byte) 0){
+            task = new Task(data[1],data[2]);
+        }
+        else if(data[0] == (byte) 1){
+            int time[] = new int[4];
+            time[0] = data[3]; time[1] = data[4]; time[2] = data[5]; time[3] = data[6];
+            task = new Task(time, data[1],data[2]);
+        }
+        //Elevator Task
+        else {
+            String buttonStatusTemp = "";
+            int direction = data[1];
+            //Assign buttonStatustemp
+            if (direction == 1) { buttonStatusTemp = "Up";}
+            else if (direction == 2) { buttonStatusTemp = "Down"; }
+
+            if(data[0] == (byte) 2){ task = new Task(buttonStatusTemp,data[2]); }
+            else{
+                int time[] = new int[4];
+                time[0] = data[3]; time[1] = data[4]; time[2] = data[5]; time[3] = data[6];
+                task = new Task(time, buttonStatusTemp,data[2]);
+            }
+        }
+
+        //Update elevator position dataset being used by Scheduler_System
+        this.sendElevatorPositionsRequest();
+        //Add reconstructed Task to queue and schedule it
+        this.addToQueue(task);
     }
 
     /**Get Scheduled tasks from Scheduler for a given elevator number*/
@@ -82,10 +113,10 @@ public class Scheduler_System implements Runnable{
     public void addToQueue(Task task){
         if(task.getIsFloorTask()){
             System.out.println("New Task added to queue" + ", Target Floor: "
-                    + task.getFloorNumber() + ", Elevator Number: " + targetElevatorNumber);
+                    + task.getFloorNumber() + ", Direction: "+ task.getDirection());
         }
         else{System.out.println("New Task added to queue"+ ", Target Floor: "
-                + task.getFloorNumber() + ", Elevator Number: " + targetElevatorNumber);
+                + task.getFloorNumber() + ", Elevator Number: " + task.getElevatorNumber());
         }
         tasksQueue.add(task);
         scheduleTask(task);
@@ -105,6 +136,7 @@ public class Scheduler_System implements Runnable{
         //Floor task
         if(task.getIsFloorTask()){
             if(elevators.length > 1) {
+
                 for (int i = 0; i < elevators.length; i++) {
                     Integer currentTaskNumber = getTaskNumber(i);
                     if(bestTaskNumber > currentTaskNumber){
@@ -122,11 +154,78 @@ public class Scheduler_System implements Runnable{
         //Add task to scheduled Task list for best elevator number if task is Not already queue.
         if(bestTaskNumber != -1) {
             ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
-            queue.add(bestTaskNumber, task.getFloorNumber());
-            this.scheduledQueue.replace(task.getElevatorNumber(), queue);
+
+            if(bestTaskNumber < queue.size()) { queue.add(bestTaskNumber, task.getFloorNumber());}
+            else {queue.add(task.getFloorNumber());}
+
+            //Convert new to byte[] format
+            byte data[] = new byte[queue.size() + 2];
+            data[0] = (byte) 0; // This will tell Elevator_System that this data is a scheduled task.
+            data[1] = (byte) bestElevatorNumber.intValue();
+            for (int i = 0; i < queue.size(); i++) {
+                data[i+2] = (byte) queue.get(i).intValue();
+            }
+
+            this.scheduledQueue.replace(bestElevatorNumber, queue);
             targetElevatorNumber = bestElevatorNumber;
             isNewTaskScheduled = true;
-            elevator_system.updateElevatorQueue(bestElevatorNumber);
+            this.sendData(data,20);
+        }
+    }
+
+    /** This method will send scheduled task data to Elevator_System*/
+    public void sendData(byte data[], int portNumber){
+        System.out.println("Scheduler: sending a scheduled task data to Elevator_System.");
+        //create the datagram packet for the message with Port given
+        try {
+            sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), portNumber);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // Send the data.
+        try {
+            sendSocket.send(sendPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    /** Method to send elevators current positions request and update*/
+    public void sendElevatorPositionsRequest(){
+        byte data[] = new byte[1];
+        data[0] = (byte) 1;
+        this.sendData(data,20);
+        // Construct a DatagramPacket for receiving packets for the data reply
+        data = new byte[100];
+        receivePacket = new DatagramPacket(data, data.length);
+
+        try {
+            // Wait until data reply is received via sendSocket.
+            sendSocket.receive(receivePacket);
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // Process the received datagram.
+        int len = receivePacket.getLength();
+        byte tempData[] = new byte[len];
+        for(int i = 0; i < len; i++) {
+            tempData[i] = data[i];
+        }
+        data = tempData;
+        int portRecievedFrom = receivePacket.getPort();
+
+        //Correct data recieved
+        if(data[0] == (byte) 4){
+            for (int i = 1; i < len; i++) {
+                int position = data[i];
+                Integer floatPosition = position;
+                elevators[i-1].setPosition(floatPosition.floatValue());
+            }
         }
     }
 
@@ -162,7 +261,6 @@ public class Scheduler_System implements Runnable{
     /** Setter methods for a group of attributes */
     public void setElevator_system(Elevator_System elevator_system){
         this.elevator_system = elevator_system;
-        elevator_system.setSchedulerSystem(this);
         elevators = elevator_system.getElevators();
         for (int i = 0; i < this.elevators.length; i++) {
             this.scheduledQueue.put(i,new ArrayList<>());
@@ -176,20 +274,15 @@ public class Scheduler_System implements Runnable{
     @Override
     public synchronized void run() {
         while (true){
-            //Wait until new task is added and scheduled
-            while (!isNewTaskScheduled) {
-                try {
-                    wait();
-                } catch (InterruptedException e) {
-                    System.out.println("Error occured while waiting for New Scheduled Task in thread.");
-                    e.printStackTrace();
-                }
-            }
-            //Notify Elevator system
-            if(isNewTaskScheduled) {
-                this.elevator_system.updateElevatorQueue(targetElevatorNumber);
-                isNewTaskScheduled = false;
-            }
+            //Wait until new task is added, schedule it and send data to Elevator_System
+            this.scheduling();
         }
+    }
+
+    /** Main method*/
+    public static void main(String[] args) {
+        Scheduler_System scheduler_SubSystem = new Scheduler_System();
+        Thread schedulerSystemThread = new Thread(scheduler_SubSystem, "Scheduler Simulation");
+        schedulerSystemThread.start();
     }
 }

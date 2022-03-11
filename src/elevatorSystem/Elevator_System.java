@@ -10,7 +10,6 @@ public class Elevator_System implements Runnable{
 
 	private static boolean isEvent;		// Variable for breaking wait()
 	private ElevatorCar[] elevators; //List of elevators
-	private Scheduler_System scheduler_system;
 	private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
 	private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
 	private final long loadTime = 10; // 10 seconds is the average loading time
@@ -42,16 +41,75 @@ public class Elevator_System implements Runnable{
 		}
 	}
 
-	/** This method will update elevator scheduled queue*/
-	public synchronized void updateElevatorQueue(Integer elevatorNumber){
-		ArrayList<Integer> tasks = this.scheduler_system.getScheduledQueue(elevatorNumber);
+	/** This method will wait until new data is received and then take the necessary actions based on that data*/
+	public void elevatorRunning(){
+		// Construct a DatagramPacket for receiving packets for the data reply
+		byte data[] = new byte[100];
+		receivePacket = new DatagramPacket(data, data.length);
 
+		try {
+			// Wait until data reply is received via receiveSocket.
+			System.out.println("Elevator_System: Waiting for New Task......");
+			receiveSocket.receive(receivePacket);
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		// Process the received datagram.
+		int len = receivePacket.getLength();
+		byte tempData[] = new byte[len];
+		for(int i = 0; i < len; i++) {
+			tempData[i] = data[i];
+		}
+		data = tempData;
+		int portRecievedFrom = receivePacket.getPort();
+
+		System.out.println("Elevator_System: Task received:");
+		System.out.println("From: " + receivePacket.getAddress());
+		System.out.println("Port: " + portRecievedFrom);
+		System.out.println("Length: " + len);
+		System.out.print("Containing: ");
+
+		// Form a String from the byte array.
+		String received = new String(data,0,len);
+		System.out.println("String: " + received);
+		System.out.println("Bytes: " + Arrays.toString(data) + "\n");
+
+		// Data is new scheduled Task
+		if(data[0] == (byte) 0){
+			int elevatorNum = data[1];
+			updateElevatorQueue(elevatorNum, data);
+		}
+		// Data is elevator positions request
+		else if(data[0] == (byte) 1){
+			this.sendElevatorsData();
+		}
+		//TODO Data is elevator button is pressed
+		else if(data[0] == (byte) 2){
+
+		}
+		//TODO Data is elevator has arrived at a floor
+		else{
+
+		}
+	}
+
+	/** This method will update elevator scheduled queue*/
+	public synchronized void updateElevatorQueue(int elevatorNumber, byte data[]){
+		//Reconstruct the scheduled tasks as an ArrayList from the data
+		ArrayList<Integer> tasks = new ArrayList<>();
+		for (int i = 1; i < data.length; i++) {
+			int floorNumber = data[i];
+			tasks.add(floorNumber);
+		}
+
+		//Update elevator tasks and move elevator.
 		this.elevators[elevatorNumber].setTasks(tasks);
 		isEvent = true;
 		targetElevatorNumber = elevatorNumber;
 		moveElevator(elevatorNumber);
 		loadElevator(elevatorNumber);
-
 	}
 
 	/** Method to move elevator */
@@ -93,30 +151,49 @@ public class Elevator_System implements Runnable{
 
 	public static void setIsEvent(boolean isEvent) {Elevator_System.isEvent = isEvent;}
 
-	public void setSchedulerSystem(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
-
 	public ElevatorCar[] getElevators(){return this.elevators;}
+
+	/** Method to convert all elevator positions to byte[] format and send to Scheduler*/
+	public void sendElevatorsData(){
+		byte data[] = new byte[elevators.length + 1];
+		data[0] = (byte) 4;
+		for (int i = 1; i < data.length; i++) {
+			data[i] = (byte) Math.round(elevators[i-1].getPosition);
+		}
+
+		System.out.println("Elevator_System: sending a elevator position data to Scheduler_System.");
+		//create the datagram packet for the message with Port 20
+		try {
+			sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 40);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		// Send the scheduled task data to Elevator_System.
+		try {
+			sendSocket.send(sendPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 
 	/** Run method for Elevator_System */
 	 @Override
 	 public synchronized void run() {
 	 	while (true) {
 	 			//Wait until event occurs for elevator
-	 			while (!isEvent){
-					try {
-						wait();
-					} catch (InterruptedException e) {
-						System.out.println("Error occured while waiting for New Elevator event in thread.");
-						e.printStackTrace();
-					}
-				}
-				//Send signal to elevator car for which floor to go to and load/unload elevator
-				if(isEvent){
-					moveElevator(targetElevatorNumber);
-					this.scheduler_system.removeElevatorTask(targetElevatorNumber);
-					loadElevator(targetElevatorNumber);
-					isEvent = false;
-				}
+	 			this.elevatorRunning();
 			}
 	 }
+
+	/** Main method*/
+	public static void main(String[] args) {
+		int totalNumElevators = 1;
+		int totalNumFloors = 10;
+		Elevator_System elevator_system = new Elevator_System(totalNumElevators,totalNumFloors);
+		Thread elevatorSystemThread = new Thread(elevator_system, "Scheduler Simulation");
+		elevatorSystemThread.start();
+	}
 }
