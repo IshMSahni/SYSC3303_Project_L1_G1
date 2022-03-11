@@ -131,7 +131,7 @@ public class Elevator_System implements Runnable{
 		double netDistance = Math.abs(startLocation - endLocation);
 		double inflectionDistance = (elevatorTopSpeed*elevatorTopSpeed)/elevatorAcceleration;
 
-		//If net distance between floors allows elevator to reach top speed, then use 1st formula, else use 2nd formula.
+		//If net distance between floors allows elevator  to reach top speed, then use 1st formula, else use 2nd formula.
 		if(netDistance > inflectionDistance){
 			time = ((netDistance - inflectionDistance) / elevatorTopSpeed) + (Math.sqrt(inflectionDistance) * 2);
 		}
@@ -158,7 +158,7 @@ public class Elevator_System implements Runnable{
 		byte data[] = new byte[elevators.length + 1];
 		data[0] = (byte) 4;
 		for (int i = 1; i < data.length; i++) {
-			data[i] = (byte) Math.round(elevators[i-1].getPosition);
+			data[i] = (byte) Math.round(elevators[i-1].getPosition());
 		}
 
 		System.out.println("Elevator_System: sending a elevator position data to Scheduler_System.");

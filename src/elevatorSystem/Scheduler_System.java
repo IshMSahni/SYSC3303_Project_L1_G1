@@ -230,7 +230,7 @@ public class Scheduler_System implements Runnable{
     }
 
     /** Method to get position of task if added to a given elevator number to schedule most the recent task
-     * Return -1 if target floor is already in queue */
+     * Return -1 if target floor is already in queue  */
     public int getTaskNumber(Integer elevatorNumber){
         //Target Floor number of latest task added and status of elevator.
         Integer targetFloorNumber = tasksQueue.get(tasksQueue.size() - 1).getFloorNumber();

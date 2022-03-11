@@ -287,11 +287,9 @@ public class Floor_System implements Runnable{
 	 */
 	public static void main(String[] args) {
 		int totalFloorNumber = 10; //total number of floors
-		int totalElevatorNumber = 1; //total number of elevators
+		int totalElevatorNumber = 1; //total number  of elevators
 
 		Floor_System floor_SubSystem = new Floor_System(totalFloorNumber,totalElevatorNumber);
-		Elevator_System elevator_SubSystem = new Elevator_System(totalElevatorNumber,totalFloorNumber);
-
 		floor_SubSystem.setEventFloor(-1);
 
 		Person[] people = readFile();	// Initialize people array using readFile method
@@ -303,10 +301,6 @@ public class Floor_System implements Runnable{
 
 		// Initializes floor manager thread and starts it
 		Thread floorSystemThread = new Thread(floor_SubSystem, "Floor Simulation");
-		Thread elevatorSystemThread = new Thread(elevator_SubSystem, "Elevator Simulation");
-
-
 		floorSystemThread.start();
-		elevatorSystemThread.start();
 	}
 }
