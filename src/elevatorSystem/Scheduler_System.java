@@ -1,6 +1,7 @@
 package elevatorSystem;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  * Scheduler_System class. Simulates a scheduler system for an Elevator system.
@@ -19,6 +20,8 @@ public class Scheduler_System implements Runnable{
     private HashMap<Integer,ArrayList<Integer>> scheduledQueue;
     private static Boolean isNewTaskScheduled;
     private static Integer targetElevatorNumber;
+    private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
+    private DatagramSocket sendSocket, receiveSocket;
 
     /** Constructor for Scheduler_System */
     public Scheduler_System(){
@@ -26,6 +29,50 @@ public class Scheduler_System implements Runnable{
         this.tasksQueue = new ArrayList<>();
         this.scheduledQueue = new HashMap<>();
         targetElevatorNumber = 0;
+        try {
+            //Create and send and recieve socket.
+            receiveSocket = new DatagramSocket(10); // Scheduler_System will recieve data on Port 10
+            sendSocket = new DatagramSocket(40); //If data is recieved from Port 40 then it from Scheduler_System
+
+        } catch (SocketException se) {
+            se.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    public synchronized void scheduling(){
+        // Construct a DatagramPacket for receiving packets for the data reply
+        byte data[] = new byte[100];
+        receivePacket = new DatagramPacket(data, data.length);
+
+        try {
+            // Wait until data reply is received via sendReceiveSocket.
+            System.out.println("Server: Waiting for New Task......");
+            receiveSocket.receive(receivePacket);
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // Process the received datagram.
+        int len = receivePacket.getLength();
+        byte tempData[] = new byte[len];
+        for(int i = 0; i < len; i++) {
+            tempData[i] = data[i];
+        }
+        data = tempData;
+
+        System.out.println("Scheduler_System: Task received:");
+        System.out.println("From: " + receivePacket.getAddress());
+        System.out.println("Port: " + receivePacket.getPort());
+
+        System.out.println("Length: " + len);
+        System.out.print("Containing: ");
+
+        // Form a String from the byte array.
+        String received = new String(data,0,len);
+        System.out.println("String: " + received);
+        System.out.println("Bytes: " + Arrays.toString(data) + "\n");
     }
 
     /**Get Scheduled tasks from Scheduler for a given elevator number*/

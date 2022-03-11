@@ -7,10 +7,9 @@ package elevatorSystem;
  */
 
 // imports for scanning text file
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 // Class declaration
 public class Floor_System implements Runnable{
@@ -26,6 +25,8 @@ public class Floor_System implements Runnable{
 	private static int eventFloor;		// Temp Target floor variable
 	private static Scheduler_System scheduler_system;
 	private static Elevator_System elevator_system; //Elevator system
+	private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
+	private DatagramSocket sendSocket, receiveSocket;
 
 	//static Person[] allPeople;				// Array of Person objects
 	private ArrayList<Person> allPeople;
@@ -45,6 +46,16 @@ public class Floor_System implements Runnable{
 		floors[lastFloorNumber] = new Floor(lastFloorNumber, totalNumElevators, this);
 		floors[lastFloorNumber].setFloor(lastFloorNumber,true);
 		allPeople = new ArrayList<>();
+
+		try {
+			//Create and send and recieve socket.
+			receiveSocket = new DatagramSocket(30); // Floor_System will recieve data on Port 30
+			sendSocket = new DatagramSocket(42); //If data is recieved from Port 42 then it Floor_System
+
+		} catch (SocketException se) {
+			se.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	public void setScheduler_system(Scheduler_System system){
@@ -124,13 +135,13 @@ public class Floor_System implements Runnable{
 			System.out.println("Problem occured while reading file, adding default people list");
 			//Create default people objects and return a list of them.
 			int time[] = new int[4];
-			time[0]=00; time[1]=00; time[2]=23; time[3]=1010;
+			time[0]=00; time[1]=00; time[2]=23; time[3]=101;
 			Person myPerson1 = new Person(time, 2, 2, 1);
 
-			time = new int[4]; time[0]=00; time[1]=00; time[2]=53; time[3]=1010;
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=53; time[3]=101;
 			Person myPerson2 = new Person(time, 3, 1, 5);
 
-			time = new int[4]; time[0]=00; time[1]=01; time[2]=53; time[3]=1010;
+			time = new int[4]; time[0]=00; time[1]=01; time[2]=53; time[3]=101;
 			Person myPerson3 = new Person(time, 0, 1, 5);
 
 			Person defaultPeoples[] = new Person[3];

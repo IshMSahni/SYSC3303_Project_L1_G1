@@ -1,8 +1,9 @@
 package elevatorSystem;
 // imports for scanning text file
 import ElevatorStates.DoorClosed;
-
-import java.util.ArrayList;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /** Elevator_System class, Simulates as a control system for Elevator Car objects */
 public class Elevator_System implements Runnable{
@@ -16,6 +17,8 @@ public class Elevator_System implements Runnable{
 	private ArrayList<ElevatorState> states;
 
 	private static Integer targetElevatorNumber;
+	private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
+	private DatagramSocket sendSocket, receiveSocket;
 
 	/** Constructor for Elevator_System */
 	public Elevator_System(int totalNumElevators, int totalNumFloors){
@@ -27,6 +30,15 @@ public class Elevator_System implements Runnable{
 		for (int elevatorNumber = 0; elevatorNumber < totalNumElevators; elevatorNumber++) {
 			elevators[elevatorNumber] = new ElevatorCar(elevatorNumber, totalNumFloors, this);
 
+		}
+		try {
+			//Create and send and recieve socket.
+			receiveSocket = new DatagramSocket(20); // Elevator_System will recieve data on Port 20
+			sendSocket = new DatagramSocket(41); //If data is recieved from Port 41 then it from Elevator_System
+
+		} catch (SocketException se) {
+			se.printStackTrace();
+			System.exit(1);
 		}
 	}
 
