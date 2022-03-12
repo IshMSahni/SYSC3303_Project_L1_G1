@@ -27,9 +27,9 @@ public class Elevator_System implements Runnable{
 		//Create elevators
 		elevators = new ElevatorCar[totalNumElevators];
 		for (int elevatorNumber = 0; elevatorNumber < totalNumElevators; elevatorNumber++) {
-			elevators[elevatorNumber] = new ElevatorCar(elevatorNumber, totalNumFloors, this);
-
+			elevators[elevatorNumber] = new ElevatorCar(elevatorNumber, totalNumFloors);
 		}
+
 		try {
 			//Create and send and recieve socket.
 			receiveSocket = new DatagramSocket(20); // Elevator_System will recieve data on Port 20

@@ -27,6 +27,7 @@ public class Floor_System implements Runnable{
 	private static Elevator_System elevator_system; //Elevator system
 	private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
 	private DatagramSocket sendSocket, receiveSocket;
+	private long previousTime;
 
 	//static Person[] allPeople;				// Array of Person objects
 	private ArrayList<Person> allPeople;
@@ -38,14 +39,15 @@ public class Floor_System implements Runnable{
 	 * 	Args: Null
 	 */
 	public Floor_System(int totalNumFloors, int totalNumElevators) {
-		floors = new Floor[totalNumFloors];
+		this.floors = new Floor[totalNumFloors];
 		int lastFloorNumber = totalNumFloors - 1;
 		for (int i = 0; i < lastFloorNumber; i++) {
-			floors[i] = new Floor(i, totalNumElevators, this);
+			floors[i] = new Floor(i, totalNumElevators);
 		}
-		floors[lastFloorNumber] = new Floor(lastFloorNumber, totalNumElevators, this);
-		floors[lastFloorNumber].setFloor(lastFloorNumber,true);
-		allPeople = new ArrayList<>();
+		this.floors[lastFloorNumber] = new Floor(lastFloorNumber, totalNumElevators);
+		this.floors[lastFloorNumber].setFloor(lastFloorNumber,true);
+		this.allPeople = new ArrayList<>();
+		this.previousTime = 0;
 
 		try {
 			//Create and send and recieve socket.
@@ -135,13 +137,13 @@ public class Floor_System implements Runnable{
 			System.out.println("Problem occured while reading file, adding default people list");
 			//Create default people objects and return a list of them.
 			int time[] = new int[4];
-			time[0]=00; time[1]=00; time[2]=23; time[3]=101;
+			time[0]=00; time[1]=00; time[2]=03; time[3]=101;
 			Person myPerson1 = new Person(time, 2, 2, 1);
 
 			time = new int[4]; time[0]=00; time[1]=00; time[2]=53; time[3]=101;
 			Person myPerson2 = new Person(time, 3, 1, 5);
 
-			time = new int[4]; time[0]=00; time[1]=01; time[2]=53; time[3]=101;
+			time = new int[4]; time[0]=00; time[1]=01; time[2]=43; time[3]=101;
 			Person myPerson3 = new Person(time, 0, 1, 5);
 
 			Person defaultPeoples[] = new Person[3];
@@ -246,24 +248,42 @@ public class Floor_System implements Runnable{
 		// while loop loops thread until program is terminated
 		while (true) {
 			//Schedule task
-			if(allPeople.size() != 0) {
-				Integer elevatorNumber = 0;
-				String buttonStatusTemp = "";
-				int direction = allPeople.get(0).getDirection();
-				//Assign buttonStatustemp
-				if (direction == 1) {
-					buttonStatusTemp = "Up";
-				} else if (direction == 2) {
-					buttonStatusTemp = "Down";
-				}
+			if(this.allPeople.size() != 0) {
 
-				scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), buttonStatusTemp, allPeople.get(0).getFloorNumber()));
-				scheduler_system.addToQueue(new Task(allPeople.get(0).getTime(), elevatorNumber, allPeople.get(0).getDestination()));
+				byte data[] = new byte[7];
+				int time[] = allPeople.get(0).getTime();
 
-				allPeople.remove(0);
+				//Find total time in miliseconds
+				long totalTime = (time[0] *3600000) + (time[1] *60000) + (time[2] * 1000) + time[3];
+
+				try{ wait(totalTime - previousTime);}
+				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
+				previousTime = previousTime + totalTime;
+
+				//Floor Task data
+				data[0] = (byte) 3;
+				data[1] = (byte) this.allPeople.get(0).getDirection();
+				data[2] = (byte) this.allPeople.get(0).getFloorNumber();
+				data[3] = (byte) time[0];
+				data[4] = (byte) time[1];
+				data[5] = (byte) time[2];
+				data[6] = (byte) (time[3]/10);
+				this.sendData(data,10);
+
+				try{ wait(2000);}
+				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
+
+				//Elevator Task data
+				int elevatorNumber = 0;
+				data[0] = (byte) 1;
+				data[1] = (byte) elevatorNumber;
+				data[2] = (byte) this.allPeople.get(0).getDestination();
+				this.sendData(data,10);
+
+				this.allPeople.remove(0);
 			}
 
-			if(allPeople.size() == 0) {
+			if(this.allPeople.size() == 0) {
 				isEvent = false;
 				System.exit(0);//Only because we don't have an GUI yet for Iteration 2
 				// while loop loops until thread is notified
@@ -276,6 +296,26 @@ public class Floor_System implements Runnable{
 					}
 				}
 			}
+		}
+	}
+
+	/** This method will send scheduled task data to Elevator_System*/
+	public void sendData(byte data[], int portNumber){
+		System.out.println("Scheduler: sending a scheduled task data to Elevator_System.");
+		//create the datagram packet for the message with Port given
+		try {
+			sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), portNumber);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		// Send the data.
+		try {
+			sendSocket.send(sendPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 

@@ -1,8 +1,10 @@
 package elevatorSystem;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 /**
  * Floor Class:
  * 	Class is an object to represent a floor
- * Written by: Keith Lam 101147900
  */
 public class Floor {
 	
@@ -13,21 +15,30 @@ public class Floor {
 	private boolean isLast;		// Variable to ID top floor
 	private boolean upButton;	// Variable for up button status
 	private boolean downButton;	// Variable for down button status
+	private int buttonStatus; // 0 = No button pressed, 1 = Up button pressed, 2 = Down button pressed
 	private int[] lamps;		// Array for all lamps statuses
-	private Floor_System floor_system;
+	private DatagramPacket sendPacket;
+	private DatagramSocket sendSocket;
 	
 	/**
 	 * Constructor:
 	 * 	Floor constructor initializes all floor variables
 	 * 	Note floor Number is not initialized due to how floor objects are created
 	 */
-	public Floor(int floorNumber, int totalElevatorNumber, Floor_System floor_system) {
+	public Floor(int floorNumber, int totalElevatorNumber) {
 		upButton = false;
 		downButton = false;
 		lamps = new int[totalElevatorNumber];
-		this.floor_system = floor_system;
 		this.floorNumber = floorNumber;
 		this.isLast = false;
+		this.buttonStatus = 0;
+
+		try {
+			this.sendSocket = new DatagramSocket();
+		} catch (SocketException se) {
+			se.printStackTrace();
+			System.exit(1);
+		}
 	}
 
 	/**
@@ -154,4 +165,39 @@ public class Floor {
 
 	/** Getter method for lamps */
 	public int[] getLamp() {return lamps;}
+
+	/** Method for when a button is pressed on a Floor */
+	public void buttonPressed(int direction){
+
+		if (direction == 1) {
+			this.setUpButton(true);
+			this.setDownButton(false);
+		}
+		else if (direction == 2) {
+			this.setUpButton(false);
+			this.setDownButton(true);
+		}
+		else{
+			this.setUpButton(false);
+			this.setDownButton(false);
+		}
+
+		byte data[] = new byte[3];
+		data[0] = (byte) 2; data[1] = (byte) direction; data[2] = (byte) floorNumber;
+		//create the datagram packet for the message with Port 10 (Scheduler)
+		try {
+			this.sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 10);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		// Send the data.
+		try {
+			sendSocket.send(sendPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
 }

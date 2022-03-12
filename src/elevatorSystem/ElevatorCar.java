@@ -1,7 +1,9 @@
 package elevatorSystem;
 import ElevatorStates.*;
 
-import java.util.ArrayList;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
 /**
  * ElevatorCar class. Simulates an elevator object.
@@ -11,8 +13,8 @@ import java.util.ArrayList;
  * String status for status of elevator, Possible statuses:"Stopped","Moving Up","Moving Down"
  */
 public class ElevatorCar {
-    
-	private int elevatorNumber;
+
+    private int elevatorNumber;
     private float position;
     // lights buttons doors and motors
     private ArrayList<Boolean> lights = new ArrayList<Boolean>();
@@ -20,25 +22,24 @@ public class ElevatorCar {
     private boolean doorsOpen = false; //to open the doors
     private boolean motors =  false; //for motion
     private ArrayList<Integer> tasks;
-    private Scheduler_System scheduler_system;
     private String status;
     private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown;
     private ElevatorState elevatorState;
-    private Elevator_System elevator_system;
-    private int elevatorUsers;
+    private int numPassengerCounter;
+    private DatagramPacket sendPacket;
+    private DatagramSocket sendSocket;
 
     /** Constructor for Elevator Car */
-    public ElevatorCar(int elevatorNumber, int totalFloorNumber, Elevator_System elevator_system){
+    public ElevatorCar(int elevatorNumber, int totalFloorNumber){
         this.elevatorNumber = elevatorNumber; //
         this.position = 0; //
+        this.numPassengerCounter = 0;
         this.status = "Stopped"; //
         this.lights = new ArrayList<>();
         this.buttons = new ArrayList<>();
         this.doorsOpen = false;
         this.motors = false;
-        this.elevator_system = elevator_system;
         this.tasks = new ArrayList<>();
-        this.elevatorUsers = 0;
         for (int i = 0; i < totalFloorNumber; i++) {
             this.lights.add(false);
             this.buttons.add(false);
@@ -53,37 +54,52 @@ public class ElevatorCar {
         this.movingDown = new MovingDown(this);
         this.elevatorState = doorClosed;
 
+        try {
+            this.sendSocket = new DatagramSocket();
+        } catch (SocketException se) {
+            se.printStackTrace();
+            System.exit(1);
+        }
     }
-    
+
     /** Getter and setters for position and status */
     public float getPosition() {return position; }
     public void setPosition(float position) {this.position = position; }
-    
+
     public String getStatus() {return status; }
     public void setStatus(String status) {this.status = status; }
-    
+
     public int getElevatorNumber() {return elevatorNumber;}
 
-    public int getElevatorUsers(){
-        return elevatorUsers;
-    }
-
-    public void removePeopleOnElevator(){
-        elevatorUsers = elevatorUsers - 1;
-    }
-
-    public void addPeopleOnElevator(){
-        elevatorUsers+=1;
-    }
-
+    /** Passenger Counter methods*/
+    public int getNumPassengerCounter(){return this.numPassengerCounter;}
+    public void setNumPassengerCounter(int newCount){this.numPassengerCounter = newCount;}
+    public void incrementPassengerCount(){this.numPassengerCounter = this.numPassengerCounter + 1;}
+    public void decrementPassengerCount(){this.numPassengerCounter = this.numPassengerCounter - 1;}
 
     /** Method for when a button is pressed inside Elevator */
     public void buttonPressed(int buttonLocation){
-        this.scheduler_system.addToQueue(new Task(elevatorNumber,buttonLocation));
+        byte data[] = new byte[3];
+        data[0] = (byte) 0; data[1] = (byte) elevatorNumber; data[2] = (byte) buttonLocation;
+        //create the datagram packet for the message with Port 10 (Scheduler)
+        try {
+            this.sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 10);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // Send the data.
+        try {
+            sendSocket.send(sendPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
         this.setLights(buttonLocation,true);
         this.setButton(buttonLocation, true);
     }
-    
+
     public void testbuttonPressed(int buttonLocation){
         this.setLights(buttonLocation,true);
         this.setButton(buttonLocation, true);
@@ -109,8 +125,6 @@ public class ElevatorCar {
     /**Getter and Setter method for Tasks */
     public ArrayList<Integer> getTasks() {return tasks;}
     public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
-    public boolean getScheduler_system(){if(this.scheduler_system != null) {return true;} else return false;}
-    public void setScheduler_system(Scheduler_System scheduler_system){this.scheduler_system = scheduler_system;}
 
     /** Elevator State methods*/
     public synchronized void moveElevator(long time){this.elevatorState.moveElevator(time);}
