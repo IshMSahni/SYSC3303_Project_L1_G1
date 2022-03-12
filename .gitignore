@@ -23,3 +23,5 @@ out/production/SYSC3303_Project_L1_G1/tests/Test_Floor.class
 out/production/SYSC3303_Project_L1_G1/tests/Test_Floor_System.class
 out/production/SYSC3303_Project_L1_G1/tests/Test_Person.class
 SYSC3303_Project_L1_G1.iml
+*.class
+production/production/SYSC3303_Project_L1_G1/.project
