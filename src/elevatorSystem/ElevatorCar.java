@@ -25,7 +25,8 @@ public class ElevatorCar {
     private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown;
     private ElevatorState elevatorState;
     private Elevator_System elevator_system;
-    
+    private int elevatorUsers;
+
     /** Constructor for Elevator Car */
     public ElevatorCar(int elevatorNumber, int totalFloorNumber, Elevator_System elevator_system){
         this.elevatorNumber = elevatorNumber; //
@@ -37,6 +38,7 @@ public class ElevatorCar {
         this.motors = false;
         this.elevator_system = elevator_system;
         this.tasks = new ArrayList<>();
+        this.elevatorUsers = 0;
         for (int i = 0; i < totalFloorNumber; i++) {
             this.lights.add(false);
             this.buttons.add(false);
@@ -61,7 +63,20 @@ public class ElevatorCar {
     public void setStatus(String status) {this.status = status; }
     
     public int getElevatorNumber() {return elevatorNumber;}
-    
+
+    public int getElevatorUsers(){
+        return elevatorUsers;
+    }
+
+    public void removePeopleOnElevator(){
+        elevatorUsers = elevatorUsers - 1;
+    }
+
+    public void addPeopleOnElevator(){
+        elevatorUsers+=1;
+    }
+
+
     /** Method for when a button is pressed inside Elevator */
     public void buttonPressed(int buttonLocation){
         this.scheduler_system.addToQueue(new Task(elevatorNumber,buttonLocation));
