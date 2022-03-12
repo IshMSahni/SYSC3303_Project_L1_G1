@@ -15,7 +15,8 @@ c. Create new project
 	
 2. Make sure .java files are under src (source folder)
 
-3. Run the main method from Floor_System.java file
+3. Run the main methods in the following order: Scheduler_System, Elevator_System, Floor_System.
+
 
 ### Steps to run the Java Tests:
 1. Right click the test package in the project explorer
@@ -123,7 +124,7 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - A class that calculates the time it takes for the elevator to travel a certain amount of distance in a realistic scenario
 - This may be used in future implementations when using multiple elevators
 
-## Team & Contributions
-1. Keith Lam - Floor_System update, States Diagram, readme.txt modifications
-2. Muhammad Furqan - ElevatorStates classes, interface and JUnit testing, Elevator_System update, Sequence Diagram
-3. Ishanov Sahni - readme.txt modifications, ElevatorStates classes, UML Diagram
+## Team & Contributions for Iteration 3
+1. Keith Lam - State Machine Diagram, readme.txt modifications
+2. Muhammad Furqan - UDP conversion of entire system, All System classess modifications, Sequence Diagram
+3. Ishanov Sahni - ElevatorCar class changes, UML Class Diagram
