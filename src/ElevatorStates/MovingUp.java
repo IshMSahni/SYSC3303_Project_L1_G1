@@ -46,7 +46,5 @@ public class MovingUp implements ElevatorState {
         //Set to new state
         elevator.setElevatorState(elevator.getArrived());
     }
-
-
-
 }
+

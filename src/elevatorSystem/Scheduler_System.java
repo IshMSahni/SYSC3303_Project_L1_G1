@@ -65,28 +65,24 @@ public class Scheduler_System implements Runnable{
             tempData[i] = data[i];
         }
         data = tempData;
-        int portRecievedFrom = receivePacket.getPort();
 
         System.out.println("Scheduler_System: Task received:");
-        System.out.println("From: " + receivePacket.getAddress());
-        System.out.println("Port: " + portRecievedFrom);
-        System.out.println("Length: " + len);
-        System.out.print("Containing: ");
-
-        // Form a String from the byte array.
-        String received = new String(data,0,len);
-        System.out.println("String: " + received);
-        System.out.println("Bytes: " + Arrays.toString(data) + "\n");
 
         //Re-construct Task object from recieved data
         Task task;
-        if(data[0] == (byte) 0){
+        if(data[0] == (byte) 7){
+            this.removeElevatorTask(data[1], data[2]); //removeElevatorTask request
+        }
+        else {if(data[0] == (byte) 0){
             task = new Task(data[1],data[2]);
         }
         else if(data[0] == (byte) 1){
             int time[] = new int[4];
             time[0] = data[3]; time[1] = data[4]; time[2] = data[5]; time[3] = data[6];
             task = new Task(time, data[1],data[2]);
+        }
+        else if(data[0] == (byte) 4){
+            task = new Task("", data[1]);
         }
         //Floor Task
         else {
@@ -104,10 +100,11 @@ public class Scheduler_System implements Runnable{
             }
         }
 
-        //Update elevator position dataset being used by Scheduler_System
-        this.sendElevatorPositionsRequest();
-        //Add reconstructed Task to queue and schedule it
-        this.addToQueue(task);
+            //Update elevator position dataset being used by Scheduler_System
+            this.sendElevatorPositionsRequest();
+            //Add reconstructed Task to queue and schedule it
+            this.addToQueue(task);
+        }
     }
 
     /**Get Scheduled tasks from Scheduler for a given elevator number*/
@@ -117,18 +114,20 @@ public class Scheduler_System implements Runnable{
     public void addToQueue(Task task){
         if(task.getIsFloorTask()){
             System.out.println("New Task added to queue" + ", Target Floor: "
-                    + task.getFloorNumber() + ", Direction: "+ task.getDirection());
+                    + task.getFloorNumber());
         }
         else{System.out.println("New Task added to queue"+ ", Target Floor: "
-                + task.getFloorNumber() + ", Elevator Number: " + task.getElevatorNumber());
+                + task.getFloorNumber());
         }
         tasksQueue.add(task);
         scheduleTask(task);
     }
 
     /**Remove First task from queue of a given elevator number*/
-    public void removeElevatorTask(Integer elevatorNumber){
-        scheduledQueue.get(elevatorNumber).remove(0);
+    public void removeElevatorTask(int elevatorNumber, int floorNumber){
+        while(scheduledQueue.get(elevatorNumber).get(0) == floorNumber) {
+            scheduledQueue.get(elevatorNumber).remove(0);
+        }
     }
 
     /** Schedule a given Task based off elevators & floors data */
@@ -175,12 +174,13 @@ public class Scheduler_System implements Runnable{
         }
         this.scheduledQueue.replace(bestElevatorNumber, queue);
         targetElevatorNumber = bestElevatorNumber;
+
+        System.out.println("Scheduler: sending Scheduled Task data to Elevator_System.");
         this.sendData(data,20);
     }
 
     /** This method will send scheduled task data to Elevator_System*/
     public void sendData(byte data[], int portNumber){
-        System.out.println("Scheduler: sending a scheduled task data to Elevator_System.");
         //create the datagram packet for the message with Port given
         try {
             sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), portNumber);

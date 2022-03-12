@@ -7,8 +7,9 @@ public class Task {
     private String direction;
     private Boolean isFloorTask;
     private byte[] data; //This first byte of data will refer to the type of data
-                         // 0 = Elevator Task, No Time given.  1 = Elevator Task, Time given
-                         // 2 = Floor Task, No Time given.     3 = Floor Task, Time given
+    // 0 = Elevator Task, No Time given.  1 = Elevator Task, Time given
+    // 2 = Floor Task, No Time given.     3 = Floor Task, Time given
+    // 4 = Elevator Task, No Time and Elevator Number given
 
     /** Constructor if task is an Elevator Task (No time given)*/
     public Task(int elevatorNumber, int floorNumber){
@@ -82,6 +83,16 @@ public class Task {
         this.data[4] = (byte) time[1];
         this.data[5] = (byte) time[2];
         this.data[6] = (byte) (time[3]/10);
+    }
+
+    /** Constructor if task is an Elevator Task (No Elevator number and time given) */
+    public Task(int floorNumber){
+        this.floorNumber = floorNumber;
+        this.isFloorTask = false;
+
+        this.data = new byte[2];
+        this.data[0] = (byte) 4;
+        this.data[1] = (byte) floorNumber;
     }
 
     /** Getter methods for all attributes */

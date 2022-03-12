@@ -131,7 +131,28 @@ public class ElevatorCar {
     public void openDoor(){this.elevatorState.openDoor();}
     public void closeDoor(){this.elevatorState.closeDoor();}
     public synchronized void loadElevator(long time){this.elevatorState.loadElevator(time);}
-    public void elevatorArrived(){this.elevatorState.elevatorArrived();}
+
+    public void elevatorArrived(){
+        this.elevatorState.elevatorArrived();
+        byte data[] = new byte[3];
+        int currentLocation = Math.round(this.position);
+        data[0] = (byte) 7; data[1] = (byte) elevatorNumber; data[2] = (byte) currentLocation ;
+        //create the datagram packet for the message with Port 10 (Scheduler)
+        try {
+            this.sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 10);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // Send the data.
+        try {
+            sendSocket.send(sendPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
 
     public ElevatorState getDoorOpen(){return this.doorOpen;}
     public ElevatorState getDoorClosed(){return this.doorClosed;}

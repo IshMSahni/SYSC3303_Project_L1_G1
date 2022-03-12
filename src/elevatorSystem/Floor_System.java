@@ -134,16 +134,16 @@ public class Floor_System implements Runnable{
 			myReader.close();
 			return filePeople;
 		} catch (FileNotFoundException e) {	// Cover case of interrupt
-			System.out.println("Problem occured while reading file, adding default people list");
+			System.out.println("Adding default people list");
 			//Create default people objects and return a list of them.
 			int time[] = new int[4];
 			time[0]=00; time[1]=00; time[2]=03; time[3]=101;
 			Person myPerson1 = new Person(time, 2, 2, 1);
 
-			time = new int[4]; time[0]=00; time[1]=00; time[2]=53; time[3]=101;
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=23; time[3]=101;
 			Person myPerson2 = new Person(time, 3, 1, 5);
 
-			time = new int[4]; time[0]=00; time[1]=01; time[2]=43; time[3]=101;
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=43; time[3]=101;
 			Person myPerson3 = new Person(time, 0, 1, 5);
 
 			Person defaultPeoples[] = new Person[3];
@@ -260,25 +260,22 @@ public class Floor_System implements Runnable{
 				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
 				previousTime = previousTime + totalTime;
 
-				//Floor Task data
-				data[0] = (byte) 3;
-				data[1] = (byte) this.allPeople.get(0).getDirection();
-				data[2] = (byte) this.allPeople.get(0).getFloorNumber();
-				data[3] = (byte) time[0];
-				data[4] = (byte) time[1];
-				data[5] = (byte) time[2];
-				data[6] = (byte) (time[3]/10);
-				this.sendData(data,10);
+				String buttonDirection = "";
+				int direction = this.allPeople.get(0).getDirection();
 
-				try{ wait(2000);}
+				if(direction == 1) { buttonDirection = "Up"; }
+				else if(direction == 2) { buttonDirection = "Down"; }
+
+				//Floor Task data
+				Task task = new Task(time, buttonDirection ,this.allPeople.get(0).getFloorNumber());
+				this.sendData(task.getData(),10);
+
+				try{ wait(10000);}
 				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
 
 				//Elevator Task data
-				int elevatorNumber = 0;
-				data[0] = (byte) 1;
-				data[1] = (byte) elevatorNumber;
-				data[2] = (byte) this.allPeople.get(0).getDestination();
-				this.sendData(data,10);
+				task = new Task(this.allPeople.get(0).getDestination());
+				this.sendData(task.getData(),10);
 
 				this.allPeople.remove(0);
 			}

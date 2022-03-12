@@ -1,4 +1,5 @@
 package elevatorSystem;
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
  * 	Class is an object to represent a floor
  */
 public class Floor {
-	
+
 	/**
 	 * Initial Class Variables
 	 */
@@ -19,7 +20,7 @@ public class Floor {
 	private int[] lamps;		// Array for all lamps statuses
 	private DatagramPacket sendPacket;
 	private DatagramSocket sendSocket;
-	
+
 	/**
 	 * Constructor:
 	 * 	Floor constructor initializes all floor variables
@@ -50,17 +51,17 @@ public class Floor {
 	public void setFloor(int floorNumber) {
 		this.floorNumber = floorNumber;
 	}
-	
+
 	/**
 	 * Method: getFloorNumber
 	 * 	Method returns floor number
 	 * 	Args: Null
 	 * 	Return: int
 	 */
-    public int getFloorNumber() {
-        return floorNumber;
-    }
-	
+	public int getFloorNumber() {
+		return floorNumber;
+	}
+
 	/**
 	 * Method: setFloor
 	 * 	@Override
@@ -72,7 +73,7 @@ public class Floor {
 		this.isLast = last;
 		this.floorNumber = floorNumber;
 	}
-	
+
 	/**
 	 * Method: getUpButton
 	 * 	Method returns up button status
@@ -82,7 +83,7 @@ public class Floor {
 	public boolean getUpButton() {
 		return upButton;
 	}
-	
+
 	/**
 	 * Method: getDownButton
 	 * 	Method returns down button status
@@ -92,7 +93,7 @@ public class Floor {
 	public boolean getDownButton() {
 		return downButton;
 	}
-	
+
 	/**
 	 * Method: setUpButton
 	 * 	Method sets up button status
@@ -102,7 +103,7 @@ public class Floor {
 	public void setUpButton(boolean upButton) {
 		this.upButton = upButton;
 	}
-	
+
 	/**
 	 * Method: setDownButton
 	 * 	Method sets down button status
@@ -112,7 +113,7 @@ public class Floor {
 	public void setDownButton(boolean downButton) {
 		this.downButton = downButton;
 	}
-	
+
 	/**
 	 * Method: changeLamp
 	 * 	Method sets a lamp's status
@@ -122,7 +123,7 @@ public class Floor {
 	public void changeLamp(int elevator, int direction) {
 		lamps[elevator] = direction;
 	}
-	
+
 	/**
 	 * Method: printFloor
 	 * 	Method displays a floor's data
@@ -132,7 +133,7 @@ public class Floor {
 	public void printFloor() {
 		System.out.println();
 		System.out.print("Floor Number: " + floorNumber);
-		
+
 		// if statements in case of ground/top floors
 		if (floorNumber == 0) {
 			System.out.println(" (Ground Floor)");
@@ -141,15 +142,15 @@ public class Floor {
 		} else {
 			System.out.println();
 		}
-		
+
 		// if statements in case of ground/top floors
 		if (!isLast) {
 			System.out.println("\tUp Button: " + upButton);
-		} 
+		}
 		if (floorNumber != 0) {
 			System.out.println("\tDown Button: " + downButton);
 		}
-		
+
 		// Logic displays all lamp data
 		System.out.println("\tLamps:");
 		for (int i = 0; i < lamps.length; i++) {
@@ -169,18 +170,8 @@ public class Floor {
 	/** Method for when a button is pressed on a Floor */
 	public void buttonPressed(int direction){
 
-		if (direction == 1) {
-			this.setUpButton(true);
-			this.setDownButton(false);
-		}
-		else if (direction == 2) {
-			this.setUpButton(false);
-			this.setDownButton(true);
-		}
-		else{
-			this.setUpButton(false);
-			this.setDownButton(false);
-		}
+		if (direction == 1) { this.setUpButton(true);}
+		else if (direction == 2) { this.setDownButton(true); }
 
 		byte data[] = new byte[3];
 		data[0] = (byte) 2; data[1] = (byte) direction; data[2] = (byte) floorNumber;
