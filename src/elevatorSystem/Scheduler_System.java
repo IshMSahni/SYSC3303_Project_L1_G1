@@ -2,6 +2,8 @@ package elevatorSystem;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 /**
  * Scheduler_System class. Simulates a scheduler system for an Elevator system.
@@ -77,7 +79,10 @@ public class Scheduler_System implements Runnable{
         }
         else {
             byte taskType;
-            System.out.println("Scheduler_System: Task received:");
+            //Print time
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            System.out.println("Scheduler_System: Task received at Time: "+dtf.format(now));
             if(data[0] == (byte) 0){
                 taskType = (byte) 0;
                 task = new Task(data[1],data[2]);
@@ -237,17 +242,26 @@ public class Scheduler_System implements Runnable{
         }
     }
 
+    /**
+     * Method to determine best Elevator Number to use.
+     * Prefers Elevators that has empty task queue (when currentWeightFactor = TaskNumber = 0)
+     * Or Elevators that already have that task in their queue (when currentTaskNumber < 0).
+     * Then it prefers Elevators that have lowest WeightFactor which is based on number of passengers and taskNumber
+     */
     public int bestElevatorNumber() {
         int bestElevatorNumber = 0;
         int bestTaskNumber = getTaskNumber(bestElevatorNumber);
+        int bestWeightFactor = bestTaskNumber * (elevators[0].getNumPassengerCounter() + 1);
 
         for (int i = 0; i < elevators.length; i++) {
-            Integer currentTaskNumber = getTaskNumber(i);
-            if(currentTaskNumber < 0){
-                bestTaskNumber = currentTaskNumber;
-                bestElevatorNumber = i;
+            int currentTaskNumber = getTaskNumber(i);
+            int passengerNumber = elevators[i].getNumPassengerCounter();
+            int currentWeightFactor = currentTaskNumber * (passengerNumber + 1);
+
+            if((currentTaskNumber < 0) || (currentWeightFactor == 0)){
+                return i;
             }
-            if(bestTaskNumber > currentTaskNumber && (bestTaskNumber > -1)){
+            else if(bestWeightFactor > currentWeightFactor){
                 bestTaskNumber = currentTaskNumber;
                 bestElevatorNumber = i;
             }

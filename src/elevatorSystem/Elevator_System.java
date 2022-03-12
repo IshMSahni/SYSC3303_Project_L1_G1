@@ -1,6 +1,8 @@
 package elevatorSystem;
 // imports for scanning text file
 import ElevatorStates.DoorClosed;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -68,12 +70,13 @@ public class Elevator_System implements Runnable{
 			this.sendElevatorsData();
 		}
 
-		//TODO Data is elevator has arrived at a floor
+		// Elevator has arrived at a floor
 		else if(data[0] == (byte) 7){
 			this.updateQueue(data);
 		}
 	}
 
+	/** Removes tasks from queue that are completed by Elevator after arriving at a floor*/
 	public void updateQueue(byte[] data) {
 		int elevatorNumber = data[1];
 		int floorNumber = data[2];
@@ -155,6 +158,7 @@ public class Elevator_System implements Runnable{
 		Float startLocation = elevator.getPosition();
 		Integer endLocation = elevator.getTasks().get(0);
 		long time = calculateTime(startLocation,endLocation);
+
 		//Elevator state methods
 		elevators[elevatorNumber].moveElevator(time);
 		elevators[elevatorNumber].elevatorArrived();
@@ -244,4 +248,3 @@ public class Elevator_System implements Runnable{
 		elevatorSystemSupportThread.start();
 	}
 }
-

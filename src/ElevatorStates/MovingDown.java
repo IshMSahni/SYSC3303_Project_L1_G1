@@ -1,6 +1,8 @@
 package ElevatorStates;
 
 import elevatorSystem.ElevatorCar;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import elevatorSystem.ElevatorState;
 
 public class MovingDown implements ElevatorState {
@@ -40,7 +42,9 @@ public class MovingDown implements ElevatorState {
         elevator.setPosition(endLocation);
         elevator.setButton(endLocation, false);
         elevator.getTasks().remove(0);
-        System.out.println("Elevator "+elevator.getElevatorNumber()+" now arrived floor "+endLocation);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println("Elevator "+elevator.getElevatorNumber()+" now arrived floor "+endLocation+" at Time: "+dtf.format(now));
         //Set to new state
         elevator.setElevatorState(elevator.getArrived());
     }
