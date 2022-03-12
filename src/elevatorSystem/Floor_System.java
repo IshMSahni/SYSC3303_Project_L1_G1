@@ -82,7 +82,7 @@ public class Floor_System implements Runnable{
 
 		// Try Catch statement for file processing
 		try {
-			File myObj = new File("filename.txt");
+			File myObj = new File("wrongFilename.txt"); //Currently doing just default list of people testing, so wrong filename
 			Scanner myCounter = new Scanner(myObj);
 
 			// while loop counts number of lines
@@ -140,10 +140,10 @@ public class Floor_System implements Runnable{
 			time[0]=00; time[1]=00; time[2]=03; time[3]=101;
 			Person myPerson1 = new Person(time, 2, 2, 1);
 
-			time = new int[4]; time[0]=00; time[1]=00; time[2]=23; time[3]=101;
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=33; time[3]=101;
 			Person myPerson2 = new Person(time, 3, 1, 5);
 
-			time = new int[4]; time[0]=00; time[1]=00; time[2]=43; time[3]=101;
+			time = new int[4]; time[0]=00; time[1]=01; time[2]=03; time[3]=101;
 			Person myPerson3 = new Person(time, 0, 1, 5);
 
 			Person defaultPeoples[] = new Person[3];
@@ -151,7 +151,6 @@ public class Floor_System implements Runnable{
 
 			return defaultPeoples;
 		}
-		//return null;	// Redundancy for syntax error coverage
 	}
 
 	/**
@@ -270,7 +269,8 @@ public class Floor_System implements Runnable{
 				Task task = new Task(time, buttonDirection ,this.allPeople.get(0).getFloorNumber());
 				this.sendData(task.getData(),10);
 
-				try{ wait(10000);}
+				//Wait 15 seconds
+				try{ wait(15000);}
 				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
 
 				//Elevator Task data
@@ -324,7 +324,7 @@ public class Floor_System implements Runnable{
 	 */
 	public static void main(String[] args) {
 		int totalFloorNumber = 10; //total number of floors
-		int totalElevatorNumber = 1; //total number  of elevators
+		int totalElevatorNumber = 3; //total number  of elevators
 
 		Floor_System floor_SubSystem = new Floor_System(totalFloorNumber,totalElevatorNumber);
 		floor_SubSystem.setEventFloor(-1);

@@ -51,9 +51,15 @@ public class Elevator_System implements Runnable{
 		// Recieve new scheduled task data
 		byte data[] = recieveData(receiveSocket);
 
-		// Data is new scheduled Task
+		// Data is new scheduled Elevator Task
 		if(data[0] == (byte) 0){
-			System.out.println("New Scheduled Task recieved.");
+			System.out.println("New Scheduled Elevator Task recieved.");
+			int elevatorNum = data[1];
+			updateElevatorQueue(elevatorNum, data);
+		}
+		// Data is new scheduled Floor Task
+		else if(data[0] == (byte) 2){
+			System.out.println("New Scheduled Floor Task recieved.");
 			int elevatorNum = data[1];
 			updateElevatorQueue(elevatorNum, data);
 		}
@@ -72,7 +78,7 @@ public class Elevator_System implements Runnable{
 		int elevatorNumber = data[1];
 		int floorNumber = data[2];
 		ArrayList<Integer> tasks = elevators[elevatorNumber].getTasks();
-		while(tasks.get(0) == floorNumber) {
+		while((tasks.size() != 0) && tasks.get(0) == floorNumber) {
 			tasks.remove(0);
 		}
 		elevators[elevatorNumber].setTasks(tasks);
@@ -82,10 +88,10 @@ public class Elevator_System implements Runnable{
 	/** A support method that will handle Elevator moving elevators */
 	public void elevatorRunningSupport() {
 		byte data[] = recieveData(movingSocket);
-		if(data[0] == (byte) 0) {
+		if(data[0] == (byte) 0 || data[0] == (byte) 2) {
 			int elevatorNumber = data[1];
 			ArrayList<Integer> tasks = new ArrayList<>();
-			for (int i = 1; i < data.length; i++) {
+			for (int i = 2; i < data.length; i++) {
 				int floorNumber = data[i];
 				tasks.add(floorNumber);
 			}
@@ -95,6 +101,12 @@ public class Elevator_System implements Runnable{
 			targetElevatorNumber = elevatorNumber;
 			moveElevator(elevatorNumber);
 			loadElevator(elevatorNumber);
+			if(data[0] == (byte) 0) {
+				this.elevators[elevatorNumber].decrementPassengerCount();
+			}
+			else {
+				this.elevators[elevatorNumber].incrementPassengerCount();
+			}
 		}
 	}
 
@@ -125,7 +137,7 @@ public class Elevator_System implements Runnable{
 	public synchronized void updateElevatorQueue(int elevatorNumber, byte data[]){
 		//Reconstruct the scheduled tasks as an ArrayList from the data
 		ArrayList<Integer> tasks = new ArrayList<>();
-		for (int i = 1; i < data.length; i++) {
+		for (int i = 2; i < data.length; i++) {
 			int floorNumber = data[i];
 			tasks.add(floorNumber);
 		}
@@ -220,7 +232,7 @@ public class Elevator_System implements Runnable{
 
 	/** Main method*/
 	public static void main(String[] args) {
-		int totalNumElevators = 1;
+		int totalNumElevators = 3;
 		int totalNumFloors = 10;
 		Elevator_System elevator_system_main = new Elevator_System(totalNumElevators,totalNumFloors, false);
 		Elevator_System elevator_system_support = new Elevator_System(totalNumElevators,totalNumFloors, true);
@@ -232,3 +244,4 @@ public class Elevator_System implements Runnable{
 		elevatorSystemSupportThread.start();
 	}
 }
+
