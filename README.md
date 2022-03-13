@@ -2,7 +2,7 @@
 
 ## Steps to install:
 
-Import the Iteration 2 into IDE
+Import Iteration 3 into IDE
 
 ### Steps to run the program:
 1. Import repo on eclipse
