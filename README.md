@@ -127,6 +127,6 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - This may be used in future implementations when using multiple elevators
 
 ## Team & Contributions for Iteration 3
-1. Keith Lam - State Machine Diagram, readme.txt modifications
+1. Keith Lam - State Machine Diagram, Readme.txt modifications
 2. Muhammad Furqan - UDP conversion of entire system, All System classess modifications, Sequence Diagram
 3. Ishanov Sahni - ElevatorCar class changes, UML Class Diagram
