@@ -35,6 +35,7 @@ c. Create new project
 - Object pertaining to requirements of every ElevatorCar such as buttons, lights, motors, doors etc.
 - Objects are managed by the Elevator_System to indicate where the elevator should travel
 - Contains the state of the elevator and also changes based on calls to the methods within the state
+- Contains information about how many people are on and off the elevator as an indicator of task completion
 
 ### Floor_System.java
 - Reads input from filename.txt
@@ -77,6 +78,7 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 ### Scheduler_System.java
 - Handles all requests in Task objects that delegate the Floor_System and the Elevator_System what to do.
 - Manages, sends, and removes interactions with the system from the queue after the interaction is complete
+- Manages which elevator to assign the task to based on the location of the elevator and the people.
 
 ### Task.java
 - Object that is made to represent the task given to the scheduler.
