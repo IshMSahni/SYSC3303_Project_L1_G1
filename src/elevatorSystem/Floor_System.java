@@ -23,6 +23,8 @@ public class Floor_System implements Runnable{
 	private static int carButton;		// Destination floor variable
 	private static boolean isEvent;		// Variable for breaking wait()
 	private static int eventFloor;		// Temp Target floor variable
+	private static int bug;				// Bug type variable for person definition
+	
 	private static Scheduler_System scheduler_system;
 	private static Elevator_System elevator_system; //Elevator system
 	private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
@@ -79,6 +81,7 @@ public class Floor_System implements Runnable{
 		String temp;				// temp variable for programming logic
 
 		time = new int[4];	// Initialize array with empty elements
+		Person myPerson;
 
 		// Try Catch statement for file processing
 		try {
@@ -105,6 +108,7 @@ public class Floor_System implements Runnable{
 				floorNumber = Integer.parseInt(txt[1]);	// Read floor number from file
 				buttonStatustemp = txt[2];				// Read button status from file
 				carButton = Integer.parseInt(txt[3]);	// Read Destination floor from file
+				bug = Integer.parseInt(txt[4]);
 
 				// for loop assigns hours and minutes to time array
 				for (int i0 = 0; i0 < (timeSTR.length - 1); i0++) {
@@ -128,7 +132,11 @@ public class Floor_System implements Runnable{
 				} else {
 					buttonStatus = 0;
 				}
-				Person myPerson = new Person(time, floorNumber, buttonStatus, carButton);	// Create Person object
+				if (bug != 0 && bug <= 3) {
+					myPerson = new Person(time, floorNumber, buttonStatus, carButton, bug);	// Create Person object with bug
+				} else {
+					myPerson = new Person(time, floorNumber, buttonStatus, carButton);	// Create Person object
+				}
 				filePeople[i] = myPerson;	// Add Person to array of people
 			}
 			myReader.close();
@@ -141,13 +149,16 @@ public class Floor_System implements Runnable{
 			Person myPerson1 = new Person(time, 2, 2, 1);
 
 			time = new int[4]; time[0]=00; time[1]=00; time[2]=33; time[3]=101;
-			Person myPerson2 = new Person(time, 3, 1, 5);
+			Person myPerson2 = new Person(time, 3, 1, 5, 1);
 
 			time = new int[4]; time[0]=00; time[1]=01; time[2]=03; time[3]=101;
-			Person myPerson3 = new Person(time, 0, 1, 5);
+			Person myPerson3 = new Person(time, 0, 1, 5, 2);
+			
+			time = new int[4]; time[0]=00; time[1]=02; time[2]=43; time[3]=101;
+			Person myPerson4 = new Person(time, 0, 1, 5, 3);
 
-			Person defaultPeoples[] = new Person[3];
-			defaultPeoples[0] = myPerson1; defaultPeoples[1] = myPerson2; defaultPeoples[2] = myPerson3;
+			Person defaultPeoples[] = new Person[4];
+			defaultPeoples[0] = myPerson1; defaultPeoples[1] = myPerson2; defaultPeoples[2] = myPerson3; defaultPeoples[3] = myPerson4;
 
 			return defaultPeoples;
 		}
@@ -244,6 +255,8 @@ public class Floor_System implements Runnable{
 	 */
 	public synchronized void run() {
 
+		Task task;
+		
 		// while loop loops thread until program is terminated
 		while (true) {
 			//Schedule task
@@ -266,7 +279,11 @@ public class Floor_System implements Runnable{
 				else if(direction == 2) { buttonDirection = "Down"; }
 
 				//Floor Task data
-				Task task = new Task(time, buttonDirection ,this.allPeople.get(0).getFloorNumber());
+				if (this.allPeople.get(0).getBug() != 0 && this.allPeople.get(0).getBug() <= 3) {
+					task = new Task(time, buttonDirection ,this.allPeople.get(0).getFloorNumber(), this.allPeople.get(0).getBug());
+				} else {
+					task = new Task(time, buttonDirection ,this.allPeople.get(0).getFloorNumber());
+				}
 				this.sendData(task.getData(),10);
 
 				//Wait 15 seconds

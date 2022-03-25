@@ -10,6 +10,7 @@ public class Person {
 	private int floorNumber;	// floor number person is on
 	private int direction;	// Button status variable (0 = un-pressed, 1 = up, 2 = down)
 	private int destination;	// Destination floor variable
+	private int bug;
 	
 	/**
 	 * Constructor:
@@ -21,6 +22,19 @@ public class Person {
 		this.floorNumber = floorNumber;
 		this.direction = direction;
 		this.destination = destination;
+	}
+	
+	/**
+	 * Constructor:
+	 * 	Person constructor initializes all person variables with bug
+	 * 	Args: (int[]) time, (int floorNumber, (int) buttonStatus, (int) destination)
+	 */
+	public Person(int[] time, int floorNumber, int direction, int destination, int bug) {
+		this.time = time;
+		this.floorNumber = floorNumber;
+		this.direction = direction;
+		this.destination = destination;
+		this.bug = bug;
 	}
 	
 	/**
@@ -61,5 +75,15 @@ public class Person {
 	 */
 	public int getDestination() {
 		return destination;
+	}
+	
+	/**
+	 * Method: getBug
+	 * 	Method returns bug type variable
+	 * 	Args: Null
+	 * 	Return: int
+	 */
+	public int getBug() {
+		return bug;
 	}
 }
