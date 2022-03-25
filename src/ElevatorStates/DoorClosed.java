@@ -65,4 +65,9 @@ public class DoorClosed implements ElevatorState {
 
     }
 
+    @Override
+    public void elevatorOutOfService() {
+
+    }
+
 }

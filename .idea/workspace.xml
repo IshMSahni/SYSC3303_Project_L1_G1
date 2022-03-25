@@ -5,25 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e64c7ac-8034-4e7d-b7ee-ca5505ec266a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.project" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ElevatorStates/CalculateTime.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/ElevatorStates/OutOfService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ElevatorStates/Arrived.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/Arrived.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ElevatorStates/DoorClosed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/DoorClosed.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ElevatorStates/DoorOpen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/DoorOpen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ElevatorStates/Loading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/Loading.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ElevatorStates/MovingDown.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/MovingDown.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ElevatorStates/MovingUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/MovingUp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/elevatorSystem/ElevatorCar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/elevatorSystem/ElevatorCar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/elevatorSystem/ElevatorState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/elevatorSystem/ElevatorState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/elevatorSystem/Elevator_System.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/elevatorSystem/Elevator_System.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />

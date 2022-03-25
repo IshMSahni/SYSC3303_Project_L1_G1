@@ -23,11 +23,12 @@ public class ElevatorCar {
     private boolean motors =  false; //for motion
     private ArrayList<Integer> tasks;
     private String status;
-    private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown;
+    private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown, outOfService;
     private ElevatorState elevatorState;
     private int numPassengerCounter;
     private DatagramPacket sendPacket;
     private DatagramSocket sendSocket;
+    private long time;
 
     /** Constructor for Elevator Car */
     public ElevatorCar(int elevatorNumber, int totalFloorNumber){
@@ -52,6 +53,7 @@ public class ElevatorCar {
         this.loading = new Loading(this);
         this.movingUp = new MovingUp(this);
         this.movingDown = new MovingDown(this);
+        this.outOfService = new OutOfService(this);
         this.elevatorState = doorClosed;
 
         try {
@@ -127,7 +129,7 @@ public class ElevatorCar {
     public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
 
     /** Elevator State methods*/
-    public synchronized void moveElevator(long time){this.elevatorState.moveElevator(time);}
+    public synchronized void moveElevator(long time){this.time = time; this.elevatorState.moveElevator(time);}
     public void openDoor(){this.elevatorState.openDoor();}
     public void closeDoor(){this.elevatorState.closeDoor();}
     public synchronized void loadElevator(long time){this.elevatorState.loadElevator(time);}
@@ -160,6 +162,7 @@ public class ElevatorCar {
     public ElevatorState getMovingDown(){return this.movingDown;}
     public ElevatorState getLoading(){return this.loading;}
     public ElevatorState getArrived(){return this.arrived;}
+    public ElevatorState getOutOfService(){return this.outOfService;}
     public ElevatorState getElevatorState(){return this.elevatorState;}
     public void setElevatorState(ElevatorState elevatorState){this.elevatorState = elevatorState;}
 }

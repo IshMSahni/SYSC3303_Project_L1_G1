@@ -38,4 +38,9 @@ public class Loading implements ElevatorState {
         System.out.println("Can not arrive, Loading for Elevator "+elevator.getElevatorNumber());
     }
 
+    @Override
+    public void elevatorOutOfService() {
+
+    }
+
 }

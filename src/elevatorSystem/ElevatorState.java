@@ -10,5 +10,6 @@ public interface ElevatorState {
     void closeDoor();
     void loadElevator(long time);
     void elevatorArrived();
+    void elevatorOutOfService();
 
 }
