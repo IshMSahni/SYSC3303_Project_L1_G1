@@ -19,7 +19,7 @@ public class Scheduler_System implements Runnable{
     private ElevatorCar[] elevators;
     private ArrayList<Task> tasksQueue;
     private HashMap<Integer,ArrayList<Integer>> scheduledQueue;
-    private static Integer targetElevatorNumber;
+    private int targetElevatorNumber;
     private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
     private DatagramSocket sendSocket, receiveSocket;
 
@@ -85,17 +85,19 @@ public class Scheduler_System implements Runnable{
             System.out.println("Scheduler_System: Task received at Time: "+dtf.format(now));
             if(data[0] == (byte) 0){
                 taskType = (byte) 0;
+                this.targetElevatorNumber = data[1];
                 task = new Task(data[1],data[2]);
             }
             else if(data[0] == (byte) 1){
                 taskType = (byte) 0;
                 int time[] = new int[4];
                 time[0] = data[3]; time[1] = data[4]; time[2] = data[5]; time[3] = data[6];
+                this.targetElevatorNumber = data[1];
                 task = new Task(time, data[1],data[2]);
             }
             else if(data[0] == (byte) 4){
                 taskType = (byte) 0;
-                task = new Task("", data[1]);
+                task = new Task(targetElevatorNumber, data[1]);
             }
             //Floor Task
             else {
