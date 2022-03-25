@@ -54,4 +54,9 @@ public class DoorOpen implements ElevatorState {
         System.out.println("Can Not arrive for Elevator "+elevator.getElevatorNumber());
 
     }
+
+    @Override
+    public void elevatorOutOfService() {
+
+    }
 }
