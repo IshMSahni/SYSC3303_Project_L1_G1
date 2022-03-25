@@ -23,7 +23,7 @@ public class ElevatorCar implements Runnable{
     private boolean motors =  false; //for motion
     private ArrayList<Integer> tasks;
     private String status;
-    private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown;
+    private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown, outOfService;
     private ElevatorState elevatorState;
     private int numPassengerCounter;
     private DatagramPacket sendPacket, receivePacket;
@@ -31,6 +31,7 @@ public class ElevatorCar implements Runnable{
     private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
     private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
     private final long loadTime = 10; // 10 seconds is the average loading time
+    private long time;
 
     /** Constructor for Elevator Car */
     public ElevatorCar(int elevatorNumber, int totalFloorNumber){
@@ -55,6 +56,7 @@ public class ElevatorCar implements Runnable{
         this.loading = new Loading(this);
         this.movingUp = new MovingUp(this);
         this.movingDown = new MovingDown(this);
+        this.outOfService = new OutOfService(this);
         this.elevatorState = doorClosed;
 
         try {
@@ -162,7 +164,10 @@ public class ElevatorCar implements Runnable{
     }
 
     /** Elevator State methods*/
-    public synchronized void moveElevator(long time){this.elevatorState.moveElevator(time);}
+    public synchronized void moveElevator(long time){
+        this.time = time;
+        this.elevatorState.moveElevator(time);
+    }
     public void openDoor(){this.elevatorState.openDoor();}
     public void closeDoor(){this.elevatorState.closeDoor();}
     public synchronized void loadElevator(long time){this.elevatorState.loadElevator(time);}
@@ -196,7 +201,9 @@ public class ElevatorCar implements Runnable{
     public ElevatorState getLoading(){return this.loading;}
     public ElevatorState getArrived(){return this.arrived;}
     public ElevatorState getElevatorState(){return this.elevatorState;}
+    public ElevatorState getOutOfService(){return this.outOfService;}
     public void setElevatorState(ElevatorState elevatorState){this.elevatorState = elevatorState;}
+
 
     public byte[] recieveData(DatagramSocket receiveSocket) {
         // Construct a DatagramPacket for receiving packets for the data reply
@@ -223,8 +230,7 @@ public class ElevatorCar implements Runnable{
 
     @Override
     public void run() {
-        // TODO Convert the while condition to while elevator is in service [ while (elevator state != Out_Of_Service) ]
-        while(true) {
+        while(this.elevatorState != this.getOutOfService()) {
             byte data[] = recieveData(recieveSocket);
             if (data[0] == (byte) 0 || data[0] == (byte) 2) {
                 int elevatorNumber = data[1];
