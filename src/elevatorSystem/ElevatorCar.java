@@ -12,7 +12,7 @@ import java.util.*;
  * Boolean attributes for doorsOpen (true if open), and motors (true if moving)
  * String status for status of elevator, Possible statuses:"Stopped","Moving Up","Moving Down"
  */
-public class ElevatorCar {
+public class ElevatorCar implements Runnable{
 
     private int elevatorNumber;
     private float position;
@@ -26,8 +26,11 @@ public class ElevatorCar {
     private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown;
     private ElevatorState elevatorState;
     private int numPassengerCounter;
-    private DatagramPacket sendPacket;
-    private DatagramSocket sendSocket;
+    private DatagramPacket sendPacket, receivePacket;
+    private DatagramSocket sendSocket, recieveSocket;
+    private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
+    private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
+    private final long loadTime = 10; // 10 seconds is the average loading time
 
     /** Constructor for Elevator Car */
     public ElevatorCar(int elevatorNumber, int totalFloorNumber){
@@ -56,6 +59,7 @@ public class ElevatorCar {
 
         try {
             this.sendSocket = new DatagramSocket();
+            this.recieveSocket = new DatagramSocket(elevatorNumber + 90);
         } catch (SocketException se) {
             se.printStackTrace();
             System.exit(1);
@@ -126,6 +130,37 @@ public class ElevatorCar {
     public ArrayList<Integer> getTasks() {return tasks;}
     public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
 
+    /** Method to move elevator */
+    public synchronized void movingElevator(){
+        //Calculate Time to move elevator
+        Float startLocation = this.position;
+        Integer endLocation = this.tasks.get(0);
+        long time = calculateTime(startLocation,endLocation);
+
+        //Elevator state methods
+        this.moveElevator(time);
+        this.elevatorArrived();
+        this.openDoor();
+    }
+
+    /** Method to calculate time in milliseconds to move Elevator a given amount of distance */
+    public long calculateTime(Float startLocation, Integer endLocation){
+        double time;
+        double netDistance = Math.abs(startLocation - endLocation) * 3.0;
+        double inflectionDistance = (elevatorTopSpeed*elevatorTopSpeed)/elevatorAcceleration;
+
+        //If net distance between floors allows elevator  to reach top speed, then use 1st formula, else use 2nd formula.
+        if(netDistance > inflectionDistance){
+            time = ((netDistance - inflectionDistance) / elevatorTopSpeed) + (Math.sqrt(inflectionDistance) * 2);
+        }
+        else{
+            time = Math.sqrt(netDistance) * 2;
+        }
+        //Return time converted to long type after rounding.
+        //Multiply 1000 because to convert time from seconds to milliseconds
+        return (Math.round(time) * 1000);
+    }
+
     /** Elevator State methods*/
     public synchronized void moveElevator(long time){this.elevatorState.moveElevator(time);}
     public void openDoor(){this.elevatorState.openDoor();}
@@ -162,4 +197,55 @@ public class ElevatorCar {
     public ElevatorState getArrived(){return this.arrived;}
     public ElevatorState getElevatorState(){return this.elevatorState;}
     public void setElevatorState(ElevatorState elevatorState){this.elevatorState = elevatorState;}
+
+    public byte[] recieveData(DatagramSocket receiveSocket) {
+        // Construct a DatagramPacket for receiving packets for the data reply
+        byte data[] = new byte[100];
+        receivePacket = new DatagramPacket(data, data.length);
+        try {
+            // Wait until data reply is received via receiveSocket.
+            receiveSocket.receive(receivePacket);
+        } catch(IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        // Process the received datagram.
+        int len = receivePacket.getLength();
+        byte tempData[] = new byte[len];
+        for(int i = 0; i < len; i++) {
+            tempData[i] = data[i];
+        }
+        data = tempData;
+
+        return data;
+    }
+
+    @Override
+    public void run() {
+        // TODO Convert the while condition to while elevator is in service [ while (elevator state != Out_Of_Service) ]
+        while(true) {
+            byte data[] = recieveData(recieveSocket);
+            if (data[0] == (byte) 0 || data[0] == (byte) 2) {
+                int elevatorNumber = data[1];
+                ArrayList<Integer> tasks = new ArrayList<>();
+                for (int i = 2; i < data.length; i++) {
+                    int floorNumber = data[i];
+                    tasks.add(floorNumber);
+                }
+
+                //Update elevator tasks and move elevator.
+                this.tasks = tasks;
+                this.movingElevator();
+                this.loadElevator(loadTime * 1000);
+                this.closeDoor();
+
+                if (data[0] == (byte) 0) {
+                    this.decrementPassengerCount();
+                } else {
+                    this.incrementPassengerCount();
+                }
+            }
+        }
+    }
 }

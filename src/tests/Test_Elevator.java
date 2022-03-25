@@ -14,7 +14,7 @@ public class Test_Elevator {
 	
 	@Test
 	public void testElevatorCreation() {
-		Elevator_System elevator_system = new Elevator_System(1,2);
+		Elevator_System elevator_system = new Elevator_System(1,2,false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
 		assertNotNull(elevator);
 		assert(elevator.getPosition() == 0);	
@@ -22,7 +22,7 @@ public class Test_Elevator {
 	
 	@Test
 	public void testGetFloor(){
-		Elevator_System elevator_system = new Elevator_System(1,2);
+		Elevator_System elevator_system = new Elevator_System(1,2,false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
 		elevator.setPosition(2);
 		assert(elevator.getPosition() == 2);
@@ -30,7 +30,7 @@ public class Test_Elevator {
 	
 	@Test
 	public void testButtonPressed(){
-		Elevator_System elevator_system = new Elevator_System(1,2);
+		Elevator_System elevator_system = new Elevator_System(1,2,false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
 		elevator.testbuttonPressed(0);
 		
@@ -40,11 +40,8 @@ public class Test_Elevator {
 	
 	@Test
 	public void testSchedulerSystem(){
-		Elevator_System elevator_system = new Elevator_System(1,2);
+		Elevator_System elevator_system = new Elevator_System(1,2,false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
-		Scheduler_System ss= new Scheduler_System();
-		ss.setElevator_system(elevator_system);
-		assert(elevator.getScheduler_system());
 	}
 
 }

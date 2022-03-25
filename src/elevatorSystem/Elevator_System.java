@@ -1,6 +1,5 @@
 package elevatorSystem;
 // imports for scanning text file
-import ElevatorStates.DoorClosed;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.io.*;
@@ -19,7 +18,7 @@ public class Elevator_System implements Runnable{
 
 	private static Integer targetElevatorNumber;
 	private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
-	private DatagramSocket sendSocket, receiveSocket, movingSocket;
+	private DatagramSocket sendSocket, receiveSocket;
 
 	/** Constructor for Elevator_System */
 	public Elevator_System(int totalNumElevators, int totalNumFloors, boolean isSupport){
@@ -30,7 +29,6 @@ public class Elevator_System implements Runnable{
 		elevators = new ElevatorCar[totalNumElevators];
 		for (int elevatorNumber = 0; elevatorNumber < totalNumElevators; elevatorNumber++) {
 			elevators[elevatorNumber] = new ElevatorCar(elevatorNumber, totalNumFloors);
-
 		}
 		try {
 			//Create and send and recieve socket.
@@ -38,10 +36,6 @@ public class Elevator_System implements Runnable{
 				receiveSocket = new DatagramSocket(20); // Elevator_System will recieve data on Port 20
 				sendSocket = new DatagramSocket(41); //If data is recieved from Port 41 then it from Elevator_System
 			}
-			else {
-				movingSocket = new DatagramSocket(45);
-			}
-
 		} catch (SocketException se) {
 			se.printStackTrace();
 			System.exit(1);
@@ -89,27 +83,18 @@ public class Elevator_System implements Runnable{
 	}
 
 	/** A support method that will handle Elevator moving elevators */
-	public void elevatorRunningSupport() {
-		byte data[] = recieveData(movingSocket);
-		if(data[0] == (byte) 0 || data[0] == (byte) 2) {
-			int elevatorNumber = data[1];
-			ArrayList<Integer> tasks = new ArrayList<>();
-			for (int i = 2; i < data.length; i++) {
-				int floorNumber = data[i];
-				tasks.add(floorNumber);
-			}
+	public void elevatorRunningSupportStartUp() {
+		int numElevators = elevators.length;
+		Thread[] elevatorThreads = new Thread[numElevators];
 
-			//Update elevator tasks and move elevator.
-			this.elevators[elevatorNumber].setTasks(tasks);
-			targetElevatorNumber = elevatorNumber;
-			moveElevator(elevatorNumber);
-			loadElevator(elevatorNumber);
-			if(data[0] == (byte) 0) {
-				this.elevators[elevatorNumber].decrementPassengerCount();
-			}
-			else {
-				this.elevators[elevatorNumber].incrementPassengerCount();
-			}
+		//Create elevator threads
+		for (int i = 0; i < numElevators; i++) {
+			elevatorThreads[i] = new Thread(elevators[i], "Scheduler Simulation");
+		}
+
+		//Run the elevator threads
+		for (int i = 0; i < numElevators; i++) {
+			elevatorThreads[i].start();
 		}
 	}
 
@@ -148,45 +133,7 @@ public class Elevator_System implements Runnable{
 		//Update elevator tasks and move elevator.
 		this.elevators[elevatorNumber].setTasks(tasks);
 		targetElevatorNumber = elevatorNumber;
-		this.sendData(data,45);
-	}
-
-	/** Method to move elevator */
-	public synchronized void moveElevator(Integer elevatorNumber){
-		//Calculate Time to move elevator
-		ElevatorCar elevator = elevators[elevatorNumber];
-		Float startLocation = elevator.getPosition();
-		Integer endLocation = elevator.getTasks().get(0);
-		long time = calculateTime(startLocation,endLocation);
-
-		//Elevator state methods
-		elevators[elevatorNumber].moveElevator(time);
-		elevators[elevatorNumber].elevatorArrived();
-		elevators[elevatorNumber].openDoor();
-	}
-
-	/** Method to calculate time in milliseconds to move Elevator a given amount of distance */
-	public long calculateTime(Float startLocation, Integer endLocation){
-		double time;
-		double netDistance = Math.abs(startLocation - endLocation) * 3.0;
-		double inflectionDistance = (elevatorTopSpeed*elevatorTopSpeed)/elevatorAcceleration;
-
-		//If net distance between floors allows elevator  to reach top speed, then use 1st formula, else use 2nd formula.
-		if(netDistance > inflectionDistance){
-			time = ((netDistance - inflectionDistance) / elevatorTopSpeed) + (Math.sqrt(inflectionDistance) * 2);
-		}
-		else{
-			time = Math.sqrt(netDistance) * 2;
-		}
-		//Return time converted to long type after rounding.
-		//Multiply 1000 because to convert time from seconds to milliseconds
-		return (Math.round(time) * 1000);
-	}
-
-	/** Method to simulate loading elevator waiting time */
-	public synchronized void loadElevator(Integer elevatorNumber){
-		elevators[elevatorNumber].loadElevator(loadTime*1000);
-		elevators[elevatorNumber].closeDoor();
+		this.sendData(data,(90 + data[1]));
 	}
 
 	public ElevatorCar[] getElevators(){return this.elevators;}
@@ -223,12 +170,12 @@ public class Elevator_System implements Runnable{
 	/** Run method for Elevator_System */
 	@Override
 	public synchronized void run() {
-		while (true) {
-			//Wait until event occurs for elevator
-			if(this.isSupport) {
-				this.elevatorRunningSupport();
-			}
-			else {
+		if(this.isSupport) {
+			this.elevatorRunningSupportStartUp();
+		}
+		else {
+			while (true) {
+				//Wait until event occurs for elevator
 				this.elevatorRunning();
 			}
 		}
