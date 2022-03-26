@@ -1,13 +1,14 @@
 package tests;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import elevatorSystem.Person;
-import org.junit.jupiter.api.Test;
 
-class Test_Person {
+public class Test_Person {
 
 	@Test
-	void test_Person_Constructor() {
+	public void test_Person_Constructor() {
 		int[] i = new int[4];
 		i[0] = 0;
 		i[1] = 1;
