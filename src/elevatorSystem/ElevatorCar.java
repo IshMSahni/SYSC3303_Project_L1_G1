@@ -26,8 +26,8 @@ public class ElevatorCar implements Runnable{
     private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown, outOfService;
     private ElevatorState elevatorState;
     private int numPassengerCounter;
-    private DatagramPacket sendPacket, receivePacket;
-    private DatagramSocket sendSocket, recieveSocket;
+    private DatagramPacket sendPacket;
+    private DatagramSocket sendSocket;
     private final double elevatorAcceleration = 0.9; // 0.9 meter per second square
     private final double elevatorTopSpeed = 2.7; // 2.7 meters per second
     private final long loadTime = 10; // 10 seconds is the average loading time
@@ -61,7 +61,6 @@ public class ElevatorCar implements Runnable{
 
         try {
             this.sendSocket = new DatagramSocket();
-            this.recieveSocket = new DatagramSocket(elevatorNumber + 90);
         } catch (SocketException se) {
             se.printStackTrace();
             System.exit(1);
@@ -204,53 +203,13 @@ public class ElevatorCar implements Runnable{
     public ElevatorState getOutOfService(){return this.outOfService;}
     public void setElevatorState(ElevatorState elevatorState){this.elevatorState = elevatorState;}
 
-
-    public byte[] recieveData(DatagramSocket receiveSocket) {
-        // Construct a DatagramPacket for receiving packets for the data reply
-        byte data[] = new byte[100];
-        receivePacket = new DatagramPacket(data, data.length);
-        try {
-            // Wait until data reply is received via receiveSocket.
-            receiveSocket.receive(receivePacket);
-        } catch(IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        // Process the received datagram.
-        int len = receivePacket.getLength();
-        byte tempData[] = new byte[len];
-        for(int i = 0; i < len; i++) {
-            tempData[i] = data[i];
-        }
-        data = tempData;
-
-        return data;
-    }
-
     @Override
     public void run() {
         while(this.elevatorState != this.getOutOfService()) {
-            byte data[] = recieveData(recieveSocket);
-            if (data[0] == (byte) 0 || data[0] == (byte) 2) {
-                int elevatorNumber = data[1];
-                ArrayList<Integer> tasks = new ArrayList<>();
-                for (int i = 2; i < data.length; i++) {
-                    int floorNumber = data[i];
-                    tasks.add(floorNumber);
-                }
-
-                //Update elevator tasks and move elevator.
-                this.tasks = tasks;
+            while (this.tasks.size() != 0) {
                 this.movingElevator();
                 this.loadElevator(loadTime * 1000);
                 this.closeDoor();
-
-                if (data[0] == (byte) 0) {
-                    this.decrementPassengerCount();
-                } else {
-                    this.incrementPassengerCount();
-                }
             }
         }
     }

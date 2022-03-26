@@ -63,6 +63,8 @@ public class Elevator_System implements Runnable{
 		else if(data[0] == (byte) 3){
 			System.out.println("New Scheduled Bug Task recieved.");
 			int bugNumber = data[1];
+			int elevatorNum = data[2];
+			updateElevatorQueue(elevatorNum, data);
 			//TODO more bug implementation needed here
 		}
 		//Elevator Position Request
@@ -90,12 +92,12 @@ public class Elevator_System implements Runnable{
 
 	/** A support method that will handle Elevator moving elevators */
 	public void elevatorRunningSupportStartUp() {
-		int numElevators = elevators.length;
+		int numElevators = this.elevators.length;
 		Thread[] elevatorThreads = new Thread[numElevators];
 
 		//Create elevator threads
 		for (int i = 0; i < numElevators; i++) {
-			elevatorThreads[i] = new Thread(elevators[i], "Scheduler Simulation");
+			elevatorThreads[i] = new Thread(this.elevators[i], "Scheduler Simulation");
 		}
 
 		//Run the elevator threads
@@ -139,7 +141,6 @@ public class Elevator_System implements Runnable{
 		//Update elevator tasks and move elevator.
 		this.elevators[elevatorNumber].setTasks(tasks);
 		targetElevatorNumber = elevatorNumber;
-		this.sendData(data,(90 + data[1]));
 	}
 
 	public ElevatorCar[] getElevators(){return this.elevators;}
