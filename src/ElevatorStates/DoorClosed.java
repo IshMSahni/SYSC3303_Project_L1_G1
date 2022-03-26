@@ -4,6 +4,8 @@ import elevatorSystem.ElevatorCar;
 import elevatorSystem.ElevatorState;
 import elevatorSystem.Elevator_System;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class DoorClosed implements ElevatorState {
@@ -56,7 +58,22 @@ public class DoorClosed implements ElevatorState {
 
     @Override
     public synchronized void loadElevator(long time) {
-        System.out.println("Can Not load, Door closed for Elevator "+elevator.getElevatorNumber());
+        //Open door, then load elevator
+        System.out.println("Opening Door for Elevator "+elevator.getElevatorNumber());
+        elevator.setDoors(true);
+
+        int elevatorNumber = elevator.getElevatorNumber();
+        try{
+            wait(time);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            System.out.println("Loading Elevator "+elevatorNumber+" completed at Time: "+dtf.format(now));
+            elevator.setElevatorState(elevator.getLoading()); //Set to new state
+        }
+        catch (Exception e){
+            System.out.println("Error occured while loading Elevator in thread.");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -67,7 +84,9 @@ public class DoorClosed implements ElevatorState {
 
     @Override
     public void elevatorOutOfService() {
-
+        elevator.setDoors(true);
+        elevator.setElevatorState(elevator.getOutOfService()); //Set to new state
+        System.out.println("Elevator "+elevator.getElevatorNumber()+" is going Out of Service");
     }
 
 }

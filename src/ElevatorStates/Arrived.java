@@ -40,7 +40,9 @@ public class Arrived implements ElevatorState {
 
     @Override
     public void elevatorOutOfService() {
-
+        elevator.setDoors(true);
+        elevator.setElevatorState(elevator.getOutOfService()); //Set to new state
+        System.out.println("Elevator "+elevator.getElevatorNumber()+" is going Out of Service");
     }
 
 }
