@@ -1,17 +1,18 @@
 package tests;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
 import elevatorSystem.Floor_System;
 import elevatorSystem.Person;
-import org.junit.jupiter.api.Test;
 
-class Test_Floor_System {
+public class Test_Floor_System {
 	
 	/**
 	 * Test assumes using file given in submission: 'filename.txt'
 	 */
 	@Test
-	void test_readFile() {
+	public void test_readFile() {
 		Person[] allPeople;
 		allPeople = Floor_System.readFile();
 		
@@ -20,7 +21,7 @@ class Test_Floor_System {
 	}
 	
 	@Test
-	void test_buttonEvent() {
+	public void test_buttonEvent() {
 		Floor_System x = new Floor_System(3,1);
 		x.buttonEvent(0, 1);
 		x.buttonEvent(1, 2);
@@ -28,13 +29,4 @@ class Test_Floor_System {
 		assertEquals(true, x.getFloors()[0].getUpButton());
 		assertEquals(true, x.getFloors()[1].getDownButton());
 	}
-	
-	@Test
-	void test_lampEvent() {
-		Floor_System x = new Floor_System(3,1);
-		x.lampEvent(1, 0, 2);
-		
-		assertEquals(2, x.getFloors()[1].getLamp()[0]);
-	}
-
 }
