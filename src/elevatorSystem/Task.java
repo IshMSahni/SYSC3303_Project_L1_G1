@@ -11,10 +11,12 @@ public class Task {
     private Boolean isDelayed;
     private Boolean isDoorStuckOpen;
     private Boolean isDoorStuckClosed;
-    
+
+    //If data[0] is equal to
     // 0 = Elevator Task, No Time given.  1 = Elevator Task, Time given
     // 2 = Floor Task, No Time given.     3 = Floor Task, Time given
     // 4 = Elevator Task, No Time and Elevator Number given
+    // 5 = Bug task
 
     /** Constructor if task is an Elevator Task (No time given)*/
     public Task(int elevatorNumber, int floorNumber){
@@ -128,14 +130,14 @@ public class Task {
         }
 
         this.data = new byte[8];
-        this.data[0] = (byte) 3;
+        this.data[0] = (byte) 5;
         this.data[1] = (byte) buttonDirection;
         this.data[2] = (byte) floorNumber;
-        this.data[3] = (byte) time[0];
-        this.data[4] = (byte) time[1];
-        this.data[5] = (byte) time[2];
-        this.data[6] = (byte) (time[3]/10);
-        this.data[7] = (byte) bug;
+        this.data[3] = (byte) bug;
+        this.data[4] = (byte) time[0];
+        this.data[5] = (byte) time[1];
+        this.data[6] = (byte) time[2];
+        this.data[7] = (byte) (time[3]/10);
     }
     
     /** Constructor if task is a Floor task (No time given)*/
@@ -167,7 +169,7 @@ public class Task {
         }
 
         this.data = new byte[4];
-        this.data[0] = (byte) 0;
+        this.data[0] = (byte) 6;
         this.data[1] = (byte) buttonDirection;
         this.data[2] = (byte) floorNumber;
         this.data[3] = (byte) bug;

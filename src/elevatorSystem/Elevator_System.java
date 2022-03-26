@@ -59,6 +59,12 @@ public class Elevator_System implements Runnable{
 			int elevatorNum = data[1];
 			updateElevatorQueue(elevatorNum, data);
 		}
+		// Data is new scheduled Bug Task
+		else if(data[0] == (byte) 3){
+			System.out.println("New Scheduled Bug Task recieved.");
+			int bugNumber = data[1];
+			//TODO more bug implementation needed here
+		}
 		//Elevator Position Request
 		else if(data[0] == (byte) 1){
 			this.sendElevatorsData();

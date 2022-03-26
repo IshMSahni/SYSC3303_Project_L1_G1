@@ -99,6 +99,30 @@ public class Scheduler_System implements Runnable{
                 taskType = (byte) 0;
                 task = new Task(targetElevatorNumber, data[1]);
             }
+            //Bug Task
+            else if (data[0] == (byte) 5){
+                taskType = (byte) 3;
+                String buttonStatusTemp = "";
+                int direction = data[1];
+                //Assign buttonStatustemp
+                if (direction == 1) { buttonStatusTemp = "Up";}
+                else if (direction == 2) { buttonStatusTemp = "Down"; }
+                int time[] = new int[4];
+                time[0] = data[4]; time[1] = data[5]; time[2] = data[6]; time[3] = data[7];
+
+                task = new Task(time,buttonStatusTemp,data[2],data[3]);
+            }
+            //Bug Task
+            else if (data[0] == (byte) 6){
+                taskType = (byte) 3;
+                String buttonStatusTemp = "";
+                int direction = data[1];
+                //Assign buttonStatustemp
+                if (direction == 1) { buttonStatusTemp = "Up";}
+                else if (direction == 2) { buttonStatusTemp = "Down"; }
+
+                task = new Task(buttonStatusTemp,data[2],data[3]);
+            }
             //Floor Task
             else {
                 taskType = (byte) 2;
@@ -175,12 +199,28 @@ public class Scheduler_System implements Runnable{
         if(bestTaskNumber < (queue.size()-1) ) { queue.add(bestTaskNumber, task.getFloorNumber());}
         else {queue.add(task.getFloorNumber());}
 
+        byte data[];
         //Convert new to byte[] format
-        byte data[] = new byte[queue.size() + 2];
-        data[0] = (byte) taskType; // This will tell Elevator_System that this data is a scheduled task.
-        data[1] = (byte) bestElevatorNumber.intValue();
-        for (int i = 0; i < queue.size(); i++) {
-            data[i+2] = (byte) queue.get(i).intValue();
+        if(task.getIsDelayed() || task.getisDoorStuckClosed() || task.getIsDoorStuckOpen()) {
+            data = new byte[queue.size() + 3];
+            data[0] = (byte) taskType; // This will tell Elevator_System that this data is a scheduled task.
+
+            if(task.getIsDelayed()){data[1] = (byte) 1;}
+            else if(task.getisDoorStuckClosed()){data[1] = (byte) 2;}
+            else {data[1] = (byte) 3;}
+
+            data[2] = (byte) bestElevatorNumber.intValue();
+            for (int i = 0; i < queue.size(); i++) {
+                data[i + 3] = (byte) queue.get(i).intValue();
+            }
+        }
+        else{
+            data = new byte[queue.size() + 2];
+            data[0] = (byte) taskType; // This will tell Elevator_System that this data is a scheduled task.
+            data[1] = (byte) bestElevatorNumber.intValue();
+            for (int i = 0; i < queue.size(); i++) {
+                data[i + 2] = (byte) queue.get(i).intValue();
+            }
         }
         this.scheduledQueue.replace(bestElevatorNumber, queue);
         targetElevatorNumber = bestElevatorNumber;
