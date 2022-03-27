@@ -18,7 +18,6 @@ public class Arrived implements ElevatorState {
 
     @Override
     public void openDoor() {
-        System.out.println("Door opening now for Elevator "+elevator.getElevatorNumber());
         elevator.setDoors(true);
         elevator.setElevatorState(elevator.getDoorOpen()); //Set to new state
     }
@@ -31,7 +30,6 @@ public class Arrived implements ElevatorState {
     @Override
     public void loadElevator(long time) {
         //Open door, then load elevator
-        System.out.println("Opening Door for Elevator "+elevator.getElevatorNumber());
         elevator.setDoors(true);
         this.elevator.setElevatorState(elevator.getDoorOpen());
         this.elevator.loadElevator(time);

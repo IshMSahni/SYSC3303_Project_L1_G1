@@ -23,7 +23,6 @@ public class Loading implements ElevatorState {
 
     @Override
     public void closeDoor() {
-        System.out.println("Closing door for Elevator "+elevator.getElevatorNumber());
         elevator.setDoors(false);
         elevator.setElevatorState(elevator.getDoorClosed()); // Set new state
     }

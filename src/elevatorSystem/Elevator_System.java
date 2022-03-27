@@ -175,6 +175,7 @@ public class Elevator_System implements Runnable{
 		//Update elevator tasks and move elevator.
 		this.elevators[elevatorNumber].setTasks(tasks);
 		targetElevatorNumber = elevatorNumber;
+		notifyAll();
 	}
 
 	public ElevatorCar[] getElevators(){return this.elevators;}
@@ -211,10 +212,7 @@ public class Elevator_System implements Runnable{
 	/** Run method for Elevator_System */
 	@Override
 	public synchronized void run() {
-		if(this.isSupport) {
-			this.elevatorRunningSupportStartUp();
-		}
-		else {
+		if(!this.isSupport) {
 			while (true) {
 				//Wait until event occurs for elevator
 				this.elevatorRunning();
@@ -224,15 +222,14 @@ public class Elevator_System implements Runnable{
 
 	/** Main method*/
 	public static void main(String[] args) {
-		int totalNumElevators = 3;
-		int totalNumFloors = 10;
+		int totalNumElevators = 5;
+		int totalNumFloors = 20;
 		Elevator_System elevator_system_main = new Elevator_System(totalNumElevators,totalNumFloors, false);
-		Elevator_System elevator_system_support = new Elevator_System(totalNumElevators,totalNumFloors, true);
+		elevator_system_main.elevatorRunningSupportStartUp();
+
 		Thread elevatorSystemMainThread = new Thread(elevator_system_main, "Scheduler Simulation");
-		Thread elevatorSystemSupportThread = new Thread(elevator_system_support, "Scheduler Simulation");
 		System.out.println("Waiting for new Task...");
 
 		elevatorSystemMainThread.start();
-		elevatorSystemSupportThread.start();
 	}
 }

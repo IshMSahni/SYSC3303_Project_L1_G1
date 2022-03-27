@@ -59,7 +59,7 @@ public class TimingEvent implements Runnable{
     }
 
     @Override
-    public void run() {
+    public synchronized void run() {
         try{ sendReceiveSocket = new DatagramSocket(100+elevatorNumber); }
         catch (SocketException se) {
             se.printStackTrace();

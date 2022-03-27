@@ -145,20 +145,23 @@ public class Floor_System implements Runnable{
 			System.out.println("Adding default people list");
 			//Create default people objects and return a list of them.
 			int time[] = new int[4];
+			int totalNumPeoples = 5;
+			Person defaultPeoples[] = new Person[totalNumPeoples];
+
 			time[0]=00; time[1]=00; time[2]=03; time[3]=101;
-			Person myPerson1 = new Person(time, 2, 2, 1);
+			defaultPeoples[0] = new Person(time, 2, 2, 1);
 
-			time = new int[4]; time[0]=00; time[1]=00; time[2]=33; time[3]=101;
-			Person myPerson2 = new Person(time, 3, 1, 5, 1);
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=13; time[3]=101;
+			defaultPeoples[1]= new Person(time, 3, 1, 5);
 
-			time = new int[4]; time[0]=00; time[1]=01; time[2]=03; time[3]=101;
-			Person myPerson3 = new Person(time, 0, 1, 5, 2);
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=23; time[3]=101;
+			defaultPeoples[2] = new Person(time, 0, 1, 6);
 			
-			time = new int[4]; time[0]=00; time[1]=02; time[2]=43; time[3]=101;
-			Person myPerson4 = new Person(time, 0, 1, 5, 3);
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=33; time[3]=101;
+			defaultPeoples[3]= new Person(time, 4, 1, 7);
 
-			Person defaultPeoples[] = new Person[4];
-			defaultPeoples[0] = myPerson1; defaultPeoples[1] = myPerson2; defaultPeoples[2] = myPerson3; defaultPeoples[3] = myPerson4;
+			time = new int[4]; time[0]=00; time[1]=00; time[2]=43; time[3]=101;
+			defaultPeoples[4]= new Person(time, 12, 2, 9);
 
 			return defaultPeoples;
 		}
@@ -286,8 +289,8 @@ public class Floor_System implements Runnable{
 				}
 				this.sendData(task.getData(),10);
 
-				//Wait 15 seconds
-				try{ wait(15000);}
+				//Wait 1 seconds
+				try{ wait(1000);}
 				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
 
 				//Elevator Task data
@@ -340,8 +343,8 @@ public class Floor_System implements Runnable{
 	 * 	Return: Void
 	 */
 	public static void main(String[] args) {
-		int totalFloorNumber = 10; //total number of floors
-		int totalElevatorNumber = 3; //total number  of elevators
+		int totalFloorNumber = 20; //total number of floors
+		int totalElevatorNumber = 5; //total number  of elevators
 
 		Floor_System floor_SubSystem = new Floor_System(totalFloorNumber,totalElevatorNumber);
 		floor_SubSystem.setEventFloor(-1);

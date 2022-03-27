@@ -23,6 +23,9 @@ public class Task {
         this.elevatorNumber = elevatorNumber;
         this.floorNumber = floorNumber;
         this.isFloorTask = false;
+        this.isDelayed = false;
+        this.isDoorStuckClosed = false;
+        this.isDoorStuckOpen = false;
 
         this.data = new byte[3];
         this.data[0] = (byte) 0;
@@ -36,6 +39,9 @@ public class Task {
         this.elevatorNumber = elevatorNumber;
         this.floorNumber = floorNumber;
         this.isFloorTask = false;
+        this.isDelayed = false;
+        this.isDoorStuckClosed = false;
+        this.isDoorStuckOpen = false;
 
         this.data = new byte[7];
         this.data[0] = (byte) 1;
@@ -179,6 +185,9 @@ public class Task {
     public Task(int floorNumber){
         this.floorNumber = floorNumber;
         this.isFloorTask = false;
+        this.isDelayed = false;
+        this.isDoorStuckClosed = false;
+        this.isDoorStuckOpen = false;
 
         this.data = new byte[2];
         this.data[0] = (byte) 4;

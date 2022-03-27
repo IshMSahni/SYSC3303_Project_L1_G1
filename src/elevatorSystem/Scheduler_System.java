@@ -376,8 +376,8 @@ public class Scheduler_System implements Runnable{
 
     /** Main method*/
     public static void main(String[] args) {
-        int totalElevatorNumber = 3;
-        int totalFloorNumber = 10;
+        int totalElevatorNumber = 5;
+        int totalFloorNumber = 20;
         Scheduler_System scheduler_SubSystem = new Scheduler_System(totalElevatorNumber, totalFloorNumber);
         Thread schedulerSystemThread = new Thread(scheduler_SubSystem, "Scheduler Simulation");
         schedulerSystemThread.start();

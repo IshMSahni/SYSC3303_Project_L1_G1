@@ -28,12 +28,10 @@ public class DoorClosed implements ElevatorState {
 
         if(startLocation < endLocation){
             System.out.println("\nElevator "+elevatorNumber+" now Moving Up to floor "+endLocation+". Num Passengers: "+passengers);
-            System.out.println("Elevator "+elevatorNumber+" moving time "+ (time/1000) + " seconds.");
             elevator.setElevatorState(elevator.getMovingUp());
         }
         else{
             System.out.println("\nElevator "+elevatorNumber+" now Moving Down to floor "+endLocation+". Num Passengers: "+passengers);
-            System.out.println("Elevator "+elevatorNumber+" moving time "+ (time/1000) + " seconds.");
             elevator.setElevatorState(elevator.getMovingDown());
         }
 
