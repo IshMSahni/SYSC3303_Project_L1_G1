@@ -100,8 +100,10 @@ public class Elevator_System implements Runnable{
 			//set elevator state to Out_Of_Service
 			elevators[elevatorNumber].setElevatorState(elevators[elevatorNumber].getOutOfService());
 
-			//remove elevator from list
-			//TODO
+			//Send out of service elevator data update to Scheduler_system
+			data = new byte[2];
+			data[0] = (byte) 8; data[1] = (byte) elevatorNumber;
+			sendData(data,10);
 		}
 
 		// Elevator has arrived at a floor

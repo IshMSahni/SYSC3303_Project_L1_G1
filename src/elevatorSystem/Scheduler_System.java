@@ -47,36 +47,25 @@ public class Scheduler_System implements Runnable{
     }
 
     public synchronized void scheduling(){
-        // Construct a DatagramPacket for receiving packets for the data reply
-        byte data[] = new byte[100];
-        receivePacket = new DatagramPacket(data, data.length);
-
-        try {
-            // Wait until data reply is received via receiveSocket.
-            System.out.println("Scheduler_System: Waiting for New Task......");
-            receiveSocket.receive(receivePacket);
-        } catch(IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-
-        // Process the received datagram.
-        int len = receivePacket.getLength();
-        byte tempData[] = new byte[len];
-        for(int i = 0; i < len; i++) {
-            tempData[i] = data[i];
-        }
-        data = tempData;
-
-
+        // Receive Data
+        System.out.println("Scheduler_System: Waiting for New Task......");
+        byte data[] = recieveData(receiveSocket);
 
         //Re-construct Task object from recieved data
         Task task;
+
+        //Data is elevator arrival
         if(data[0] == (byte) 7){
             System.out.println("Scheduler_System: Elevator "+data[1]+" has arrived at floor "+data[2]);
             System.out.println("Updating queues....");
             this.removeElevatorTask(data[1], data[2]); //removeElevatorTask request
         }
+        //Data is Out of service elevator status update
+        else if(data[0] == (byte) 8){
+            int elevatorNum = data[1];
+            elevators[elevatorNum].setElevatorState(elevators[elevatorNum].getOutOfService());
+        }
+        //Data is scheduling task data
         else {
             byte taskType;
             //Print time
@@ -180,7 +169,10 @@ public class Scheduler_System implements Runnable{
         if(task.getIsFloorTask()){
             if(elevators.length > 1) {
                 bestElevatorNumber = bestElevatorNumber();
-                bestTaskNumber = getTaskNumber(bestElevatorNumber);
+                if(bestElevatorNumber == -1){
+                    bestTaskNumber = 0;
+                }
+                else{bestTaskNumber = getTaskNumber(bestElevatorNumber);}
             }
             else {
                 bestTaskNumber = getTaskNumber(0);
@@ -192,42 +184,54 @@ public class Scheduler_System implements Runnable{
             bestTaskNumber = getTaskNumber(bestElevatorNumber);
         }
 
-        //Add task to scheduled Task list for best elevator number
-        bestTaskNumber = Math.abs(bestTaskNumber);
-        ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
-
-        if(bestTaskNumber < (queue.size()-1) ) { queue.add(bestTaskNumber, task.getFloorNumber());}
-        else {queue.add(task.getFloorNumber());}
-
-        byte data[];
-        //Convert new to byte[] format
-        if(task.getIsDelayed() || task.getisDoorStuckClosed() || task.getIsDoorStuckOpen()) {
-            data = new byte[queue.size() + 3];
-            data[0] = (byte) taskType; // This will tell Elevator_System that this data is a scheduled task.
-
-            if(task.getIsDelayed()){data[1] = (byte) 1;}
-            else if(task.getisDoorStuckClosed()){data[1] = (byte) 2;}
-            else {data[1] = (byte) 3;}
-
-            data[2] = (byte) bestElevatorNumber.intValue();
-            for (int i = 0; i < queue.size(); i++) {
-                data[i + 3] = (byte) queue.get(i).intValue();
-            }
+        //Check bestElevatorNumber
+        if(bestElevatorNumber == -1){
+            System.out.println("Scheduler: No elevator found, Task did not schedule");
         }
-        else{
-            data = new byte[queue.size() + 2];
-            data[0] = (byte) taskType; // This will tell Elevator_System that this data is a scheduled task.
-            data[1] = (byte) bestElevatorNumber.intValue();
-            for (int i = 0; i < queue.size(); i++) {
-                data[i + 2] = (byte) queue.get(i).intValue();
-            }
-        }
-        this.scheduledQueue.replace(bestElevatorNumber, queue);
-        targetElevatorNumber = bestElevatorNumber;
+        else {
+            //Add task to scheduled Task list for best elevator number
+            bestTaskNumber = Math.abs(bestTaskNumber);
+            ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
 
-        System.out.println("Scheduler: sending Scheduled Task data to Elevator_System.");
-        System.out.println("Containing Bytes: " + Arrays.toString(data) + "\n");
-        this.sendData(data,20);
+            if (bestTaskNumber < (queue.size() - 1)) {
+                queue.add(bestTaskNumber, task.getFloorNumber());
+            } else {
+                queue.add(task.getFloorNumber());
+            }
+
+            byte data[];
+            //Convert new to byte[] format
+            if (task.getIsDelayed() || task.getisDoorStuckClosed() || task.getIsDoorStuckOpen()) {
+                data = new byte[queue.size() + 3];
+                data[0] = (byte) taskType; // This will tell Elevator_System that this data is a scheduled task.
+
+                if (task.getIsDelayed()) {
+                    data[1] = (byte) 1;
+                } else if (task.getisDoorStuckClosed()) {
+                    data[1] = (byte) 2;
+                } else {
+                    data[1] = (byte) 3;
+                }
+
+                data[2] = (byte) bestElevatorNumber.intValue();
+                for (int i = 0; i < queue.size(); i++) {
+                    data[i + 3] = (byte) queue.get(i).intValue();
+                }
+            } else {
+                data = new byte[queue.size() + 2];
+                data[0] = taskType; // This will tell Elevator_System that this data is a scheduled task.
+                data[1] = (byte) bestElevatorNumber.intValue();
+                for (int i = 0; i < queue.size(); i++) {
+                    data[i + 2] = (byte) queue.get(i).intValue();
+                }
+            }
+            this.scheduledQueue.replace(bestElevatorNumber, queue);
+            targetElevatorNumber = bestElevatorNumber;
+
+            System.out.println("Scheduler: sending Scheduled Task data to Elevator_System.");
+            System.out.println("Containing Bytes: " + Arrays.toString(data) + "\n");
+            this.sendData(data, 20);
+        }
     }
 
     /** This method will send scheduled task data to Elevator_System*/
@@ -249,18 +253,14 @@ public class Scheduler_System implements Runnable{
         }
     }
 
-    /** Method to send elevators current positions request and update*/
-    public void sendElevatorPositionsRequest(){
-        byte data[] = new byte[1];
-        data[0] = (byte) 1;
-        this.sendData(data,20);
+    /** Method to receieveData at the receiveSocket given*/
+    public byte[] recieveData(DatagramSocket receiveSocket) {
         // Construct a DatagramPacket for receiving packets for the data reply
-        data = new byte[100];
+        byte data[] = new byte[100];
         receivePacket = new DatagramPacket(data, data.length);
-
         try {
-            // Wait until data reply is received via sendSocket.
-            sendSocket.receive(receivePacket);
+            // Wait until data reply is received via receiveSocket.
+            receiveSocket.receive(receivePacket);
         } catch(IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -274,7 +274,20 @@ public class Scheduler_System implements Runnable{
         }
         data = tempData;
 
-        //Correct data recieved
+        return data;
+    }
+
+    /** Method to send elevators current positions request and update*/
+    public void sendElevatorPositionsRequest(){
+        byte data[] = new byte[1];
+        data[0] = (byte) 1;
+        this.sendData(data,20);
+
+        // Receive Elevator data
+        data = recieveData(sendSocket);
+        int len = data.length;
+
+        //If Correct data type received
         if(data[0] == (byte) 4){
             for (int i = 1; i < len; i++) {
                 int position = data[i];
@@ -291,21 +304,26 @@ public class Scheduler_System implements Runnable{
      * Then it prefers Elevators that have lowest WeightFactor which is based on number of passengers and taskNumber
      */
     public int bestElevatorNumber() {
-        int bestElevatorNumber = 0;
-        int bestTaskNumber = getTaskNumber(bestElevatorNumber);
-        int bestWeightFactor = bestTaskNumber * (elevators[0].getNumPassengerCounter() + 1);
+        int bestElevatorNumber = -1;
+        int bestWeightFactor = -1;
 
         for (int i = 0; i < elevators.length; i++) {
-            int currentTaskNumber = getTaskNumber(i);
-            int passengerNumber = elevators[i].getNumPassengerCounter();
-            int currentWeightFactor = currentTaskNumber * (passengerNumber + 1);
+            if(!elevators[i].getElevatorState().equals(elevators[i].getOutOfService())) {
+                int currentTaskNumber = getTaskNumber(i);
+                int passengerNumber = elevators[i].getNumPassengerCounter();
+                int currentWeightFactor = currentTaskNumber * (passengerNumber + 1);
 
-            if((currentTaskNumber < 0) || (currentWeightFactor == 0)){
-                return i;
-            }
-            else if(bestWeightFactor > currentWeightFactor){
-                bestTaskNumber = currentTaskNumber;
-                bestElevatorNumber = i;
+                if(bestElevatorNumber == -1){
+                    bestElevatorNumber = i;
+                    bestWeightFactor = currentWeightFactor;
+                }
+                else {
+                    if ((currentTaskNumber < 0) || (currentWeightFactor == 0)) {
+                        return i;
+                    } else if (bestWeightFactor > currentWeightFactor) {
+                        bestElevatorNumber = i;
+                    }
+                }
             }
         }
         return bestElevatorNumber;

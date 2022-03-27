@@ -205,7 +205,7 @@ public class ElevatorCar implements Runnable{
 
     @Override
     public void run() {
-        while(this.elevatorState != this.getOutOfService()) {
+        while(!this.elevatorState.equals(this.getOutOfService())) {
             while (this.tasks.size() != 0) {
                 this.movingElevator();
                 this.loadElevator(loadTime * 1000);
