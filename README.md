@@ -2,18 +2,22 @@
 
 ## Steps to install:
 
-Import Iteration 3 into IDE
+Import Iteration 4 into IDE
 
 ### Steps to run the program:
 1. Import repo on eclipse
 
-a. Paste github url (https://github.com/KeithLam101147900/SYSC3303_Project_L1_G1.git)
+a) Paste github url (https://github.com/KeithLam101147900/SYSC3303_Project_L1_G1.git)
 
-b. Type in User and API key
+b) Pull/Clone main branch
 
-c. Create new project
-	
-2. Make sure .java files are under src (source folder)
+c) Type in User and API key
+
+2. If pulled/cloned files are not pulled as source folders in eclipse create new project	
+
+a) Make sure .java files are under src (source folder)
+
+b) Make sure to name packages correctly 
 
 3. Run the main methods in the following order: Scheduler_System, Elevator_System, Floor_System.
 
@@ -53,6 +57,7 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - Initializes the program (main method located in Floor_System)
 - Note that Floor_System constructor has been created for JUnit Testing only.
 - allPeople array has been changed to an ArrayList in order to accommodate for the iteration 2 requirements.
+- Note that Floor_System now reads file with bug parameter for iteration 4
 
 ### Floor.java
 - Creates floors of the building for a Person to be located on/have a destination to
@@ -74,6 +79,7 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 ### Person.java
 - Object for holding the interactions that a Person would be having with the elevator
 - Object is used to call elevator and is handled by the Floor_System and Scheduler_System
+- Note that person has bug attribute for iteration 4 (Creating bugs for system to test)
 
 ### Scheduler_System.java
 - Handles all requests in Task objects that delegate the Floor_System and the Elevator_System what to do.
@@ -87,6 +93,7 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 ### Task.java
 - Object that is made to represent the task given to the scheduler.
 - Can handle requests from both elevator and floor to then be red by the Scheduler_System.
+- Note that Task has bug attribute for iteration 4 (Creating bugs for system to test)
 
 ### ElevatorState.java
 - An interface that outlines the methods that will be used by all the states that implement this interface.
@@ -122,7 +129,12 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - This state defines what happens when the elevator is in motion while going up floors and its separate implementation on how different methods interact with the elevator in this state
 - The next state for this is Arrived
 
+### OutOfService.java
+- A class that implements ElevatorState
+- This state defines what happens when a bug/fault occurs and the elevater must now remain out of service until the issue is fixed.
+- Note that this state has no next state
+
 ## Team & Contributions for Iteration 3
-1. Keith Lam - State Machine Diagram, Readme.txt modifications
+1. Keith Lam - Bug input readFile changes, Request with bug modifications, JUnit testing, Readme.txt modifications
 2. Muhammad Furqan - UDP conversion of entire system, All System classess modifications, Sequence Diagram
 3. Ishanov Sahni - ElevatorCar class changes, UML Class Diagram
