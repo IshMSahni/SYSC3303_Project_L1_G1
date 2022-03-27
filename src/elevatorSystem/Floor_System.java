@@ -155,13 +155,13 @@ public class Floor_System implements Runnable{
 			defaultPeoples[1]= new Person(time, 3, 1, 5);
 
 			time = new int[4]; time[0]=00; time[1]=00; time[2]=23; time[3]=101;
-			defaultPeoples[2] = new Person(time, 0, 1, 6);
+			defaultPeoples[2] = new Person(time, 0, 1, 6,1);
 			
 			time = new int[4]; time[0]=00; time[1]=00; time[2]=33; time[3]=101;
-			defaultPeoples[3]= new Person(time, 4, 1, 7);
+			defaultPeoples[3]= new Person(time, 4, 1, 7,2);
 
 			time = new int[4]; time[0]=00; time[1]=00; time[2]=43; time[3]=101;
-			defaultPeoples[4]= new Person(time, 12, 2, 9);
+			defaultPeoples[4]= new Person(time, 12, 2, 9,3);
 
 			return defaultPeoples;
 		}

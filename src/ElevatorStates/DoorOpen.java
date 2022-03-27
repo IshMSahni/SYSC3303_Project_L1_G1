@@ -17,7 +17,7 @@ public class DoorOpen implements ElevatorState {
     public void moveElevator(long time) {
         //Close door then move elevator
         elevator.setDoors(false);
-        System.out.println("Closing Door for Elevator "+elevator.getElevatorNumber());
+        System.out.println("\nElevator "+elevator.getElevatorNumber() +" door is stuck open, closing door before moving.\n");
         this.elevator.setElevatorState(elevator.getDoorClosed());
         this.elevator.moveElevator(time);
     }

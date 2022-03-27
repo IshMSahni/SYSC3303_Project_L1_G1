@@ -138,12 +138,39 @@ public class ElevatorCar implements Runnable{
         ElevatorAction task = this.tasks.get(0);
         Integer endLocation = task.getTargetFloor();
         long time = calculateTime(startLocation,endLocation);
+        int numPeople = task.getNumPeople();
 
-        //Elevator state methods
-        this.moveElevator(time);
-        this.elevatorArrived();
-        this.setNumPassengerCounter(this.numPassengerCounter + task.getNumPeople());
-        this.openDoor();
+        //Elevator delayed/stuck, go Out Of Service
+        if(numPeople == -30){
+            this.elevatorState = outOfService;
+            System.out.println("\nELEVATOR "+elevatorNumber +" IS GOING OUT OF SERVICE\n");
+        }
+        //Elevator door stuck close, try to load elevator while door closed
+        else if(numPeople == -40){
+            this.moveElevator(time);
+            this.elevatorArrived();
+            this.setNumPassengerCounter(this.numPassengerCounter + 1);
+            this.openDoor();
+            this.elevatorState = doorClosed;
+        }
+        //Elevator door stuck open, try to move elevator while door open
+        else if(numPeople == -50){
+            this.elevatorState = doorOpen;
+            this.moveElevator(time);
+            this.elevatorArrived();
+            this.setNumPassengerCounter(this.numPassengerCounter + 1);
+            this.openDoor();
+        }
+
+        //Normal
+        else{
+            //Elevator state methods
+            this.moveElevator(time);
+            this.elevatorArrived();
+            this.setNumPassengerCounter(this.numPassengerCounter + task.getNumPeople());
+            this.openDoor();
+        }
+
     }
 
     /** Method to calculate time in milliseconds to move Elevator a given amount of distance */
@@ -216,6 +243,7 @@ public class ElevatorCar implements Runnable{
             }
             while (this.tasks.size() != 0) {
                 this.movingElevator();
+                if(this.elevatorState.equals(this.getOutOfService())){break;}
                 this.loadElevator(loadTime * 1000);
                 this.closeDoor();
             }

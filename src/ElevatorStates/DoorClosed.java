@@ -62,7 +62,7 @@ public class DoorClosed implements ElevatorState {
     @Override
     public synchronized void loadElevator(long time) {
         //Open door, then load elevator
-        System.out.println("Opening Door for Elevator "+elevator.getElevatorNumber());
+        System.out.println("\nElevator "+elevator.getElevatorNumber() +" door is stuck close, opening door again before loading.\n");
         elevator.setDoors(true);
         this.elevator.setElevatorState(elevator.getDoorOpen());
         this.elevator.loadElevator(time);

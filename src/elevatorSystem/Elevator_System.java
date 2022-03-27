@@ -62,23 +62,8 @@ public class Elevator_System implements Runnable{
 		// Data is new scheduled Bug Task
 		else if(data[0] == (byte) 3){
 			System.out.println("New Scheduled Bug Task recieved.");
-			int bugNumber = data[1];
-			int elevatorNum = data[2];
-
-			//Elevator Delayed bug
-			if(bugNumber == 1){
-				//TODO
-			}
-
-			//Elevator door stuck closed bug
-			else if (bugNumber == 2){
-				//TODO
-			}
-
-			//Elevator door stuck open bug
-			else if (bugNumber == 3){
-				//TODO
-			}
+			int elevatorNum = data[1];
+			updateElevatorQueue(elevatorNum, data);
 		}
 		//All Elevators Position Request
 		else if(data[0] == (byte) 1){
