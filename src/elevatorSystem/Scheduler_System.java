@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Scheduler_System implements Runnable{
     private ElevatorCar[] elevators;
     private ArrayList<Task> tasksQueue;
-    private HashMap<Integer,ArrayList<Integer>> scheduledQueue;
+    private HashMap<Integer,ArrayList<ElevatorAction>> scheduledQueue;
     private int targetElevatorNumber;
     private DatagramPacket sendPacket, receivePacket; // UDP packets and sockets for send and recieving
     private DatagramSocket sendSocket, receiveSocket;
@@ -137,7 +137,7 @@ public class Scheduler_System implements Runnable{
     }
 
     /**Get Scheduled tasks from Scheduler for a given elevator number*/
-    public synchronized ArrayList<Integer> getScheduledQueue(Integer elevatorNumber){return this.scheduledQueue.get(elevatorNumber);}
+    public synchronized ArrayList<ElevatorAction> getScheduledQueue(Integer elevatorNumber){return this.scheduledQueue.get(elevatorNumber);}
 
     /**Add task to queue for Scheduler and schedule it*/
     public void addToQueue(Task task, byte taskType){
@@ -154,7 +154,7 @@ public class Scheduler_System implements Runnable{
 
     /**Remove First task from queue of a given elevator number*/
     public void removeElevatorTask(int elevatorNumber, int floorNumber){
-        while((scheduledQueue.get(elevatorNumber).size() != 0) && scheduledQueue.get(elevatorNumber).get(0) == floorNumber) {
+        while((scheduledQueue.get(elevatorNumber).size() != 0) && scheduledQueue.get(elevatorNumber).get(0).getTargetFloor() == floorNumber) {
             scheduledQueue.get(elevatorNumber).remove(0);
         }
     }
@@ -191,19 +191,23 @@ public class Scheduler_System implements Runnable{
         else {
             //Add task to scheduled Task list for best elevator number
             bestTaskNumber = Math.abs(bestTaskNumber);
-            ArrayList<Integer> queue = this.scheduledQueue.get(bestElevatorNumber);
+            ArrayList<ElevatorAction> queue = this.scheduledQueue.get(bestElevatorNumber);
+
+            int numPeople;
+            if(task.getIsFloorTask()){ numPeople = 1; }
+            else{ numPeople = -1; }
 
             if (bestTaskNumber < (queue.size() - 1)) {
-                queue.add(bestTaskNumber, task.getFloorNumber());
+                queue.add(bestTaskNumber, new ElevatorAction(task.getFloorNumber(),numPeople));
             } else {
-                queue.add(task.getFloorNumber());
+                queue.add(new ElevatorAction(task.getFloorNumber(),numPeople));
             }
 
             byte data[];
             //Convert new to byte[] format
             if (task.getIsDelayed() || task.getisDoorStuckClosed() || task.getIsDoorStuckOpen()) {
-                data = new byte[queue.size() + 3];
-                data[0] = (byte) taskType; // This will tell Elevator_System that this data is a scheduled task.
+                data = new byte[(queue.size()*2) + 3];
+                data[0] = taskType; // This will tell Elevator_System that this data is a scheduled task.
 
                 if (task.getIsDelayed()) {
                     data[1] = (byte) 1;
@@ -214,15 +218,21 @@ public class Scheduler_System implements Runnable{
                 }
 
                 data[2] = (byte) bestElevatorNumber.intValue();
-                for (int i = 0; i < queue.size(); i++) {
-                    data[i + 3] = (byte) queue.get(i).intValue();
+                int i = 0;
+                for (int j = 0; j < queue.size();j++) {
+                    data[i + 3] = (byte) queue.get(j).getTargetFloor();
+                    data[i + 4] = (byte) queue.get(j).getNumPeople();
+                    i += 2;
                 }
             } else {
-                data = new byte[queue.size() + 2];
+                data = new byte[(queue.size()*2) + 2];
                 data[0] = taskType; // This will tell Elevator_System that this data is a scheduled task.
                 data[1] = (byte) bestElevatorNumber.intValue();
-                for (int i = 0; i < queue.size(); i++) {
-                    data[i + 2] = (byte) queue.get(i).intValue();
+                int i = 0;
+                for (int j = 0; j < queue.size();j++) {
+                    data[i + 2] = (byte) queue.get(j).getTargetFloor();
+                    data[i + 3] = (byte) queue.get(j).getNumPeople();
+                    i += 2;
                 }
             }
             this.scheduledQueue.replace(bestElevatorNumber, queue);
@@ -335,7 +345,7 @@ public class Scheduler_System implements Runnable{
         //Target Floor number of latest task added and status of elevator.
         Integer targetFloorNumber = tasksQueue.get(tasksQueue.size() - 1).getFloorNumber();
         Float elevatorPosition = elevators[elevatorNumber].getPosition();
-        ArrayList<Integer> queue = this.scheduledQueue.get(elevatorNumber);
+        ArrayList<ElevatorAction> queue = this.scheduledQueue.get(elevatorNumber);
         Boolean condition1 = false;
         Boolean condition2 = false;
         Integer bestTaskNumber = 0;
@@ -344,13 +354,13 @@ public class Scheduler_System implements Runnable{
         if(queue.size() != 0) {
             //Return -bestTaskNumber if target floor already in queue (to make sure it choosen)
             for (int i = 0; i < queue.size(); i++) {
-                if (targetFloorNumber == queue.get(i)) {
+                if (targetFloorNumber == queue.get(i).getTargetFloor()) {
                     return -i;
                 }
             }
             // Else loop again to find best position
             for (int j = 0; !condition1 && !condition2 && (j < queue.size()); j++) {
-                Integer queueFloor = queue.get(j);
+                Integer queueFloor = queue.get(j).getTargetFloor();
                 condition1 = (elevatorPosition > queueFloor) && (targetFloorNumber > queueFloor) && (elevatorPosition > targetFloorNumber);
                 condition2 = (elevatorPosition < queueFloor) && (targetFloorNumber < queueFloor) && (elevatorPosition < targetFloorNumber);
                 bestTaskNumber = j;
@@ -363,7 +373,7 @@ public class Scheduler_System implements Runnable{
     public Integer getTargetElevatorNumber(){return targetElevatorNumber;}
 
     public void setTasksQueue(ArrayList<Task> tasks){this.tasksQueue = tasks;}
-    public void setScheduledQueue(HashMap<Integer,ArrayList<Integer>> tasks){this.scheduledQueue = tasks;}
+    public void setScheduledQueue(HashMap<Integer,ArrayList<ElevatorAction>> tasks){this.scheduledQueue = tasks;}
 
     /** run method for Scheduler Thread */
     @Override

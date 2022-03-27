@@ -21,7 +21,7 @@ public class ElevatorCar implements Runnable{
     private ArrayList<Boolean> buttons = new ArrayList<Boolean>();
     private boolean doorsOpen = false; //to open the doors
     private boolean motors =  false; //for motion
-    private ArrayList<Integer> tasks;
+    private ArrayList<ElevatorAction> tasks;
     private String status;
     private ElevatorState doorOpen, doorClosed, arrived, loading, movingUp, movingDown, outOfService;
     private ElevatorState elevatorState;
@@ -128,19 +128,21 @@ public class ElevatorCar implements Runnable{
     public void setMotors(boolean value) {this.motors = value;}
 
     /**Getter and Setter method for Tasks */
-    public ArrayList<Integer> getTasks() {return tasks;}
-    public void setTasks(ArrayList<Integer> tasks) {this.tasks = tasks;}
+    public ArrayList<ElevatorAction> getTasks() {return tasks;}
+    public void setTasks(ArrayList<ElevatorAction> tasks) {this.tasks = tasks;}
 
     /** Method to move elevator */
     public synchronized void movingElevator(){
         //Calculate Time to move elevator
         Float startLocation = this.position;
-        Integer endLocation = this.tasks.get(0);
+        ElevatorAction task = this.tasks.get(0);
+        Integer endLocation = task.getTargetFloor();
         long time = calculateTime(startLocation,endLocation);
 
         //Elevator state methods
         this.moveElevator(time);
         this.elevatorArrived();
+        this.setNumPassengerCounter(this.numPassengerCounter + task.getNumPeople());
         this.openDoor();
     }
 

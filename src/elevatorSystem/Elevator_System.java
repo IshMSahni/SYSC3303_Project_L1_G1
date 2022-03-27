@@ -64,7 +64,6 @@ public class Elevator_System implements Runnable{
 			System.out.println("New Scheduled Bug Task recieved.");
 			int bugNumber = data[1];
 			int elevatorNum = data[2];
-			updateElevatorQueue(elevatorNum, data);
 
 			//Elevator Delayed bug
 			if(bugNumber == 1){
@@ -116,8 +115,8 @@ public class Elevator_System implements Runnable{
 	public void updateQueue(byte[] data) {
 		int elevatorNumber = data[1];
 		int floorNumber = data[2];
-		ArrayList<Integer> tasks = elevators[elevatorNumber].getTasks();
-		while((tasks.size() != 0) && tasks.get(0) == floorNumber) {
+		ArrayList<ElevatorAction> tasks = elevators[elevatorNumber].getTasks();
+		while((tasks.size() != 0) && tasks.get(0).getTargetFloor() == floorNumber) {
 			tasks.remove(0);
 		}
 		elevators[elevatorNumber].setTasks(tasks);
@@ -166,10 +165,12 @@ public class Elevator_System implements Runnable{
 	/** This method will update elevator scheduled queue*/
 	public synchronized void updateElevatorQueue(int elevatorNumber, byte data[]){
 		//Reconstruct the scheduled tasks as an ArrayList from the data
-		ArrayList<Integer> tasks = new ArrayList<>();
-		for (int i = 2; i < data.length; i++) {
+		ArrayList<ElevatorAction> tasks = new ArrayList<>();
+		for (int i = 2; i < (data.length - 1);) {
 			int floorNumber = data[i];
-			tasks.add(floorNumber);
+			int numPeople = data[i+1];
+			tasks.add(new ElevatorAction(floorNumber,numPeople));
+			i += 2;
 		}
 
 		//Update elevator tasks and move elevator.

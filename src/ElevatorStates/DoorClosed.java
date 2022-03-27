@@ -22,7 +22,7 @@ public class DoorClosed implements ElevatorState {
     public synchronized void moveElevator(long time) {
         int elevatorNumber = elevator.getElevatorNumber();
         float startLocation = elevator.getPosition();
-        int endLocation = elevator.getTasks().get(0);
+        int endLocation = elevator.getTasks().get(0).getTargetFloor();
         elevator.setMotors(true);
         int passengers = elevator.getNumPassengerCounter();
 

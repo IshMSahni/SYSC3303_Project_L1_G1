@@ -272,8 +272,11 @@ public class Floor_System implements Runnable{
 				long totalTime = (time[0] *3600000) + (time[1] *60000) + (time[2] * 1000) + time[3];
 
 				try{ wait(totalTime - previousTime);}
-				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
-				previousTime = previousTime + totalTime;
+				catch (Exception e){
+					System.out.println("Error while waiting between sending Peoples data");
+					e.printStackTrace();
+				}
+				previousTime = totalTime;
 
 				String buttonDirection = "";
 				int direction = this.allPeople.get(0).getDirection();
@@ -289,9 +292,12 @@ public class Floor_System implements Runnable{
 				}
 				this.sendData(task.getData(),10);
 
-				//Wait 1 seconds
-				try{ wait(1000);}
-				catch (Exception e){System.out.println("Error while waiting between sending Peoples data");}
+				//Wait 2 seconds
+				try{ wait(2000);}
+				catch (Exception e){
+					System.out.println("Error while waiting 2 seconds sending Peoples data");
+					e.printStackTrace();
+				}
 
 				//Elevator Task data
 				task = new Task(this.allPeople.get(0).getDestination());
@@ -318,7 +324,7 @@ public class Floor_System implements Runnable{
 
 	/** This method will send scheduled task data to Elevator_System*/
 	public void sendData(byte data[], int portNumber){
-		System.out.println("Scheduler: sending a scheduled task data to Elevator_System.");
+		System.out.println("Sending a task data to Scheduler_System.");
 		//create the datagram packet for the message with Port given
 		try {
 			sendPacket = new DatagramPacket(data, data.length, InetAddress.getLocalHost(), portNumber);

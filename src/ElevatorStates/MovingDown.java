@@ -35,7 +35,7 @@ public class MovingDown implements ElevatorState {
 
     @Override
     public void elevatorArrived() {
-        int endLocation = elevator.getTasks().get(0);
+        int endLocation = elevator.getTasks().get(0).getTargetFloor();
         elevator.setMotors(false);
         elevator.setStatus("Stopped");
         //Set elevator to new position and remove task from Elevator's queue
