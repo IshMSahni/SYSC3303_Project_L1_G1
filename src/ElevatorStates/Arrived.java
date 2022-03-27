@@ -30,7 +30,11 @@ public class Arrived implements ElevatorState {
 
     @Override
     public void loadElevator(long time) {
-        System.out.println("Can Not load elevator, Door not open for Elevator "+elevator.getElevatorNumber());
+        //Open door, then load elevator
+        System.out.println("Opening Door for Elevator "+elevator.getElevatorNumber());
+        elevator.setDoors(true);
+        this.elevator.setElevatorState(elevator.getDoorOpen());
+        this.elevator.loadElevator(time);
     }
 
     @Override

@@ -18,29 +18,8 @@ public class DoorOpen implements ElevatorState {
         //Close door then move elevator
         elevator.setDoors(false);
         System.out.println("Closing Door for Elevator "+elevator.getElevatorNumber());
-
-        int elevatorNumber = elevator.getElevatorNumber();
-        float startLocation = elevator.getPosition();
-        int endLocation = elevator.getTasks().get(0);
-        elevator.setMotors(true);
-        int passengers = elevator.getNumPassengerCounter();
-
-        if(startLocation < endLocation){
-            System.out.println("\nElevator "+elevatorNumber+" now Moving Up to floor "+endLocation+". Num Passengers: "+passengers);
-            System.out.println("Elevator "+elevatorNumber+" moving time "+ (time/1000) + " seconds.");
-            elevator.setElevatorState(elevator.getMovingUp());
-        }
-        else{
-            System.out.println("\nElevator "+elevatorNumber+" now Moving Down to floor "+endLocation+". Num Passengers: "+passengers);
-            System.out.println("Elevator "+elevatorNumber+" moving time "+ (time/1000) + " seconds.");
-            elevator.setElevatorState(elevator.getMovingDown());
-        }
-
-        //Wait for calculated time
-        if(time != 0) {
-            try{ wait(time); }
-            catch (Exception e){}
-        }
+        this.elevator.setElevatorState(elevator.getDoorClosed());
+        this.elevator.moveElevator(time);
     }
 
     @Override

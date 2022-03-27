@@ -65,11 +65,43 @@ public class Elevator_System implements Runnable{
 			int bugNumber = data[1];
 			int elevatorNum = data[2];
 			updateElevatorQueue(elevatorNum, data);
-			//TODO more bug implementation needed here
+
+			//Elevator Delayed bug
+			if(bugNumber == 1){
+				//TODO
+			}
+
+			//Elevator door stuck closed bug
+			else if (bugNumber == 2){
+				//TODO
+			}
+
+			//Elevator door stuck open bug
+			else if (bugNumber == 3){
+				//TODO
+			}
 		}
-		//Elevator Position Request
+		//All Elevators Position Request
 		else if(data[0] == (byte) 1){
 			this.sendElevatorsData();
+		}
+		//Specific Elevator position request
+		else if(data[0] == (byte) 4){
+			int elevatorNumber = data[1];
+			float position = elevators[elevatorNumber].getPosition();
+			data = new byte[1];
+			data[0] = (byte) Math.round(position);
+			sendData(data,(100+elevatorNumber));
+		}
+
+		//Elevator Out_Of_Service data
+		else if(data[0] == (byte) 5){
+			int elevatorNumber = data[1];
+			//set elevator state to Out_Of_Service
+			elevators[elevatorNumber].setElevatorState(elevators[elevatorNumber].getOutOfService());
+
+			//remove elevator from list
+			//TODO
 		}
 
 		// Elevator has arrived at a floor
@@ -155,7 +187,7 @@ public class Elevator_System implements Runnable{
 		this.sendData(data, 40);
 	}
 
-	/** This method will send scheduled task data to Elevator_System*/
+	/** This method will send data to given portNumber*/
 	public void sendData(byte data[], int portNumber){
 		//create the datagram packet for the message with Port given
 		try {

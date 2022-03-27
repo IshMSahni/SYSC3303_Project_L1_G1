@@ -3,6 +3,7 @@ package ElevatorStates;
 import elevatorSystem.ElevatorCar;
 import elevatorSystem.ElevatorState;
 import elevatorSystem.Elevator_System;
+import elevatorSystem.TimingEvent;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,12 +37,16 @@ public class DoorClosed implements ElevatorState {
             elevator.setElevatorState(elevator.getMovingDown());
         }
 
+        //Create Timer and start it with Estimated moving time + 2 seconds
+        TimingEvent timingEvent = new TimingEvent(elevatorNumber,endLocation,(time + 2000));
+        Thread timerThread = new Thread(timingEvent,"Elevator Timer "+elevatorNumber);
+        timerThread.start();
+
         //Wait for calculated time
         if(time != 0) {
             try{ wait(time); }
             catch (Exception e){}
         }
-
     }
 
     @Override
@@ -61,19 +66,8 @@ public class DoorClosed implements ElevatorState {
         //Open door, then load elevator
         System.out.println("Opening Door for Elevator "+elevator.getElevatorNumber());
         elevator.setDoors(true);
-
-        int elevatorNumber = elevator.getElevatorNumber();
-        try{
-            wait(time);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();
-            System.out.println("Loading Elevator "+elevatorNumber+" completed at Time: "+dtf.format(now));
-            elevator.setElevatorState(elevator.getLoading()); //Set to new state
-        }
-        catch (Exception e){
-            System.out.println("Error occured while loading Elevator in thread.");
-            e.printStackTrace();
-        }
+        this.elevator.setElevatorState(elevator.getDoorOpen());
+        this.elevator.loadElevator(time);
     }
 
     @Override
