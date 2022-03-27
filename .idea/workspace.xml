@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0e64c7ac-8034-4e7d-b7ee-ca5505ec266a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/ElevatorStates/OutOfService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ElevatorStates/Arrived.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/Arrived.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ElevatorStates/DoorClosed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/DoorClosed.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ElevatorStates/DoorOpen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/DoorOpen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ElevatorStates/Loading.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/Loading.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ElevatorStates/MovingDown.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/MovingDown.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ElevatorStates/MovingUp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ElevatorStates/MovingUp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/elevatorSystem/ElevatorCar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/elevatorSystem/ElevatorCar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/elevatorSystem/ElevatorState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/elevatorSystem/ElevatorState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/Test_Elevator_System.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/Test_Elevator_System.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +34,97 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager" selected="JUnit.Test_Elevator_System.testMovingElevator">
+    <configuration name="Test_Elevator_System.testMovingElevator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator_System" />
+      <option name="METHOD_NAME" value="testMovingElevator" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test_Elevator.changeElevatorState" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="changeElevatorState" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test_Elevator.testElevatorCreation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="testElevatorCreation" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test_Elevator.testGetFloor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="testGetFloor" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test_Elevator.testMovingElevator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="testMovingElevator" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.Test_Elevator_System.testMovingElevator" />
+        <item itemvalue="JUnit.Test_Elevator.changeElevatorState" />
+        <item itemvalue="JUnit.Test_Elevator.testMovingElevator" />
+        <item itemvalue="JUnit.Test_Elevator.testElevatorCreation" />
+        <item itemvalue="JUnit.Test_Elevator.testGetFloor" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

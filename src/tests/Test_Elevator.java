@@ -39,9 +39,26 @@ public class Test_Elevator {
 	}
 	
 	@Test
-	public void testSchedulerSystem(){
-		Elevator_System elevator_system = new Elevator_System(1,2,false);
+	public void testMovingElevator(){
+		Elevator_System elevator_system = new Elevator_System(1,3,false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
+		ArrayList <Integer> tasks = new ArrayList<>();
+		tasks.add(2);
+		elevator.setTasks(tasks);
+		elevator.movingElevator();
+		assert(elevator.getPosition() == 2);
+	}
+
+	@Test
+	public void changeElevatorState(){
+		Elevator_System elevator_system = new Elevator_System(1,3,false);
+		ElevatorCar elevator = elevator_system.getElevators()[0];
+		ArrayList <Integer> tasks = new ArrayList<>();
+		tasks.add(2);
+		elevator.setTasks(tasks);
+		elevator.movingElevator();
+		elevator.setElevatorState(elevator.getOutOfService());
+		assert (elevator.getElevatorState() == elevator.getOutOfService());
 	}
 
 }
