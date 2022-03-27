@@ -13,14 +13,13 @@ public class Test_Elevator_System {
 
 	
 	@Test
-	public void testMovingElevator() throws InterruptedException {
-		Elevator_System elevator_system = new Elevator_System(1,4, false);
+	public void testMovingElevator() {
+		Elevator_System elevator_system = new Elevator_System(1,6, false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
 		elevator_system.elevatorRunningSupportStartUp();
 		Thread elevatorSystemMainThread = new Thread(elevator_system, "Scheduler Simulation");
-		Floor floor= new Floor(4,1);
 			Task task = new Task(4);
-		Scheduler_System scheduler_SubSystem = new Scheduler_System(1, 4);
+		Scheduler_System scheduler_SubSystem = new Scheduler_System(1, 6);
 		Thread schedulerSystemThread = new Thread(scheduler_SubSystem, "Scheduler Simulation");
 		schedulerSystemThread.start();
 		byte data[] = new byte[3];
@@ -30,10 +29,11 @@ public class Test_Elevator_System {
 		data[2] = (byte) 5;
 		elevatorSystemMainThread.start();
 		scheduler_SubSystem.sendData(data, 20);
-		ArrayList <Integer> check = new ArrayList<>();
-		check.add(5);
-		System.out.println();
-		assert(check == check);
+		ArrayList <Integer> tasks = new ArrayList<>();
+		tasks.add((int) data[2]);
+		elevator.setTasks(tasks);
+		elevator.movingElevator();
+		assert(elevator.getPosition() == 5);
 	}
 
 
