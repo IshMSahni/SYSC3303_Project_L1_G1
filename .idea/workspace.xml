@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0e64c7ac-8034-4e7d-b7ee-ca5505ec266a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/elevatorSystem/Elevator_System.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/elevatorSystem/Elevator_System.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tests/Test_ElevatorStates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/Test_ElevatorStates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tests/Test_Elevator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/Test_Elevator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tests/Test_Elevator_System.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/Test_Elevator_System.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/tests/Test_Scheduler_System.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/tests/Test_Scheduler_System.java" afterDir="false" />
     </list>
@@ -39,47 +38,8 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
   </component>
-  <component name="RunManager" selected="JUnit.Test_Elevator_System.testMovingElevator">
-    <configuration name="Elevator_System" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="elevatorSystem.Elevator_System" />
-      <module name="SYSC3303_Project_L1_G1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="elevatorSystem.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Floor_System" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="elevatorSystem.Floor_System" />
-      <module name="SYSC3303_Project_L1_G1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="elevatorSystem.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Scheduler_System" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="elevatorSystem.Scheduler_System" />
-      <module name="SYSC3303_Project_L1_G1" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="elevatorSystem.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Test_ElevatorStates.invalidMovingTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.Test_Elevator.changeElevatorState">
+    <configuration name="Test_Elevator.changeElevatorState" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SYSC3303_Project_L1_G1" />
       <extension name="coverage">
         <pattern>
@@ -88,14 +48,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="tests" />
-      <option name="MAIN_CLASS_NAME" value="tests.Test_ElevatorStates" />
-      <option name="METHOD_NAME" value="invalidMovingTest" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="changeElevatorState" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Test_Elevator_System.testMovingElevator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="Test_Elevator.testButtonPressed" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="SYSC3303_Project_L1_G1" />
       <extension name="coverage">
         <pattern>
@@ -104,7 +64,55 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="tests" />
-      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator_System" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="testButtonPressed" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test_Elevator.testElevatorCreation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="testElevatorCreation" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test_Elevator.testGetFloor" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
+      <option name="METHOD_NAME" value="testGetFloor" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test_Elevator.testMovingElevator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="SYSC3303_Project_L1_G1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests" />
+      <option name="MAIN_CLASS_NAME" value="tests.Test_Elevator" />
       <option name="METHOD_NAME" value="testMovingElevator" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
@@ -113,11 +121,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.Test_Elevator_System.testMovingElevator" />
-        <item itemvalue="Application.Floor_System" />
-        <item itemvalue="Application.Elevator_System" />
-        <item itemvalue="Application.Scheduler_System" />
-        <item itemvalue="JUnit.Test_ElevatorStates.invalidMovingTest" />
+        <item itemvalue="JUnit.Test_Elevator.changeElevatorState" />
+        <item itemvalue="JUnit.Test_Elevator.testMovingElevator" />
+        <item itemvalue="JUnit.Test_Elevator.testElevatorCreation" />
+        <item itemvalue="JUnit.Test_Elevator.testGetFloor" />
+        <item itemvalue="JUnit.Test_Elevator.testButtonPressed" />
       </list>
     </recent_temporary>
   </component>

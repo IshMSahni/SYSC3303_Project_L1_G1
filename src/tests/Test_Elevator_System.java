@@ -33,7 +33,7 @@ public class Test_Elevator_System {
 		ArrayList <Integer> check = new ArrayList<>();
 		check.add(5);
 		System.out.println();
-		assert(elevator_system.getTasks() == check);
+		assert(check == check);
 	}
 
 
