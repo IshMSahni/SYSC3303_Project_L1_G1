@@ -36,8 +36,9 @@ public class Test_ElevatorStates {
         //State is set to MovingUp, Elevator should not open door
         elevator.setElevatorState(elevator.getMovingUp());
         elevator.setPosition(3);
-        ArrayList<Integer> tasks = new ArrayList<>();
-        tasks.add(1);
+        ArrayList<ElevatorAction> tasks = new ArrayList<>();
+        ElevatorAction action = new ElevatorAction(1,2);
+        tasks.add(action);
         elevator.setTasks(tasks);
         elevator.elevatorArrived();
         assert(elevator.getPosition() == 1.0); //Test elevator did move to 1 after calling elevatorArrived()

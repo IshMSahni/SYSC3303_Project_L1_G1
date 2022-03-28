@@ -57,6 +57,7 @@ public class Test_Elevator {
 		ArrayList<ElevatorAction> tasks = new ArrayList<>();
 		ElevatorAction action = new ElevatorAction(2,2);
 		tasks.add(action);
+		elevator.setTasks(tasks);
 		elevator.movingElevator();
 		elevator.setElevatorState(elevator.getOutOfService());
 		assert (elevator.getElevatorState() == elevator.getOutOfService());

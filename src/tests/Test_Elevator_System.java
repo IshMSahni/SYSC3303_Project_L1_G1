@@ -18,7 +18,6 @@ public class Test_Elevator_System {
 		ElevatorCar elevator = elevator_system.getElevators()[0];
 		elevator_system.elevatorRunningSupportStartUp();
 		Thread elevatorSystemMainThread = new Thread(elevator_system, "Scheduler Simulation");
-			Task task = new Task(4);
 		Scheduler_System scheduler_SubSystem = new Scheduler_System(1, 6);
 		Thread schedulerSystemThread = new Thread(scheduler_SubSystem, "Scheduler Simulation");
 		schedulerSystemThread.start();
@@ -32,8 +31,10 @@ public class Test_Elevator_System {
 		ArrayList<ElevatorAction> tasks = new ArrayList<>();
 		ElevatorAction action = new ElevatorAction(4,2);
 		tasks.add(action);
+		elevator.setTasks(tasks);
 		elevator.movingElevator();
-		assert(elevator.getPosition() == 5);
+
+		assert(elevator.getPosition() == 4);
 	}
 
 
