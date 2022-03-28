@@ -44,7 +44,7 @@ public class MovingDown implements ElevatorState {
         elevator.getTasks().remove(0);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        System.out.println("Elevator "+elevator.getElevatorNumber()+" now arrived floor "+endLocation+" at Time: "+dtf.format(now));
+        System.out.println("Elevator "+elevator.getElevatorNumber()+" now arrived floor "+Math.round(this.elevator.getPosition())+" at Time: "+dtf.format(now));
         //Set to new state
         elevator.setElevatorState(elevator.getArrived());
     }

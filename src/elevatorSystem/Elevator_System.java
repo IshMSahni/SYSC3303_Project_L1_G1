@@ -81,6 +81,7 @@ public class Elevator_System implements Runnable{
 		//Elevator Out_Of_Service data
 		else if(data[0] == (byte) 5){
 			int elevatorNumber = data[1];
+			System.out.println("\nELEVATOR "+elevatorNumber +" IS GOING OUT OF SERVICE, TIMING ERROR\n");
 			//set elevator state to Out_Of_Service
 			elevators[elevatorNumber].setElevatorState(elevators[elevatorNumber].getOutOfService());
 

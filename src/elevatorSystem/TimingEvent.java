@@ -14,6 +14,9 @@ public class TimingEvent implements Runnable{
         this.elevatorNumber = elevatorNumber;
         this.time = time;
         this.targetFloor = targetFloor;
+
+        try{sendReceiveSocket = new DatagramSocket();}
+        catch (SocketException se){se.printStackTrace();}
     }
 
     /** This method will send data to the portNumber given*/

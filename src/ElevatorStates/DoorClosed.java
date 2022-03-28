@@ -35,8 +35,8 @@ public class DoorClosed implements ElevatorState {
             elevator.setElevatorState(elevator.getMovingDown());
         }
 
-        //Create Timer and start it with Estimated moving time + 2 seconds
-        TimingEvent timingEvent = new TimingEvent(elevatorNumber,endLocation,(time + 2000));
+        //Create Timer and start it with Estimated moving time + 0.5 second
+        TimingEvent timingEvent = new TimingEvent(elevatorNumber,endLocation,(time + 500));
         Thread timerThread = new Thread(timingEvent,"Elevator Timer "+elevatorNumber);
         timerThread.start();
 

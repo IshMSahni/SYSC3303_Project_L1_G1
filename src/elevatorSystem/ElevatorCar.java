@@ -142,8 +142,15 @@ public class ElevatorCar implements Runnable{
 
         //Elevator delayed/stuck, go Out Of Service
         if(numPeople == -30){
+            this.moveElevator(time);
+            this.elevatorArrived();
+            if(Math.round(startLocation) == endLocation){
+                if(endLocation - 1 > 0){this.position = endLocation - 1;}
+                else{this.position = endLocation + 1;}
+            }
+            else{this.position = startLocation;}
+            this.openDoor();
             this.elevatorState = outOfService;
-            System.out.println("\nELEVATOR "+elevatorNumber +" IS GOING OUT OF SERVICE\n");
         }
         //Elevator door stuck close, try to load elevator while door closed
         else if(numPeople == -40){
@@ -199,6 +206,7 @@ public class ElevatorCar implements Runnable{
     public void openDoor(){this.elevatorState.openDoor();}
     public void closeDoor(){this.elevatorState.closeDoor();}
     public synchronized void loadElevator(long time){this.elevatorState.loadElevator(time);}
+    public void outOfService(){this.elevatorState.elevatorOutOfService();}
 
     public void elevatorArrived(){
         this.elevatorState.elevatorArrived();
