@@ -42,8 +42,9 @@ public class Test_Elevator {
 	public void testMovingElevator(){
 		Elevator_System elevator_system = new Elevator_System(1,3,false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
-		ArrayList <Integer> tasks = new ArrayList<>();
-		tasks.add(2);
+		ArrayList<ElevatorAction> tasks = new ArrayList<>();
+		ElevatorAction action = new ElevatorAction(2,2);
+		tasks.add(action);
 		elevator.setTasks(tasks);
 		elevator.movingElevator();
 		assert(elevator.getPosition() == 2);
@@ -53,9 +54,9 @@ public class Test_Elevator {
 	public void changeElevatorState(){
 		Elevator_System elevator_system = new Elevator_System(1,3,false);
 		ElevatorCar elevator = elevator_system.getElevators()[0];
-		ArrayList <Integer> tasks = new ArrayList<>();
-		tasks.add(2);
-		elevator.setTasks(tasks);
+		ArrayList<ElevatorAction> tasks = new ArrayList<>();
+		ElevatorAction action = new ElevatorAction(2,2);
+		tasks.add(action);
 		elevator.movingElevator();
 		elevator.setElevatorState(elevator.getOutOfService());
 		assert (elevator.getElevatorState() == elevator.getOutOfService());

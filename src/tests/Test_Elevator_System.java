@@ -29,9 +29,9 @@ public class Test_Elevator_System {
 		data[2] = (byte) 5;
 		elevatorSystemMainThread.start();
 		scheduler_SubSystem.sendData(data, 20);
-		ArrayList <Integer> tasks = new ArrayList<>();
-		tasks.add((int) data[2]);
-		elevator.setTasks(tasks);
+		ArrayList<ElevatorAction> tasks = new ArrayList<>();
+		ElevatorAction action = new ElevatorAction(4,2);
+		tasks.add(action);
 		elevator.movingElevator();
 		assert(elevator.getPosition() == 5);
 	}
