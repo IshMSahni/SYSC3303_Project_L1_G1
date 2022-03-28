@@ -1,3 +1,4 @@
+
 package tests;
 
 import elevatorSystem.*;
@@ -22,16 +23,14 @@ public class Test_Elevator {
 	
 	@Test
 	public void testGetFloor(){
-		Elevator_System elevator_system = new Elevator_System(1,2,false);
-		ElevatorCar elevator = elevator_system.getElevators()[0];
+		ElevatorCar elevator = new ElevatorCar(1,10);
 		elevator.setPosition(2);
 		assert(elevator.getPosition() == 2);
 	}
 	
 	@Test
 	public void testButtonPressed(){
-		Elevator_System elevator_system = new Elevator_System(1,2,false);
-		ElevatorCar elevator = elevator_system.getElevators()[0];
+		ElevatorCar elevator = new ElevatorCar(2,10);
 		elevator.testbuttonPressed(0);
 		
 		assert(elevator.getLights(0));
@@ -40,10 +39,9 @@ public class Test_Elevator {
 	
 	@Test
 	public void testMovingElevator(){
-		Elevator_System elevator_system = new Elevator_System(1,3,false);
-		ElevatorCar elevator = elevator_system.getElevators()[0];
-		ArrayList <Integer> tasks = new ArrayList<>();
-		tasks.add(2);
+		ElevatorCar elevator = new ElevatorCar(3,10);
+		ArrayList <ElevatorAction> tasks = new ArrayList<>();
+		tasks.add(new ElevatorAction(2,1));
 		elevator.setTasks(tasks);
 		elevator.movingElevator();
 		assert(elevator.getPosition() == 2);
@@ -51,10 +49,9 @@ public class Test_Elevator {
 
 	@Test
 	public void changeElevatorState(){
-		Elevator_System elevator_system = new Elevator_System(1,3,false);
-		ElevatorCar elevator = elevator_system.getElevators()[0];
-		ArrayList <Integer> tasks = new ArrayList<>();
-		tasks.add(2);
+		ElevatorCar elevator = new ElevatorCar(4,10);
+		ArrayList <ElevatorAction> tasks = new ArrayList<>();
+		tasks.add(new ElevatorAction(2,1));
 		elevator.setTasks(tasks);
 		elevator.movingElevator();
 		elevator.setElevatorState(elevator.getOutOfService());
