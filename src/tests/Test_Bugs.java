@@ -15,7 +15,7 @@ public class Test_Bugs {
 
     @Test
     /** Manually set position wrong after moving elevator and check if timing event catches the mistake
-     * and sets state to Out of Service. */
+     * and sets state to Out of Service.  */
     public synchronized void test_OutOfServiceBug(){
         this.elevator_system = new Elevator_System(1,20,false);
         Thread elevatorSystemMainThread = new Thread(elevator_system , "Elevator Simulation");

@@ -214,7 +214,7 @@ public class Elevator_System implements Runnable{
 		Elevator_System elevator_system_main = new Elevator_System(totalNumElevators,totalNumFloors, false);
 		elevator_system_main.elevatorRunningSupportStartUp();
 
-		Thread elevatorSystemMainThread = new Thread(elevator_system_main, "Elevator Simulation");
+		Thread elevatorSystemMainThread = new Thread(elevator_system_main, "Elevator Simulation ");
 		System.out.println("Waiting for new Task...");
 
 		elevatorSystemMainThread.start();
