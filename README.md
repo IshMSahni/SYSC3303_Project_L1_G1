@@ -21,6 +21,7 @@ b) Make sure to name packages correctly
 
 3. Run the main methods in the following order: Scheduler_System, Elevator_System, Floor_System.
 
+4. To run the test files open any file in the test folder and run all or some of the tests.
 
 ### Steps to run the Java Tests:
 1. Right click the test package in the project explorer
@@ -34,12 +35,15 @@ b) Make sure to name packages correctly
 - Keeps track of the work that each elevator has to do in a queue
 - Ensures that the motion and timing of the completion of the elevator is realistic
 - Interacts with elevator states depending on action that needs to occur
+- Handles each car on a different thread
 
 ### ElevatorCar.java
 - Object pertaining to requirements of every ElevatorCar such as buttons, lights, motors, doors etc.
 - Objects are managed by the Elevator_System to indicate where the elevator should travel
 - Contains the state of the elevator and also changes based on calls to the methods within the state
 - Contains information about how many people are on and off the elevator as an indicator of task completion
+- Each car is now a thread that is notified when it supposed to interact with the system
+- The system has a OutOfService mode to ensure safe usage of the elevator and to minimize edge cases that can result in harm
 
 ### Floor_System.java
 - Reads input from filename.txt
@@ -134,7 +138,14 @@ hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
 - This state defines what happens when a bug/fault occurs and the elevater must now remain out of service until the issue is fixed.
 - Note that this state has no next state
 
+### ElevatorAction.java
+- An instruction object for ElevatorCar to follow
+- Holds information about the target floor and number of people travelling in each instruction
+
+### TimingEvent.java
+- A Threaded event that runs to measure the time it takes for each interaction to and handling it for bugs
+
 ## Team & Contributions for Iteration 3
 1. Keith Lam - Bug input readFile changes, Request with bug modifications, JUnit testing, Readme.txt modifications
-2. Muhammad Furqan - UDP conversion of entire system, All System classess modifications, Sequence Diagram
-3. Ishanov Sahni - ElevatorCar class changes, UML Class Diagram
+2. Muhammad Furqan - TimingEvent, JUnit Testing, ElevatorAction, ElevatorAction, OutOFService, Scheduler_System,
+3. Ishanov Sahni - UML Class Diagram, Readme.txt modifications, JUnit testing
