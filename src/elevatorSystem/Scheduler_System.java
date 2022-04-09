@@ -310,16 +310,16 @@ public class Scheduler_System implements Runnable{
                 int passengerNumber = elevators[i].getNumPassengerCounter();
                 int currentWeightFactor = currentTaskNumber * (passengerNumber + 1);
 
+                if ((currentTaskNumber < 0) || (currentWeightFactor == 0)) {
+                    return i;
+                }
+
                 if(bestElevatorNumber == -1){
                     bestElevatorNumber = i;
                     bestWeightFactor = currentWeightFactor;
                 }
-                else {
-                    if ((currentTaskNumber < 0) || (currentWeightFactor == 0)) {
-                        return i;
-                    } else if (bestWeightFactor > currentWeightFactor) {
-                        bestElevatorNumber = i;
-                    }
+                else if (bestWeightFactor > currentWeightFactor) {
+                    bestElevatorNumber = i;
                 }
             }
         }
