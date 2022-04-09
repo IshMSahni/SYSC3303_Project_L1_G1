@@ -49,19 +49,19 @@ public class Elevator_System implements Runnable{
 
 		// Data is new scheduled Elevator Task
 		if(data[0] == (byte) 0){
-			System.out.println("New Scheduled Elevator Task recieved.");
+			//System.out.println("New Scheduled Elevator Task received.");
 			int elevatorNum = data[1];
 			updateElevatorQueue(elevatorNum, data);
 		}
 		// Data is new scheduled Floor Task
 		else if(data[0] == (byte) 2){
-			System.out.println("New Scheduled Floor Task recieved.");
+			//System.out.println("New Scheduled Floor Task received.");
 			int elevatorNum = data[1];
 			updateElevatorQueue(elevatorNum, data);
 		}
 		// Data is new scheduled Bug Task
 		else if(data[0] == (byte) 3){
-			System.out.println("New Scheduled Bug Task recieved.");
+			System.out.println("New Scheduled Bug Task received.");
 			int elevatorNum = data[1];
 			updateElevatorQueue(elevatorNum, data);
 		}
