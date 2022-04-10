@@ -216,8 +216,8 @@ public class Elevator_System implements Runnable{
 
 	/** Main method*/
 	public static void main(String[] args) {
-		int totalNumElevators = 5;
-		int totalNumFloors = 20;
+		int totalNumElevators = 4;
+		int totalNumFloors = 22;
 		Elevator_System elevator_system_main = new Elevator_System(totalNumElevators,totalNumFloors, false);
 		elevator_system_main.elevatorRunningSupportStartUp();
 

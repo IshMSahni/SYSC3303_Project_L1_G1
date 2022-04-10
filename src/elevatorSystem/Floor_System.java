@@ -349,8 +349,8 @@ public class Floor_System implements Runnable{
 	 * 	Return: Void
 	 */
 	public static void main(String[] args) {
-		int totalFloorNumber = 20; //total number of floors
-		int totalElevatorNumber = 5; //total number  of elevators
+		int totalFloorNumber = 22; //total number of floors
+		int totalElevatorNumber = 4; //total number  of elevators
 
 		Floor_System floor_SubSystem = new Floor_System(totalFloorNumber,totalElevatorNumber);
 		floor_SubSystem.setEventFloor(-1);
