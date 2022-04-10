@@ -43,7 +43,7 @@ public class DoorOpen implements ElevatorState {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             System.out.println("Loading Elevator "+elevatorNumber+" completed at Time: "+dtf.format(now));
-            elevator.setElevatorState(elevator.getLoading()); //Set to new state
+            this.elevator.setElevatorState(elevator.getLoading()); //Set to new state
         }
         catch (Exception e){
             System.out.println("Error occured while loading Elevator in thread.");

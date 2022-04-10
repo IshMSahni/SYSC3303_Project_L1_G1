@@ -87,7 +87,7 @@ public class Elevator_System implements Runnable{
 			int elevatorNumber = data[1];
 			System.out.println("\nELEVATOR "+elevatorNumber +" IS GOING OUT OF SERVICE, TIMING ERROR\n");
 			//set elevator state to Out_Of_Service
-			elevators[elevatorNumber].setElevatorState(elevators[elevatorNumber].getOutOfService());
+			this.elevators[elevatorNumber].setElevatorState(elevators[elevatorNumber].getOutOfService());
 
 			//Send out of service elevator data update to Scheduler_system
 			data = new byte[2];

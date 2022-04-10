@@ -40,7 +40,7 @@ public class DoorClosed implements ElevatorState {
         }
 
         //Create Timer and start it with Estimated moving time + 0.5 second
-        TimingEvent timingEvent = new TimingEvent(elevatorNumber,endLocation,(time + 500));
+        TimingEvent timingEvent = new TimingEvent(this.elevator,endLocation,(time + 500));
         Thread timerThread = new Thread(timingEvent,"Elevator Timer "+elevatorNumber);
         timerThread.start();
 
@@ -70,7 +70,7 @@ public class DoorClosed implements ElevatorState {
     public synchronized void loadElevator(long time) {
         //Open door, then load elevator
         System.out.println("\nElevator "+elevator.getElevatorNumber() +" door is stuck close, opening door again before loading.\n");
-        elevator.setDoors(true);
+        this.elevator.setDoors(true);
         this.elevator.setElevatorState(elevator.getDoorOpen());
         this.elevator.loadElevator(time);
     }

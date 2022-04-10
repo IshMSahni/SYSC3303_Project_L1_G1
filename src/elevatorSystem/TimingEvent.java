@@ -4,14 +4,16 @@ import java.io.IOException;
 import java.net.*;
 
 public class TimingEvent implements Runnable{
+    private ElevatorCar elevatorCar;
     private int elevatorNumber;
     private int targetFloor;
     private long time;
     private DatagramSocket sendReceiveSocket;
     private DatagramPacket sendPacket, receivePacket;
 
-    public TimingEvent(int elevatorNumber, int targetFloor, long time){
-        this.elevatorNumber = elevatorNumber;
+    public TimingEvent(ElevatorCar elevatorCar, int targetFloor, long time){
+        this.elevatorCar = elevatorCar;
+        this.elevatorNumber = elevatorCar.getElevatorNumber();
         this.time = time;
         this.targetFloor = targetFloor;
 
@@ -85,6 +87,7 @@ public class TimingEvent implements Runnable{
             data = new byte[2];
             data[0] = (byte) 5; data[1] = (byte) elevatorNumber;
             sendData(data, 20);
+            this.elevatorCar.setElevatorState(elevatorCar.getOutOfService());
         }
         sendReceiveSocket.close();
     }
