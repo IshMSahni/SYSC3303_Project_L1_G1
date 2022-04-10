@@ -41,6 +41,7 @@ public class Elevator_System implements Runnable{
 			System.exit(1);
 		}
 
+		//Create GUI thread
 		Thread elevatorGUI = new Thread(new Elevator_System_GUI(totalNumElevators,totalNumFloors));
 		elevatorGUI.start();
 	}
