@@ -54,11 +54,11 @@ b) Make sure to name packages correctly
 - Reads input from filename.txt
 - Note that document called "filename" follows the following format:
 
-      00:00:23.101 2 Down 1
+      00:00:23.101 2 Down 1 0
       00:00:53.101 3 Up 5
-      00:01:53.101 0 Up 5
+      00:01:53.101 0 Up 5 3
 
-  hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor
+  hr:min:sec.mm | Current_Floor | Direction_of_Destination | Destination Floor | Bug
 
 - Parses each line into People objects and adds them to queue for scheduler
 - Once it reaches the end of the file it will return a list of People objects
@@ -66,7 +66,7 @@ b) Make sure to name packages correctly
 - Initializes the program (main method located in Floor_System)
 - Note that Floor_System constructor has been created for JUnit Testing only.
 - allPeople array has been changed to an ArrayList in order to accommodate for the iteration 2 requirements.
-- Note that Floor_System now reads file with bug parameter for iteration 4
+- Note that Floor_System now reads file with bug parameter for iteration 4 and 5. The bug attribute is optional.
 
 ### Floor.java
 
