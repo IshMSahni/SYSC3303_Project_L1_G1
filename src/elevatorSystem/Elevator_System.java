@@ -40,6 +40,9 @@ public class Elevator_System implements Runnable{
 			se.printStackTrace();
 			System.exit(1);
 		}
+
+		Thread elevatorGUI = new Thread(new Elevator_System_GUI(totalNumElevators,totalNumFloors));
+		elevatorGUI.start();
 	}
 
 	/** This method will wait until new data is received and then take the necessary actions based on that data*/
@@ -123,6 +126,9 @@ public class Elevator_System implements Runnable{
 		for (int i = 0; i < numElevators; i++) {
 			elevatorThreads[i].start();
 		}
+
+		Thread elevatorsTracker = new Thread(new Elevators_RealTime_Tracker(this.elevators));
+		elevatorsTracker.start();
 	}
 
 	public byte[] recieveData(DatagramSocket receiveSocket) {

@@ -23,14 +23,18 @@ public class DoorClosed implements ElevatorState {
         int elevatorNumber = elevator.getElevatorNumber();
         float startLocation = elevator.getPosition();
         int endLocation = elevator.getTasks().get(0).getTargetFloor();
+        int distance = Math.round(Math.abs(startLocation - endLocation));
+        int amount = 0;
         elevator.setMotors(true);
         int passengers = elevator.getNumPassengerCounter();
 
         if(startLocation < endLocation){
+            amount = 1;
             System.out.println("\nElevator "+elevatorNumber+" now Moving Up to floor "+endLocation+". Num Passengers: "+passengers);
             elevator.setElevatorState(elevator.getMovingUp());
         }
         else{
+            amount = -1;
             System.out.println("\nElevator "+elevatorNumber+" now Moving Down to floor "+endLocation+". Num Passengers: "+passengers);
             elevator.setElevatorState(elevator.getMovingDown());
         }
@@ -42,8 +46,11 @@ public class DoorClosed implements ElevatorState {
 
         //Wait for calculated time
         if(time != 0) {
-            try{ wait(time); }
-            catch (Exception e){}
+            for (int i = 0; i < distance; i++) {
+                try{ wait((time/distance) - 50); }
+                catch (Exception e){}
+                this.elevator.setPosition(this.elevator.getPosition() + amount);
+            }
         }
     }
 

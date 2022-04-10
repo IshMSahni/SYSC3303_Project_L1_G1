@@ -5,19 +5,19 @@ import java.io.IOException;
 import java.net.*;
 
 /** This Class will create the GUI for the Elevator_System*/
-public class Elevator_System_GUI {
-    private Elevator_System elevator_system;
+public class Elevator_System_GUI implements Runnable{
     private int numElevators;
     private int numFloors;
+    private int[] elevatorsPositions;
     private JFrame mainFrame;
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendReceiveSocket;
 
     /** Constructor */
-     public Elevator_System_GUI(Elevator_System elevator_system, int numElevators, int numFloors){
-         this.elevator_system = elevator_system;
+     public Elevator_System_GUI(int numElevators, int numFloors){
          this.numElevators = numElevators;
          this.numFloors = numFloors;
+         this.elevatorsPositions = new int[numElevators];
 
          //Create and sendReceive socket. This socket and will receive Elevator real time position data to update GUI with.
          try {
@@ -35,6 +35,11 @@ public class Elevator_System_GUI {
 
     /** Creates individual JFrames for a single elevatorCar object*/
     public void createElevatorCarFrame(){
+
+    }
+
+    /** This method will update the elevator positions on the GUI*/
+    public void updateGUI(){
 
     }
 
@@ -81,4 +86,16 @@ public class Elevator_System_GUI {
         return data;
     }
 
+    @Override
+    public synchronized void run() {
+        while(true){
+            byte data[] = recieveData(sendReceiveSocket);
+            if(data[0] == (byte) 0){
+                for (int i = 0; i < this.numElevators; i++) {
+                    this.elevatorsPositions[i] = data[i+1];
+                }
+                this.updateGUI();
+            }
+        }
+    }
 }
