@@ -149,6 +149,7 @@ public class ElevatorCar implements Runnable{
                 else{this.position = endLocation + 1;}
             }
             else{this.position = startLocation;}
+
             this.openDoor();
             this.elevatorState = outOfService;
         }

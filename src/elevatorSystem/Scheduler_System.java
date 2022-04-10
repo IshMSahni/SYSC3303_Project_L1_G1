@@ -310,16 +310,16 @@ public class Scheduler_System implements Runnable{
                 int passengerNumber = elevators[i].getNumPassengerCounter();
                 int currentWeightFactor = currentTaskNumber * (passengerNumber + 1);
 
+                if ((currentTaskNumber < 0) || (currentWeightFactor == 0)) {
+                    return i;
+                }
+
                 if(bestElevatorNumber == -1){
                     bestElevatorNumber = i;
                     bestWeightFactor = currentWeightFactor;
                 }
-                else {
-                    if ((currentTaskNumber < 0) || (currentWeightFactor == 0)) {
-                        return i;
-                    } else if (bestWeightFactor > currentWeightFactor) {
-                        bestElevatorNumber = i;
-                    }
+                else if (bestWeightFactor > currentWeightFactor) {
+                    bestElevatorNumber = i;
                 }
             }
         }
@@ -327,7 +327,7 @@ public class Scheduler_System implements Runnable{
     }
 
     /** Method to get position of task if added to a given elevator number to schedule most the recent task
-     * Returns a negative number if target floor is already in queue  */
+     * Returns a negative number if target floor is already in queue */
     public int getTaskNumber(Integer elevatorNumber){
         //Target Floor number of latest task added and status of elevator.
         Integer targetFloorNumber = tasksQueue.get(tasksQueue.size() - 1).getFloorNumber();
