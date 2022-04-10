@@ -1,6 +1,9 @@
 package elevatorSystem;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.*;
 
@@ -10,6 +13,9 @@ public class Elevator_System_GUI implements Runnable{
     private int numFloors;
     private int[] elevatorsPositions;
     private JFrame mainFrame;
+    private JPanel upperPanel, mainPanel, lowerPanel;
+    private JPanel[] elevatorPanels;
+    private JLabel[] positionLabels;
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendReceiveSocket;
 
@@ -26,21 +32,83 @@ public class Elevator_System_GUI implements Runnable{
              se.printStackTrace();
              System.exit(1);
          }
+
+         this.createMainFrame();
      }
 
      /** Creates the main JFrame of the GUI which will contain multiple ElevatorCarFrames*/
      public void createMainFrame(){
+         this.mainFrame = new JFrame("Group 1 Elevator System");
+         Dimension size = Toolkit. getDefaultToolkit(). getScreenSize();
+         this.mainFrame.setPreferredSize(size);
 
+         this.mainFrame.setResizable(true);
+
+         this.upperPanel = new JPanel(new BorderLayout());
+         this.lowerPanel = new JPanel(new BorderLayout());
+         this.mainPanel = new JPanel(new GridLayout(1,numElevators));
+         Dimension mainPanelSize = new Dimension(size.width, size.height);
+         this.mainPanel.setPreferredSize(mainPanelSize);
+
+
+         this.elevatorPanels = new JPanel[numElevators];
+         this.positionLabels = new JLabel[numElevators];
+
+         this.createElevatorCarFrame();
+
+         this.mainFrame.add(upperPanel,BorderLayout.PAGE_START);
+         this.mainFrame.add(mainPanel,BorderLayout.CENTER);
+         this.mainFrame.add(lowerPanel,BorderLayout.PAGE_END);
     }
 
     /** Creates individual JFrames for a single elevatorCar object*/
     public void createElevatorCarFrame(){
+        for (int i = 0; i < this.numElevators; i++) {
+            this.elevatorPanels[i] = new JPanel(new BorderLayout());
+            JLabel elevatorName = new JLabel("Elevator "+i);
+            this.positionLabels[i] = new JLabel("Floor "+this.elevatorsPositions[i]);
+
+            this.elevatorPanels[i].add(elevatorName,BorderLayout.PAGE_START);
+            this.elevatorPanels[i].add(this.positionLabels[i],BorderLayout.CENTER);
+            this.mainPanel.add(this.elevatorPanels[i]);
+        }
 
     }
 
     /** This method will update the elevator positions on the GUI*/
     public void updateGUI(){
+        for (int i = 0; i < this.numElevators; i++) {
+            this.positionLabels[i].setText("Floor "+this.elevatorsPositions[i]);
+        }
+    }
 
+    /**
+     * Closes the main frame and prompts the user with a confirmation message beforehand.
+     */
+    public void closeFrame() {
+
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                if (JOptionPane.showConfirmDialog(mainFrame, "Are you sure you want to close the GUI?")
+                        == JOptionPane.OK_OPTION) {
+                    mainFrame.setVisible(false);
+                    mainFrame.dispose();
+                    System.exit(0);
+                }
+            }
+        });
+    }
+
+    /**
+     * displays the GUI of the game.
+     */
+    public void displayGUI(){
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        mainFrame.setSize(size);
+        mainFrame.setVisible(true);
+        closeFrame();
     }
 
     /** This method will send data to given portNumber*/
@@ -88,6 +156,7 @@ public class Elevator_System_GUI implements Runnable{
 
     @Override
     public synchronized void run() {
+        this.displayGUI();
         while(true){
             byte data[] = recieveData(sendReceiveSocket);
             if(data[0] == (byte) 0){

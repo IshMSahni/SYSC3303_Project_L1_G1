@@ -42,7 +42,7 @@ public class Elevators_RealTime_Tracker implements Runnable {
 
     @Override
     public synchronized void run() {
-        long updateCycleTime = 5000; // 5 seconds
+        long updateCycleTime = 1000; // 1 second
         int numElevators = elevators.length;
 
         while(true){
