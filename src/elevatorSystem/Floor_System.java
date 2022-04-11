@@ -163,24 +163,26 @@ public class Floor_System implements Runnable{
 
 			time = new int[4]; time[0]=00; time[1]=00; time[2]=43; time[3]=101;
 			defaultPeoples[4]= new Person(time, 1, 1, 2, 0);
-			time[0]=00; time[1]=00; time[2]=48; time[3]=101;
-			defaultPeoples[5] = new Person(time, 21, 2, 1, 0);
 
 			time = new int[4]; time[0]=00; time[1]=00; time[2]=53; time[3]=101;
-			defaultPeoples[6]= new Person(time, 5, 1, 6, 0);
+			defaultPeoples[5] = new Person(time, 21, 2, 1, 0);
 
 			time = new int[4]; time[0]=00; time[1]=01; time[2]=03; time[3]=101;
-			defaultPeoples[7] = new Person(time, 6, 2, 1,3);
+			defaultPeoples[6]= new Person(time, 5, 1, 6, 0);
 
 			time = new int[4]; time[0]=00; time[1]=01; time[2]=13; time[3]=101;
-			defaultPeoples[8]= new Person(time, 7, 2, 4, 0);
+			defaultPeoples[7] = new Person(time, 6, 2, 1,3);
 
 			time = new int[4]; time[0]=00; time[1]=01; time[2]=23; time[3]=101;
+			defaultPeoples[8]= new Person(time, 7, 2, 4, 0);
+
+			time = new int[4]; time[0]=00; time[1]=01; time[2]=33; time[3]=101;
 			defaultPeoples[9]= new Person(time, 12, 2, 1);
-			time[0]=00; time[1]=01; time[2]=33; time[3]=101;
-			defaultPeoples[10] = new Person(time, 4, 2, 0, 1);
 
 			time = new int[4]; time[0]=00; time[1]=01; time[2]=43; time[3]=101;
+			defaultPeoples[10] = new Person(time, 4, 2, 0, 1);
+
+			time = new int[4]; time[0]=00; time[1]=01; time[2]=53; time[3]=101;
 			defaultPeoples[11]= new Person(time, 2, 2, 1, 0);
 
 			return defaultPeoples;
