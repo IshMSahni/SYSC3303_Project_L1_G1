@@ -11,12 +11,12 @@ import java.net.*;
 public class Elevator_System_GUI implements Runnable{
     private int numElevators;
     private int numFloors;
-    private int[] elevatorsPositions;
+    private int[] elevatorsPositions, elevatorsPassengers;
     private int[] elevatorsStatus; // 0: Door closed, 1: moving up, 2: moving down, 3: Loading Passengers, Door Open, 4: Out Of Service, 5: idle
     private JFrame mainFrame;
     private JPanel upperPanel, mainPanel, lowerPanel;
     private JPanel[] elevatorPanels;
-    private JLabel[] positionLabels, statusLabels;
+    private JLabel[] positionLabels, statusLabels, passengerLabels;
     private DatagramPacket sendPacket, receivePacket;
     private DatagramSocket sendReceiveSocket;
 
@@ -26,6 +26,7 @@ public class Elevator_System_GUI implements Runnable{
          this.numFloors = numFloors;
          this.elevatorsPositions = new int[numElevators];
          this.elevatorsStatus = new int[numElevators];
+         this.elevatorsPassengers = new int[numElevators];
 
          //Create and sendReceive socket. This socket and will receive Elevator real time position data to update GUI with.
          try {
@@ -56,6 +57,7 @@ public class Elevator_System_GUI implements Runnable{
          this.elevatorPanels = new JPanel[numElevators];
          this.positionLabels = new JLabel[numElevators];
          this.statusLabels = new JLabel[numElevators];
+         this.passengerLabels = new JLabel[numElevators];
 
          this.createElevatorCarFrame();
 
@@ -67,9 +69,10 @@ public class Elevator_System_GUI implements Runnable{
     /** Creates individual JFrames for a single elevatorCar object*/
     public void createElevatorCarFrame(){
         for (int i = 0; i < this.numElevators; i++) {
-            this.elevatorPanels[i] = new JPanel(new GridLayout(3,1));
+            this.elevatorPanels[i] = new JPanel(new GridLayout(4,1));
             JLabel elevatorName = new JLabel("Elevator "+i);
             this.positionLabels[i] = new JLabel("Floor "+this.elevatorsPositions[i]);
+            this.passengerLabels[i] = new JLabel("Passengers: "+this.elevatorsPassengers[i]);
             this.statusLabels[i] = new JLabel("Idle");
 
             //Center Align labels
@@ -77,11 +80,14 @@ public class Elevator_System_GUI implements Runnable{
             elevatorName.setVerticalAlignment(SwingConstants.CENTER);
             positionLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
             positionLabels[i].setVerticalAlignment(SwingConstants.CENTER);
+            passengerLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
+            passengerLabels[i].setVerticalAlignment(SwingConstants.CENTER);
             statusLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
             statusLabels[i].setVerticalAlignment(SwingConstants.CENTER);
 
             this.elevatorPanels[i].add(elevatorName);
             this.elevatorPanels[i].add(this.positionLabels[i]);
+            this.elevatorPanels[i].add(this.passengerLabels[i]);
             this.elevatorPanels[i].add(this.statusLabels[i]);
             this.elevatorPanels[i].setBackground(new Color(150,150,150));
             this.mainPanel.add(this.elevatorPanels[i]);
@@ -94,6 +100,7 @@ public class Elevator_System_GUI implements Runnable{
         for (int i = 0; i < this.numElevators; i++) {
             this.positionLabels[i].setText("Floor "+this.elevatorsPositions[i]);
             this.statusLabels[i].setText(this.getStatusString(this.elevatorsStatus[i]));
+            this.passengerLabels[i].setText("Passengers: "+this.elevatorsPassengers[i]);
             if(this.elevatorsStatus[i] == 4){this.elevatorPanels[i].setBackground(new Color(200,0,0));}
         }
     }
@@ -175,7 +182,8 @@ public class Elevator_System_GUI implements Runnable{
                 for (int j = 0; j < this.numElevators; j++) {
                     this.elevatorsPositions[j] = data[i];
                     this.elevatorsStatus[j] = data[i+1];
-                    i += 2;
+                    this.elevatorsPassengers[j] = data[i+2];
+                    i += 3;
                 }
                 this.updateGUI();
             }

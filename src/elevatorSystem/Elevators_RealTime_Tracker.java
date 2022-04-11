@@ -63,7 +63,7 @@ public class Elevators_RealTime_Tracker implements Runnable {
                 //Wait cycle time, Then send Elevators positions data to GUI
                 wait(updateCycleTime);
 
-                byte[] data = new byte[(2*numElevators)+1];
+                byte[] data = new byte[(3*numElevators)+1];
                 data[0] = (byte) 0;
                 int i = 1;
                 for (int j = 0; j < numElevators;j++) {
@@ -73,7 +73,8 @@ public class Elevators_RealTime_Tracker implements Runnable {
                     else if(elevators[j].getTasks().size() == 0){ data[i+1] = (byte) 5; }
                     else {data[i+1] = (byte) Math.round(this.elevatorStateNumber(elevators[j].getElevatorState(),j));}
 
-                    i += 2;
+                    data[i+2] = (byte) elevators[j].getNumPassengerCounter();
+                    i += 3;
                 }
                 this.sendData(data,200);
             }
