@@ -303,6 +303,7 @@ public class Scheduler_System implements Runnable{
     public int bestElevatorNumber() {
         int bestElevatorNumber = -1;
         int bestWeightFactor = -1;
+        int lowestDistance = -1;
 
         for (int i = 0; i < elevators.length; i++) {
             if(!elevators[i].getElevatorState().equals(elevators[i].getOutOfService())) {
@@ -310,8 +311,22 @@ public class Scheduler_System implements Runnable{
                 int passengerNumber = elevators[i].getNumPassengerCounter();
                 int currentWeightFactor = currentTaskNumber * (passengerNumber + 1);
 
-                if ((currentTaskNumber < 0) || (currentWeightFactor == 0)) {
+                if (currentTaskNumber < 0) {
                     return i;
+                }
+
+                if (currentTaskNumber == 0){
+                    int currentDistance = Math.round(Math.abs(elevators[i].getPosition() - tasksQueue.get(tasksQueue.size() - 1).getFloorNumber()));
+                    if(lowestDistance == -1){
+                        bestElevatorNumber = i;
+                        lowestDistance = currentDistance;
+                    }
+                    else{
+                        if (lowestDistance > currentDistance){
+                            bestElevatorNumber = i;
+                            lowestDistance = currentDistance;
+                        }
+                    }
                 }
 
                 if(bestElevatorNumber == -1){
@@ -339,6 +354,7 @@ public class Scheduler_System implements Runnable{
 
         //Iterate task number until condition1 or condition2 becomes true, Or until queue.size reaches end.
         if(queue.size() != 0) {
+            bestTaskNumber = 1;
             //Return -bestTaskNumber if target floor already in queue (to make sure it choosen)
             for (int i = 0; i < queue.size(); i++) {
                 if (targetFloorNumber == queue.get(i).getTargetFloor()) {
@@ -346,7 +362,7 @@ public class Scheduler_System implements Runnable{
                 }
             }
             // Else loop again to find best position
-            for (int j = 0; !condition1 && !condition2 && (j < queue.size()); j++) {
+            for (int j = 1; !condition1 && !condition2 && (j < queue.size()); j++) {
                 Integer queueFloor = queue.get(j).getTargetFloor();
                 condition1 = (elevatorPosition > queueFloor) && (targetFloorNumber > queueFloor) && (elevatorPosition > targetFloorNumber);
                 condition2 = (elevatorPosition < queueFloor) && (targetFloorNumber < queueFloor) && (elevatorPosition < targetFloorNumber);

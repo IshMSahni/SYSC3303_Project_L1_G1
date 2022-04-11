@@ -146,8 +146,6 @@ public class Floor_System implements Runnable{
 			//Create default people objects and return a list of them.
 			int time[] = new int[4];
 
-
-
 			int totalNumPeoples = 12;
 			Person defaultPeoples[] = new Person[totalNumPeoples];
 
@@ -179,10 +177,10 @@ public class Floor_System implements Runnable{
 
 			time = new int[4]; time[0]=00; time[1]=01; time[2]=23; time[3]=101;
 			defaultPeoples[9]= new Person(time, 12, 2, 1);
-			time[0]=00; time[1]=00; time[2]=03; time[3]=101;
+			time[0]=00; time[1]=01; time[2]=33; time[3]=101;
 			defaultPeoples[10] = new Person(time, 4, 2, 0, 1);
 
-			time = new int[4]; time[0]=00; time[1]=01; time[2]=33; time[3]=101;
+			time = new int[4]; time[0]=00; time[1]=01; time[2]=43; time[3]=101;
 			defaultPeoples[11]= new Person(time, 2, 2, 1, 0);
 
 			return defaultPeoples;
