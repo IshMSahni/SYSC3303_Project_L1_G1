@@ -39,7 +39,6 @@ public class MovingDown implements ElevatorState {
         elevator.setMotors(false);
         elevator.setStatus("Stopped");
         //Set elevator to new position and remove task from Elevator's queue
-        elevator.setPosition(endLocation);
         elevator.setButton(endLocation, false);
         elevator.getTasks().remove(0);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");

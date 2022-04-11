@@ -47,9 +47,9 @@ public class DoorClosed implements ElevatorState {
         //Wait for calculated time
         if(time != 0) {
             for (int i = 0; i < distance; i++) {
-                try{ wait((time/distance) - 50); }
+                try{ wait((time/distance) - 100); } // -100 just to take out any time it takes to execute the code
                 catch (Exception e){}
-                this.elevator.setPosition(this.elevator.getPosition() + amount);
+                this.elevator.setPosition(startLocation + (amount*i) + amount);
             }
         }
     }
