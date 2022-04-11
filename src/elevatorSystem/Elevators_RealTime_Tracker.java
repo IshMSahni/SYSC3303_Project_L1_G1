@@ -40,15 +40,15 @@ public class Elevators_RealTime_Tracker implements Runnable {
         }
     }
 
-    public int elevatorStateNumber(ElevatorState elevatorState){
+    public int elevatorStateNumber(ElevatorState elevatorState, int elevatorNum){
         int number = 0;
 
-        if(elevatorState.equals(elevators[0].getMovingUp())){ number = 1; }
-        else if(elevatorState.equals(elevators[0].getMovingDown())){ number = 2; }
-        else if(elevatorState.equals(elevators[0].getLoading()) || elevatorState.equals(elevators[0].getArrived()) || elevatorState.equals(elevators[0].getDoorOpen())){
+        if(elevatorState.equals(elevators[elevatorNum].getMovingUp())){ number = 1; }
+        else if(elevatorState.equals(elevators[elevatorNum].getMovingDown())){ number = 2; }
+        else if(elevatorState.equals(elevators[elevatorNum].getLoading()) || elevatorState.equals(elevators[elevatorNum].getArrived()) || elevatorState.equals(elevators[elevatorNum].getDoorOpen())){
             number = 3;
         }
-        else if(elevatorState.equals(elevators[0].getOutOfService())){ number = 4; }
+        else if(elevatorState.equals(elevators[elevatorNum].getOutOfService())){ number = 4; }
 
         return number;
     }
@@ -69,9 +69,9 @@ public class Elevators_RealTime_Tracker implements Runnable {
                 for (int j = 0; j < numElevators;j++) {
                     data[i] = (byte) Math.round(elevators[j].getPosition());
 
-                    if(elevators[j].getElevatorState().equals(elevators[0].getOutOfService())){ data[i+1] = (byte) 4; }
+                    if(elevators[j].getElevatorState().equals(elevators[j].getOutOfService())){ data[i+1] = (byte) 4; }
                     else if(elevators[j].getTasks().size() == 0){ data[i+1] = (byte) 5; }
-                    else {data[i+1] = (byte) Math.round(this.elevatorStateNumber(elevators[j].getElevatorState()));}
+                    else {data[i+1] = (byte) Math.round(this.elevatorStateNumber(elevators[j].getElevatorState(),j));}
 
                     i += 2;
                 }
